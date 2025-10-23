@@ -3605,7 +3605,7 @@
         }
 
         // Fonctions du jeu
-        function registerPlayer() {
+         function registerPlayer() {
             const firstName = playerData.firstName || 'Joueur';
             const lastName = playerData.lastName || 'Anonyme';
             
@@ -3614,18 +3614,18 @@
         }
 
         function rollDice() {
-            const dice = event.target;
             const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
             let counter = 0;
+            const diceElement = event.currentTarget;
             
             const interval = setInterval(() => {
-                dice.textContent = faces[Math.floor(Math.random() * faces.length)];
+                diceElement.textContent = faces[Math.floor(Math.random() * faces.length)];
                 counter++;
                 
                 if (counter > 10) {
                     clearInterval(interval);
                     const finalResult = Math.floor(Math.random() * 6) + 1;
-                    dice.textContent = faces[finalResult - 1];
+                    diceElement.textContent = faces[finalResult - 1];
                     
                     setTimeout(() => {
                         alert(currentLanguage === 'fr' ? 
@@ -3637,32 +3637,43 @@
         }
 
         function showStandInfo(sector) {
+            console.log('Secteur cliqué:', sector); // Debug
+            
             const sectorData = sectorsData[sector];
-            if (!sectorData) return;
+            
+            if (!sectorData) {
+                console.error('Secteur non trouvé:', sector);
+                alert('Secteur non disponible');
+                return;
+            }
             
             document.getElementById('modalTitle').textContent = sectorData.name[currentLanguage];
             
             const companiesGrid = document.getElementById('companiesGrid');
             companiesGrid.innerHTML = '';
             
-            sectorData.companies.forEach((company, index) => {
-                const companyCard = document.createElement('div');
-                companyCard.className = 'company-card';
-                companyCard.innerHTML = `
-                    <button class="delete-btn" onclick="deleteCompany('${sector}', ${index})" title="Supprimer">×</button>
-                    <div class="company-name">${company.name}</div>
-                    <div class="company-info">${company.info}</div>
-                    <div class="company-tags">
-                        ${company.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                    </div>
-                    <div class="company-actions">
-                        <button class="action-icon" onclick="contactCompany('${company.name}')" title="Contacter">📞</button>
-                        <button class="action-icon" onclick="visitWebsite('${company.name}')" title="Site web">🌐</button>
-                        <button class="action-icon" onclick="saveCompany('${company.name}')" title="Sauvegarder">💾</button>
-                    </div>
-                `;
-                companiesGrid.appendChild(companyCard);
-            });
+            if (!sectorData.companies || sectorData.companies.length === 0) {
+                companiesGrid.innerHTML = '<p style="text-align: center; padding: 20px;">Aucune entreprise disponible</p>';
+            } else {
+                sectorData.companies.forEach((company, index) => {
+                    const companyCard = document.createElement('div');
+                    companyCard.className = 'company-card';
+                    companyCard.innerHTML = `
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteCompany('${sector}', ${index})" title="Supprimer">×</button>
+                        <div class="company-name">${company.name}</div>
+                        <div class="company-info">${company.info}</div>
+                        <div class="company-tags">
+                            ${company.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="company-actions">
+                            <button class="action-icon" onclick="event.stopPropagation(); contactCompany('${company.name}')" title="Contacter">📞</button>
+                            <button class="action-icon" onclick="event.stopPropagation(); visitWebsite('${company.name}')" title="Site web">🌐</button>
+                            <button class="action-icon" onclick="event.stopPropagation(); saveCompany('${company.name}')" title="Sauvegarder">💾</button>
+                        </div>
+                    `;
+                    companiesGrid.appendChild(companyCard);
+                });
+            }
             
             document.getElementById('companyModal').style.display = 'block';
         }
@@ -3753,7 +3764,7 @@
             companyCard.style.borderColor = '#95c11f';
             companyCard.id = `company-${newCompany.id}`;
             companyCard.innerHTML = `
-                <button class="delete-btn" onclick="deleteCustomCompany('${newCompany.id}')" title="Supprimer">×</button>
+                <button class="delete-btn" onclick="event.stopPropagation(); deleteCustomCompany('${newCompany.id}')" title="Supprimer">×</button>
                 <div class="company-name">${newCompany.name}</div>
                 <div class="company-info">${newCompany.activity}</div>
                 <div class="company-tags">
@@ -3764,9 +3775,9 @@
                     ${phone ? `<div><strong>📞 Tél:</strong> <a href="tel:${phone}" style="color: #2897d5;">${phone}</a></div>` : ''}
                 </div>
                 <div class="company-actions">
-                    ${email ? `<button class="action-icon" onclick="window.open('mailto:${email}')" title="Envoyer email">📧</button>` : ''}
-                    ${phone ? `<button class="action-icon" onclick="window.open('tel:${phone}')" title="Appeler">📞</button>` : ''}
-                    <button class="action-icon" onclick="saveCompany('${newCompany.name}')" title="Sauvegarder">💾</button>
+                    ${email ? `<button class="action-icon" onclick="event.stopPropagation(); window.location.href='mailto:${email}'" title="Envoyer email">📧</button>` : ''}
+                    ${phone ? `<button class="action-icon" onclick="event.stopPropagation(); window.location.href='tel:${phone}'" title="Appeler">📞</button>` : ''}
+                    <button class="action-icon" onclick="event.stopPropagation(); saveCompany('${newCompany.name}')" title="Sauvegarder">💾</button>
                 </div>
             `;
             companiesGrid.appendChild(companyCard);
@@ -3817,9 +3828,9 @@
                         ${newCompany.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                     </div>
                     <div class="company-actions">
-                        <button class="action-icon" onclick="contactCompany('${newCompany.name}')" title="Contacter">📞</button>
-                        <button class="action-icon" onclick="visitWebsite('${newCompany.name}')" title="Site web">🌐</button>
-                        <button class="action-icon" onclick="saveCompany('${newCompany.name}')" title="Sauvegarder">💾</button>
+                        <button class="action-icon" onclick="event.stopPropagation(); contactCompany('${newCompany.name}')" title="Contacter">📞</button>
+                        <button class="action-icon" onclick="event.stopPropagation(); visitWebsite('${newCompany.name}')" title="Site web">🌐</button>
+                        <button class="action-icon" onclick="event.stopPropagation(); saveCompany('${newCompany.name}')" title="Sauvegarder">💾</button>
                     </div>
                 `;
                 companiesGrid.appendChild(companyCard);
