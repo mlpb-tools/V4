@@ -200,10 +200,8 @@
             position: relative;
         }
 
-        .page.active {
-            display: block;
-        }
-
+        .page.active { display: block; }
+        
         .page-header {
             text-align: center;
             margin-bottom: 30px;
@@ -2136,7 +2134,8 @@
 
                 <!-- Mission Locale - Quartier Général -->
                 <div class="headquarters">
-                    <div class="hq-building" onclick="showStandInfo('mission')">
+                   <div class="headquarters">
+    <div class="hq-building" onclick="alert(currentLanguage === 'fr' ? 'Quartier Général de la Mission Locale - Point de départ et validation' : 'Cuartel General de la Misión Local - Punto de partida y validación')">
                         <div class="hq-flag">🏠</div>
                         <h3 data-fr="QUARTIER GÉNÉRAL" data-es="CUARTEL GENERAL">QUARTIER GÉNÉRAL</h3>
                         <h4 data-fr="Mission Locale" data-es="Misión Local">Mission Locale</h4>
