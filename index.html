@@ -3367,888 +3367,904 @@
     </div>
 
     <script>
-        // Variables globales
-        let currentLanguage = 'fr';
-        let currentPage = 1;
-        let playerData = {
-            firstName: '',
-            lastName: '',
-            projectName: '',
-            logoUrl: '',
-            cvFile: null
-        };
-        let gameData = {
-            badges: [],
-            completedChallenges: [],
-            companies: {},
-            visitedCompanies: [],
-            points: 0,
-            mobility: {
-                steps: 0,
-                bike: 0,
-                publicTransport: false,
-                carpool: false
+    // Variables globales
+    let currentLanguage = 'fr';
+    let currentPage = 1;
+    let playerData = {
+        firstName: '',
+        lastName: '',
+        projectName: '',
+        logoUrl: '',
+        cvFile: null
+    };
+    let gameData = {
+        badges: [],
+        completedChallenges: [],
+        companies: {},
+        visitedCompanies: [],
+        points: 0,
+        mobility: {
+            steps: 0,
+            bike: 0,
+            publicTransport: false,
+            carpool: false
+        }
+    };
+
+    // Système de points par défi
+    const challengePoints = {
+        1: 100,
+        2: 150,
+        3: 200,
+        4: 300,
+        5: 500,
+        6: 250
+    };
+
+    // Paliers de récompenses
+    const pointsRewards = {
+        0: { name: 'Débutant Motivé', icon: '🌟', color: '#2897d5' },
+        500: { name: 'Candidat Actif', icon: '🚀', color: '#95c11f' },
+        1000: { name: 'Pro du Networking', icon: '🤝', color: '#f39200' },
+        1500: { name: 'Expert Mission', icon: '🏆', color: '#d60b52' },
+        2000: { name: 'Légende du Forum', icon: '👑', color: '#a3195b' }
+    };
+    
+    let customSectors = [];
+    let customCompanies = [];
+
+    // Données des secteurs
+    const sectorsData = {
+        tech: {
+            name: { fr: 'Tech & Digital', es: 'Tech & Digital' },
+            companies: [
+                { name: 'WebDev Solutions', info: 'Développement web et applications mobiles', tags: ['Dev', 'Web', 'Mobile'] },
+                { name: 'AI Innovations', info: 'Intelligence artificielle et machine learning', tags: ['IA', 'Data', 'Innovation'] },
+                { name: 'CyberSec Pro', info: 'Cybersécurité et protection des données', tags: ['Sécurité', 'Réseau', 'Protection'] },
+                { name: 'Cloud Systems', info: 'Solutions cloud et infrastructure', tags: ['Cloud', 'Infra', 'Système'] },
+                { name: 'UX Design Studio', info: 'Design d\'expérience utilisateur', tags: ['UX', 'Design', 'Interface'] }
+            ]
+        },
+        resto: {
+            name: { fr: 'Restauration', es: 'Restauración' },
+            companies: [
+                { name: 'Le Gourmet', info: 'Restaurant gastronomique français', tags: ['Chef', 'Gastro', 'Service'] },
+                { name: 'Pizza Express', info: 'Pizzeria rapide et livraison', tags: ['Rapide', 'Livraison', 'Italien'] },
+                { name: 'Café Central', info: 'Café-brasserie du centre-ville', tags: ['Café', 'Brasserie', 'Accueil'] },
+                { name: 'Traiteur Deluxe', info: 'Service traiteur événementiel', tags: ['Traiteur', 'Événement', 'Buffet'] },
+                { name: 'Boulangerie Artisan', info: 'Boulangerie traditionnelle', tags: ['Pain', 'Artisan', 'Tradition'] },
+                { name: 'Restaurant Scolaire', info: 'Restauration collective', tags: ['Collectif', 'Scolaire', 'Nutrition'] },
+                { name: 'Food Truck Gourmet', info: 'Cuisine mobile haut de gamme', tags: ['Mobile', 'Street Food', 'Innovation'] },
+                { name: 'Hôtel Restaurant', info: 'Restaurant d\'hôtel 4 étoiles', tags: ['Hôtel', 'Luxe', 'Service'] }
+            ]
+        },
+        sante: {
+            name: { fr: 'Santé & Social', es: 'Salud & Social' },
+            companies: [
+                { name: 'Clinique Saint-Martin', info: 'Établissement de soins privé', tags: ['Clinique', 'Soins', 'Médical'] },
+                { name: 'EHPAD Les Jardins', info: 'Maison de retraite médicalisée', tags: ['EHPAD', 'Seniors', 'Accompagnement'] },
+                { name: 'Centre Social Municipal', info: 'Services sociaux de proximité', tags: ['Social', 'Aide', 'Proximité'] },
+                { name: 'Pharmacie Centrale', info: 'Officine pharmaceutique', tags: ['Pharmacie', 'Conseil', 'Santé'] },
+                { name: 'Aide à Domicile Plus', info: 'Services d\'aide à la personne', tags: ['Domicile', 'Aide', 'Autonomie'] },
+                { name: 'Cabinet Infirmier', info: 'Soins infirmiers libéraux', tags: ['Infirmier', 'Soins', 'Libéral'] }
+            ]
+        },
+        commerce: {
+            name: { fr: 'Commerce', es: 'Comercio' },
+            companies: [
+                { name: 'Galeries Lafayette', info: 'Grand magasin mode et luxe', tags: ['Mode', 'Luxe', 'Conseil'] },
+                { name: 'SuperMarché Bio', info: 'Alimentation biologique', tags: ['Bio', 'Alimentaire', 'Écologie'] },
+                { name: 'Électro Discount', info: 'Électroménager et high-tech', tags: ['Électro', 'High-tech', 'Discount'] },
+                { name: 'Boutique Tendance', info: 'Prêt-à-porter jeune', tags: ['Mode', 'Jeune', 'Tendance'] },
+                { name: 'Librairie du Centre', info: 'Librairie généraliste', tags: ['Livre', 'Culture', 'Conseil'] },
+                { name: 'Magasin de Sport', info: 'Articles de sport et loisirs', tags: ['Sport', 'Loisir', 'Équipement'] },
+                { name: 'Bijouterie Précieuse', info: 'Bijoux et montres', tags: ['Bijou', 'Montre', 'Luxe'] },
+                { name: 'Jardinerie Verte', info: 'Plantes et jardinage', tags: ['Jardin', 'Plante', 'Nature'] },
+                { name: 'Bazar du Coin', info: 'Bazar et articles divers', tags: ['Bazar', 'Divers', 'Pratique'] },
+                { name: 'Opticien Vision', info: 'Lunettes et lentilles', tags: ['Optique', 'Lunette', 'Vision'] },
+                { name: 'Parfumerie Élégance', info: 'Parfums et cosmétiques', tags: ['Parfum', 'Cosmétique', 'Beauté'] },
+                { name: 'Magasin de Jouets', info: 'Jouets et jeux pour enfants', tags: ['Jouet', 'Enfant', 'Jeu'] }
+            ]
+        },
+        artisan: {
+            name: { fr: 'Artisanat & BTP', es: 'Artesanía & BTP' },
+            companies: [
+                { name: 'Menuiserie Dubois', info: 'Menuiserie traditionnelle et moderne', tags: ['Bois', 'Meuble', 'Artisan'] },
+                { name: 'Électricité Pro', info: 'Installation électrique résidentielle', tags: ['Électricité', 'Installation', 'Résidentiel'] },
+                { name: 'Plomberie Express', info: 'Plomberie et chauffage', tags: ['Plomberie', 'Chauffage', 'Dépannage'] },
+                { name: 'Maçonnerie Solide', info: 'Gros œuvre et rénovation', tags: ['Maçonnerie', 'Gros œuvre', 'Rénovation'] },
+                { name: 'Peinture Déco', info: 'Peinture et décoration intérieure', tags: ['Peinture', 'Décoration', 'Intérieur'] },
+                { name: 'Couverture Toit', info: 'Couverture et charpente', tags: ['Couverture', 'Charpente', 'Toit'] },
+                { name: 'Carrelage Design', info: 'Pose de carrelage et faïence', tags: ['Carrelage', 'Faïence', 'Sol'] }
+            ]
+        },
+        service: {
+            name: { fr: 'Services', es: 'Servicios' },
+            companies: [
+                { name: 'Banque Populaire', info: 'Services bancaires et financiers', tags: ['Banque', 'Finance', 'Conseil'] },
+                { name: 'Assurance Vie', info: 'Assurances tous risques', tags: ['Assurance', 'Protection', 'Conseil'] },
+                { name: 'Cabinet Comptable', info: 'Expertise comptable et fiscale', tags: ['Comptabilité', 'Fiscal', 'Gestion'] },
+                { name: 'Agence Immobilière', info: 'Vente et location immobilière', tags: ['Immobilier', 'Vente', 'Location'] },
+                { name: 'Nettoyage Pro', info: 'Nettoyage industriel et bureaux', tags: ['Nettoyage', 'Entretien', 'Hygiène'] },
+                { name: 'Sécurité Garde', info: 'Gardiennage et surveillance', tags: ['Sécurité', 'Surveillance', 'Protection'] },
+                { name: 'Avocat Conseil', info: 'Cabinet d\'avocats généralistes', tags: ['Droit', 'Conseil', 'Juridique'] },
+                { name: 'Agence Marketing', info: 'Communication et publicité', tags: ['Marketing', 'Communication', 'Publicité'] },
+                { name: 'Formation Pro', info: 'Organisme de formation professionnelle', tags: ['Formation', 'Apprentissage', 'Compétences'] }
+            ]
+        },
+        tourisme: {
+            name: { fr: 'Tourisme & Hôtellerie', es: 'Turismo & Hostelería' },
+            companies: [
+                { name: 'Hôtel 4 Étoiles', info: 'Hôtellerie de luxe centre-ville', tags: ['Hôtel', 'Luxe', 'Accueil'] },
+                { name: 'Camping Les Pins', info: 'Camping familial 3 étoiles', tags: ['Camping', 'Famille', 'Nature'] },
+                { name: 'Agence Voyage', info: 'Organisation de voyages sur mesure', tags: ['Voyage', 'Organisation', 'Conseil'] },
+                { name: 'Office Tourisme', info: 'Promotion du territoire local', tags: ['Tourisme', 'Information', 'Territoire'] },
+                { name: 'Guide Montagne', info: 'Accompagnement randonnée et escalade', tags: ['Guide', 'Montagne', 'Sport'] },
+                { name: 'Parc Attractions', info: 'Parc de loisirs familial', tags: ['Loisir', 'Famille', 'Animation'] }
+            ]
+        },
+        transport: {
+            name: { fr: 'Transport & Logistique', es: 'Transporte & Logística' },
+            companies: [
+                { name: 'Transport Rapide', info: 'Transport routier de marchandises', tags: ['Transport', 'Routier', 'Marchandise'] },
+                { name: 'Logistique Stock', info: 'Entreposage et distribution', tags: ['Logistique', 'Stock', 'Distribution'] },
+                { name: 'Taxi Local', info: 'Transport de personnes local', tags: ['Taxi', 'Transport', 'Personne'] },
+                { name: 'Livraison Express', info: 'Livraison rapide colis', tags: ['Livraison', 'Colis', 'Express'] }
+            ]
+        }
+    };
+
+    // ========== FONCTIONS PRINCIPALES ==========
+    
+    // Fonctions de navigation
+    window.showPage = function(pageNum) {
+        console.log('Changement de page vers:', pageNum);
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        
+        const targetPage = document.getElementById(`page${pageNum}`);
+        if (targetPage) {
+            targetPage.classList.add('active');
+        }
+        
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        const navBtns = document.querySelectorAll('.nav-btn');
+        if (navBtns[pageNum - 1]) {
+            navBtns[pageNum - 1].classList.add('active');
+        }
+        
+        currentPage = pageNum;
+
+        if (pageNum === 3) {
+            updateCompaniesCounter();
+        }
+    };
+
+    // Fonctions de langue
+    window.setLanguage = function(lang) {
+        currentLanguage = lang;
+        
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        const langBtns = document.querySelectorAll('.lang-btn');
+        langBtns.forEach(btn => {
+            if (btn.textContent.includes(lang.toUpperCase())) {
+                btn.classList.add('active');
             }
-        };
+        });
+        
+        document.querySelectorAll('[data-fr]').forEach(element => {
+            if (element.hasAttribute(`data-${lang}`)) {
+                if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || element.type === 'tel')) {
+                    element.placeholder = element.getAttribute(`data-${lang}`);
+                } else {
+                    element.textContent = element.getAttribute(`data-${lang}`);
+                }
+            }
+        });
+    };
 
-        // Système de points par défi
-        const challengePoints = {
-            1: 100,
-            2: 150,
-            3: 200,
-            4: 300,
-            5: 500,
-            6: 250
-        };
+    // Fonctions de personnalisation
+    window.updateIdentity = function() {
+        playerData.firstName = document.getElementById('firstName').value;
+        playerData.lastName = document.getElementById('lastName').value;
+    };
 
-        // Paliers de récompenses
-        const pointsRewards = {
-            0: { name: 'Débutant Motivé', icon: '🌟', color: '#2897d5' },
-            500: { name: 'Candidat Actif', icon: '🚀', color: '#95c11f' },
-            1000: { name: 'Pro du Networking', icon: '🤝', color: '#f39200' },
-            1500: { name: 'Expert Mission', icon: '🏆', color: '#d60b52' },
-            2000: { name: 'Légende du Forum', icon: '👑', color: '#a3195b' }
+    // Fonctions de gestion des fichiers
+    window.triggerMainCVUpload = function() {
+        document.getElementById('cvFileInputMain').click();
+    };
+
+    window.handleMainCVUpload = function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            playerData.cvFile = file;
+            document.getElementById('cvFileNameMain').textContent = file.name;
+            document.getElementById('cvUploadContentMain').style.display = 'none';
+            document.getElementById('cvPreviewMain').style.display = 'flex';
+            document.getElementById('cvUploadAreaMain').classList.add('has-cv');
+        }
+    };
+
+    window.removeMainCV = function(event) {
+        event.stopPropagation();
+        playerData.cvFile = null;
+        document.getElementById('cvUploadContentMain').style.display = 'block';
+        document.getElementById('cvPreviewMain').style.display = 'none';
+        document.getElementById('cvUploadAreaMain').classList.remove('has-cv');
+        document.getElementById('cvFileInputMain').value = '';
+    };
+
+    // Fonctions de téléchargement
+    window.downloadLogo = function() {
+        alert(currentLanguage === 'fr' ? 'Fonction de téléchargement du logo' : 'Función de descarga del logo');
+    };
+
+    window.downloadForumName = function() {
+        const forumName = 'Forum Mission Locale Pays Basque';
+        const blob = new Blob([forumName], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'nom-forum.txt';
+        link.click();
+    };
+
+    // Fonctions du jeu
+    window.registerPlayer = function() {
+        const firstName = playerData.firstName || 'Joueur';
+        const lastName = playerData.lastName || 'Anonyme';
+        
+        document.getElementById('playerName').textContent = `${firstName} ${lastName}`;
+        document.getElementById('playerInfo').style.display = 'block';
+    };
+
+    window.rollDice = function() {
+        const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        let counter = 0;
+        const diceElement = event.currentTarget;
+        
+        const interval = setInterval(() => {
+            diceElement.textContent = faces[Math.floor(Math.random() * faces.length)];
+            counter++;
+            
+            if (counter > 10) {
+                clearInterval(interval);
+                const finalResult = Math.floor(Math.random() * 6) + 1;
+                diceElement.textContent = faces[finalResult - 1];
+                
+                setTimeout(() => {
+                    alert(currentLanguage === 'fr' ? 
+                        `Tu as fait ${finalResult} ! Visite ${finalResult} secteur(s) minimum !` :
+                        `¡Sacaste ${finalResult}! ¡Visita ${finalResult} sector(es) como mínimo!`);
+                }, 500);
+            }
+        }, 100);
+    };
+
+    // FONCTION CRITIQUE : showStandInfo
+    window.showStandInfo = function(sector) {
+        console.log('showStandInfo appelé avec secteur:', sector);
+        
+        const sectorData = sectorsData[sector];
+        
+        if (!sectorData) {
+            console.error('Secteur non trouvé:', sector);
+            alert('Secteur non disponible: ' + sector);
+            return;
+        }
+        
+        console.log('Données secteur trouvées:', sectorData);
+        
+        document.getElementById('modalTitle').textContent = sectorData.name[currentLanguage];
+        
+        const companiesGrid = document.getElementById('companiesGrid');
+        companiesGrid.innerHTML = '';
+        
+        if (!sectorData.companies || sectorData.companies.length === 0) {
+            companiesGrid.innerHTML = '<p style="text-align: center; padding: 20px;">Aucune entreprise disponible</p>';
+        } else {
+            sectorData.companies.forEach((company, index) => {
+                const companyCard = document.createElement('div');
+                companyCard.className = 'company-card';
+                companyCard.innerHTML = `
+                    <button class="delete-btn" onclick="event.stopPropagation(); deleteCompany('${sector}', ${index})" title="Supprimer">×</button>
+                    <div class="company-name">${company.name}</div>
+                    <div class="company-info">${company.info}</div>
+                    <div class="company-tags">
+                        ${company.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <div class="company-actions">
+                        <button class="action-icon" onclick="event.stopPropagation(); contactCompany('${company.name}')" title="Contacter">📞</button>
+                        <button class="action-icon" onclick="event.stopPropagation(); visitWebsite('${company.name}')" title="Site web">🌐</button>
+                        <button class="action-icon" onclick="event.stopPropagation(); saveCompany('${company.name}')" title="Sauvegarder">💾</button>
+                    </div>
+                `;
+                companiesGrid.appendChild(companyCard);
+            });
+        }
+        
+        document.getElementById('companyModal').style.display = 'block';
+        console.log('Modal affiché');
+    };
+
+    window.closeModal = function() {
+        document.getElementById('companyModal').style.display = 'none';
+    };
+
+    window.handleModalClick = function(event) {
+        if (event.target.id === 'companyModal') {
+            closeModal();
+        }
+    };
+
+    window.showCustomSectorModal = function() {
+        document.getElementById('customSectorModal').style.display = 'block';
+    };
+
+    window.closeCustomSectorModal = function() {
+        document.getElementById('customSectorModal').style.display = 'none';
+    };
+
+    window.handleCustomModalClick = function(event) {
+        if (event.target.id === 'customSectorModal') {
+            closeCustomSectorModal();
+        }
+    };
+
+    window.createCustomSector = function() {
+        const name = document.getElementById('customSectorName').value.trim();
+        const icon = document.getElementById('customSectorIcon').value.trim() || '🏢';
+        const tags = document.getElementById('customSectorTags').value.trim();
+        
+        if (!name) {
+            alert(currentLanguage === 'fr' ? 
+                'Veuillez saisir un nom pour le secteur' : 
+                'Por favor ingrese un nombre para el sector');
+            return;
+        }
+        
+        const newSector = {
+            id: 'custom_' + Date.now(),
+            name: name,
+            icon: icon,
+            tags: tags ? tags.split(',').map(tag => tag.trim()) : ['Nouveau'],
+            companies: []
         };
         
-        let customSectors = [];
-        let customCompanies = [];
+        customSectors.push(newSector);
+        
+        document.getElementById('customSectorName').value = '';
+        document.getElementById('customSectorIcon').value = '';
+        document.getElementById('customSectorTags').value = '';
+        
+        alert(currentLanguage === 'fr' ? 
+            `Secteur "${name}" créé avec succès !` : 
+            `¡Sector "${name}" creado con éxito!`);
+    };
 
-        // Données des secteurs
-        const sectorsData = {
-            tech: {
-                name: { fr: 'Tech & Digital', es: 'Tech & Digital' },
-                companies: [
-                    { name: 'WebDev Solutions', info: 'Développement web et applications mobiles', tags: ['Dev', 'Web', 'Mobile'] },
-                    { name: 'AI Innovations', info: 'Intelligence artificielle et machine learning', tags: ['IA', 'Data', 'Innovation'] },
-                    { name: 'CyberSec Pro', info: 'Cybersécurité et protection des données', tags: ['Sécurité', 'Réseau', 'Protection'] },
-                    { name: 'Cloud Systems', info: 'Solutions cloud et infrastructure', tags: ['Cloud', 'Infra', 'Système'] },
-                    { name: 'UX Design Studio', info: 'Design d\'expérience utilisateur', tags: ['UX', 'Design', 'Interface'] }
-                ]
-            },
-            resto: {
-                name: { fr: 'Restauration', es: 'Restauración' },
-                companies: [
-                    { name: 'Le Gourmet', info: 'Restaurant gastronomique français', tags: ['Chef', 'Gastro', 'Service'] },
-                    { name: 'Pizza Express', info: 'Pizzeria rapide et livraison', tags: ['Rapide', 'Livraison', 'Italien'] },
-                    { name: 'Café Central', info: 'Café-brasserie du centre-ville', tags: ['Café', 'Brasserie', 'Accueil'] },
-                    { name: 'Traiteur Deluxe', info: 'Service traiteur événementiel', tags: ['Traiteur', 'Événement', 'Buffet'] },
-                    { name: 'Boulangerie Artisan', info: 'Boulangerie traditionnelle', tags: ['Pain', 'Artisan', 'Tradition'] },
-                    { name: 'Restaurant Scolaire', info: 'Restauration collective', tags: ['Collectif', 'Scolaire', 'Nutrition'] },
-                    { name: 'Food Truck Gourmet', info: 'Cuisine mobile haut de gamme', tags: ['Mobile', 'Street Food', 'Innovation'] },
-                    { name: 'Hôtel Restaurant', info: 'Restaurant d\'hôtel 4 étoiles', tags: ['Hôtel', 'Luxe', 'Service'] }
-                ]
-            },
-            sante: {
-                name: { fr: 'Santé & Social', es: 'Salud & Social' },
-                companies: [
-                    { name: 'Clinique Saint-Martin', info: 'Établissement de soins privé', tags: ['Clinique', 'Soins', 'Médical'] },
-                    { name: 'EHPAD Les Jardins', info: 'Maison de retraite médicalisée', tags: ['EHPAD', 'Seniors', 'Accompagnement'] },
-                    { name: 'Centre Social Municipal', info: 'Services sociaux de proximité', tags: ['Social', 'Aide', 'Proximité'] },
-                    { name: 'Pharmacie Centrale', info: 'Officine pharmaceutique', tags: ['Pharmacie', 'Conseil', 'Santé'] },
-                    { name: 'Aide à Domicile Plus', info: 'Services d\'aide à la personne', tags: ['Domicile', 'Aide', 'Autonomie'] },
-                    { name: 'Cabinet Infirmier', info: 'Soins infirmiers libéraux', tags: ['Infirmier', 'Soins', 'Libéral'] }
-                ]
-            },
-            commerce: {
-                name: { fr: 'Commerce', es: 'Comercio' },
-                companies: [
-                    { name: 'Galeries Lafayette', info: 'Grand magasin mode et luxe', tags: ['Mode', 'Luxe', 'Conseil'] },
-                    { name: 'SuperMarché Bio', info: 'Alimentation biologique', tags: ['Bio', 'Alimentaire', 'Écologie'] },
-                    { name: 'Électro Discount', info: 'Électroménager et high-tech', tags: ['Électro', 'High-tech', 'Discount'] },
-                    { name: 'Boutique Tendance', info: 'Prêt-à-porter jeune', tags: ['Mode', 'Jeune', 'Tendance'] },
-                    { name: 'Librairie du Centre', info: 'Librairie généraliste', tags: ['Livre', 'Culture', 'Conseil'] },
-                    { name: 'Magasin de Sport', info: 'Articles de sport et loisirs', tags: ['Sport', 'Loisir', 'Équipement'] },
-                    { name: 'Bijouterie Précieuse', info: 'Bijoux et montres', tags: ['Bijou', 'Montre', 'Luxe'] },
-                    { name: 'Jardinerie Verte', info: 'Plantes et jardinage', tags: ['Jardin', 'Plante', 'Nature'] },
-                    { name: 'Bazar du Coin', info: 'Bazar et articles divers', tags: ['Bazar', 'Divers', 'Pratique'] },
-                    { name: 'Opticien Vision', info: 'Lunettes et lentilles', tags: ['Optique', 'Lunette', 'Vision'] },
-                    { name: 'Parfumerie Élégance', info: 'Parfums et cosmétiques', tags: ['Parfum', 'Cosmétique', 'Beauté'] },
-                    { name: 'Magasin de Jouets', info: 'Jouets et jeux pour enfants', tags: ['Jouet', 'Enfant', 'Jeu'] }
-                ]
-            },
-            artisan: {
-                name: { fr: 'Artisanat & BTP', es: 'Artesanía & BTP' },
-                companies: [
-                    { name: 'Menuiserie Dubois', info: 'Menuiserie traditionnelle et moderne', tags: ['Bois', 'Meuble', 'Artisan'] },
-                    { name: 'Électricité Pro', info: 'Installation électrique résidentielle', tags: ['Électricité', 'Installation', 'Résidentiel'] },
-                    { name: 'Plomberie Express', info: 'Plomberie et chauffage', tags: ['Plomberie', 'Chauffage', 'Dépannage'] },
-                    { name: 'Maçonnerie Solide', info: 'Gros œuvre et rénovation', tags: ['Maçonnerie', 'Gros œuvre', 'Rénovation'] },
-                    { name: 'Peinture Déco', info: 'Peinture et décoration intérieure', tags: ['Peinture', 'Décoration', 'Intérieur'] },
-                    { name: 'Couverture Toit', info: 'Couverture et charpente', tags: ['Couverture', 'Charpente', 'Toit'] },
-                    { name: 'Carrelage Design', info: 'Pose de carrelage et faïence', tags: ['Carrelage', 'Faïence', 'Sol'] }
-                ]
-            },
-            service: {
-                name: { fr: 'Services', es: 'Servicios' },
-                companies: [
-                    { name: 'Banque Populaire', info: 'Services bancaires et financiers', tags: ['Banque', 'Finance', 'Conseil'] },
-                    { name: 'Assurance Vie', info: 'Assurances tous risques', tags: ['Assurance', 'Protection', 'Conseil'] },
-                    { name: 'Cabinet Comptable', info: 'Expertise comptable et fiscale', tags: ['Comptabilité', 'Fiscal', 'Gestion'] },
-                    { name: 'Agence Immobilière', info: 'Vente et location immobilière', tags: ['Immobilier', 'Vente', 'Location'] },
-                    { name: 'Nettoyage Pro', info: 'Nettoyage industriel et bureaux', tags: ['Nettoyage', 'Entretien', 'Hygiène'] },
-                    { name: 'Sécurité Garde', info: 'Gardiennage et surveillance', tags: ['Sécurité', 'Surveillance', 'Protection'] },
-                    { name: 'Avocat Conseil', info: 'Cabinet d\'avocats généralistes', tags: ['Droit', 'Conseil', 'Juridique'] },
-                    { name: 'Agence Marketing', info: 'Communication et publicité', tags: ['Marketing', 'Communication', 'Publicité'] },
-                    { name: 'Formation Pro', info: 'Organisme de formation professionnelle', tags: ['Formation', 'Apprentissage', 'Compétences'] }
-                ]
-            },
-            tourisme: {
-                name: { fr: 'Tourisme & Hôtellerie', es: 'Turismo & Hostelería' },
-                companies: [
-                    { name: 'Hôtel 4 Étoiles', info: 'Hôtellerie de luxe centre-ville', tags: ['Hôtel', 'Luxe', 'Accueil'] },
-                    { name: 'Camping Les Pins', info: 'Camping familial 3 étoiles', tags: ['Camping', 'Famille', 'Nature'] },
-                    { name: 'Agence Voyage', info: 'Organisation de voyages sur mesure', tags: ['Voyage', 'Organisation', 'Conseil'] },
-                    { name: 'Office Tourisme', info: 'Promotion du territoire local', tags: ['Tourisme', 'Information', 'Territoire'] },
-                    { name: 'Guide Montagne', info: 'Accompagnement randonnée et escalade', tags: ['Guide', 'Montagne', 'Sport'] },
-                    { name: 'Parc Attractions', info: 'Parc de loisirs familial', tags: ['Loisir', 'Famille', 'Animation'] }
-                ]
-            },
-            transport: {
-                name: { fr: 'Transport & Logistique', es: 'Transporte & Logística' },
-                companies: [
-                    { name: 'Transport Rapide', info: 'Transport routier de marchandises', tags: ['Transport', 'Routier', 'Marchandise'] },
-                    { name: 'Logistique Stock', info: 'Entreposage et distribution', tags: ['Logistique', 'Stock', 'Distribution'] },
-                    { name: 'Taxi Local', info: 'Transport de personnes local', tags: ['Taxi', 'Transport', 'Personne'] },
-                    { name: 'Livraison Express', info: 'Livraison rapide colis', tags: ['Livraison', 'Colis', 'Express'] }
-                ]
-            }
-        };
-
-        // Fonctions de navigation
-        function showPage(pageNum) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            document.getElementById(`page${pageNum}`).classList.add('active');
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-btn')[pageNum - 1].classList.add('active');
-            
-            currentPage = pageNum;
-
-            if (pageNum === 3) {
-                updateCompaniesCounter();
-            }
-        }
-
-        // Fonctions de langue
-        function setLanguage(lang) {
-            currentLanguage = lang;
-            
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            document.querySelectorAll('[data-fr]').forEach(element => {
-                if (element.hasAttribute(`data-${lang}`)) {
-                    if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || element.type === 'tel')) {
-                        element.placeholder = element.getAttribute(`data-${lang}`);
-                    } else {
-                        const originalText = element.textContent;
-                        const newText = element.getAttribute(`data-${lang}`);
-                        if (originalText !== newText) {
-                            element.textContent = newText;
-                        }
-                    }
-                }
-            });
-        }
-
-        // Fonctions de personnalisation
-        function updateIdentity() {
-            playerData.firstName = document.getElementById('firstName').value;
-            playerData.lastName = document.getElementById('lastName').value;
-        }
-
-        // Fonctions de gestion des fichiers
-        function triggerMainCVUpload() {
-            document.getElementById('cvFileInputMain').click();
-        }
-
-        function handleMainCVUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                playerData.cvFile = file;
-                document.getElementById('cvFileNameMain').textContent = file.name;
-                document.getElementById('cvUploadContentMain').style.display = 'none';
-                document.getElementById('cvPreviewMain').style.display = 'flex';
-                document.getElementById('cvUploadAreaMain').classList.add('has-cv');
-            }
-        }
-
-        function removeMainCV(event) {
-            event.stopPropagation();
-            playerData.cvFile = null;
-            document.getElementById('cvUploadContentMain').style.display = 'block';
-            document.getElementById('cvPreviewMain').style.display = 'none';
-            document.getElementById('cvUploadAreaMain').classList.remove('has-cv');
-            document.getElementById('cvFileInputMain').value = '';
-        }
-
-        // Fonctions de téléchargement
-        function downloadLogo() {
-            alert(currentLanguage === 'fr' ? 'Fonction de téléchargement du logo' : 'Función de descarga del logo');
-        }
-
-        function downloadForumName() {
-            const forumName = 'Forum Mission Locale Pays Basque';
-            const blob = new Blob([forumName], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'nom-forum.txt';
-            link.click();
-        }
-
-        // Fonctions du jeu
-         function registerPlayer() {
-            const firstName = playerData.firstName || 'Joueur';
-            const lastName = playerData.lastName || 'Anonyme';
-            
-            document.getElementById('playerName').textContent = `${firstName} ${lastName}`;
-            document.getElementById('playerInfo').style.display = 'block';
-        }
-
-        function rollDice() {
-            const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-            let counter = 0;
-            const diceElement = event.currentTarget;
-            
-            const interval = setInterval(() => {
-                diceElement.textContent = faces[Math.floor(Math.random() * faces.length)];
-                counter++;
-                
-                if (counter > 10) {
-                    clearInterval(interval);
-                    const finalResult = Math.floor(Math.random() * 6) + 1;
-                    diceElement.textContent = faces[finalResult - 1];
-                    
-                    setTimeout(() => {
-                        alert(currentLanguage === 'fr' ? 
-                            `Tu as fait ${finalResult} ! Visite ${finalResult} secteur(s) minimum !` :
-                            `¡Sacaste ${finalResult}! ¡Visita ${finalResult} sector(es) como mínimo!`);
-                    }, 500);
-                }
-            }, 100);
-        }
-
-        function showStandInfo(sector) {
-            console.log('Secteur cliqué:', sector); // Debug
-            
-            const sectorData = sectorsData[sector];
-            
-            if (!sectorData) {
-                console.error('Secteur non trouvé:', sector);
-                alert('Secteur non disponible');
-                return;
-            }
-            
-            document.getElementById('modalTitle').textContent = sectorData.name[currentLanguage];
-            
-            const companiesGrid = document.getElementById('companiesGrid');
-            companiesGrid.innerHTML = '';
-            
-            if (!sectorData.companies || sectorData.companies.length === 0) {
-                companiesGrid.innerHTML = '<p style="text-align: center; padding: 20px;">Aucune entreprise disponible</p>';
-            } else {
-                sectorData.companies.forEach((company, index) => {
-                    const companyCard = document.createElement('div');
-                    companyCard.className = 'company-card';
-                    companyCard.innerHTML = `
-                        <button class="delete-btn" onclick="event.stopPropagation(); deleteCompany('${sector}', ${index})" title="Supprimer">×</button>
-                        <div class="company-name">${company.name}</div>
-                        <div class="company-info">${company.info}</div>
-                        <div class="company-tags">
-                            ${company.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
-                        <div class="company-actions">
-                            <button class="action-icon" onclick="event.stopPropagation(); contactCompany('${company.name}')" title="Contacter">📞</button>
-                            <button class="action-icon" onclick="event.stopPropagation(); visitWebsite('${company.name}')" title="Site web">🌐</button>
-                            <button class="action-icon" onclick="event.stopPropagation(); saveCompany('${company.name}')" title="Sauvegarder">💾</button>
-                        </div>
-                    `;
-                    companiesGrid.appendChild(companyCard);
-                });
-            }
-            
-            document.getElementById('companyModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('companyModal').style.display = 'none';
-        }
-
-        function handleModalClick(event) {
-            if (event.target.id === 'companyModal') {
-                closeModal();
-            }
-        }
-
-        function showCustomSectorModal() {
-            document.getElementById('customSectorModal').style.display = 'block';
-        }
-
-        function closeCustomSectorModal() {
-            document.getElementById('customSectorModal').style.display = 'none';
-        }
-
-        function handleCustomModalClick(event) {
-            if (event.target.id === 'customSectorModal') {
-                closeCustomSectorModal();
-            }
-        }
-
-        function createCustomSector() {
-            const name = document.getElementById('customSectorName').value.trim();
-            const icon = document.getElementById('customSectorIcon').value.trim() || '🏢';
-            const tags = document.getElementById('customSectorTags').value.trim();
-            
-            if (!name) {
-                alert(currentLanguage === 'fr' ? 
-                    'Veuillez saisir un nom pour le secteur' : 
-                    'Por favor ingrese un nombre para el sector');
-                return;
-            }
-            
-            const newSector = {
-                id: 'custom_' + Date.now(),
-                name: name,
-                icon: icon,
-                tags: tags ? tags.split(',').map(tag => tag.trim()) : ['Nouveau'],
-                companies: []
-            };
-            
-            customSectors.push(newSector);
-            
-            document.getElementById('customSectorName').value = '';
-            document.getElementById('customSectorIcon').value = '';
-            document.getElementById('customSectorTags').value = '';
-            
+    window.addCustomCompany = function() {
+        const name = document.getElementById('companyName').value.trim();
+        const activity = document.getElementById('companyActivity').value.trim();
+        const email = document.getElementById('companyEmail').value.trim();
+        const phone = document.getElementById('companyPhone').value.trim();
+        
+        if (!name || !activity) {
             alert(currentLanguage === 'fr' ? 
-                `Secteur "${name}" créé avec succès !` : 
-                `¡Sector "${name}" creado con éxito!`);
+                'Veuillez remplir au minimum le nom et l\'activité de l\'entreprise' : 
+                'Por favor complete al menos el nombre y la actividad de la empresa');
+            return;
         }
+        
+        const newCompany = {
+            id: 'company_' + Date.now(),
+            name: name,
+            activity: activity,
+            email: email,
+            phone: phone,
+            tags: [activity.split(' ')[0], 'Nouveau']
+        };
+        
+        customCompanies.push(newCompany);
+        
+        const companiesGrid = document.getElementById('customCompaniesGrid');
+        const companyCard = document.createElement('div');
+        companyCard.className = 'company-card';
+        companyCard.style.background = 'linear-gradient(135deg, rgba(149,193,31,0.1), rgba(243,146,0,0.1))';
+        companyCard.style.borderColor = '#95c11f';
+        companyCard.id = `company-${newCompany.id}`;
+        companyCard.innerHTML = `
+            <button class="delete-btn" onclick="event.stopPropagation(); deleteCustomCompany('${newCompany.id}')" title="Supprimer">×</button>
+            <div class="company-name">${newCompany.name}</div>
+            <div class="company-info">${newCompany.activity}</div>
+            <div class="company-tags">
+                ${newCompany.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+            <div style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.8); border-radius: 12px; font-size: 0.9rem;">
+                ${email ? `<div style="margin-bottom: 8px;"><strong>📧 Email:</strong> <a href="mailto:${email}" style="color: #2897d5;">${email}</a></div>` : ''}
+                ${phone ? `<div><strong>📞 Tél:</strong> <a href="tel:${phone}" style="color: #2897d5;">${phone}</a></div>` : ''}
+            </div>
+            <div class="company-actions">
+                ${email ? `<button class="action-icon" onclick="event.stopPropagation(); window.location.href='mailto:${email}'" title="Envoyer email">📧</button>` : ''}
+                ${phone ? `<button class="action-icon" onclick="event.stopPropagation(); window.location.href='tel:${phone}'" title="Appeler">📞</button>` : ''}
+                <button class="action-icon" onclick="event.stopPropagation(); saveCompany('${newCompany.name}')" title="Sauvegarder">💾</button>
+            </div>
+        `;
+        companiesGrid.appendChild(companyCard);
+        
+        document.getElementById('companyName').value = '';
+        document.getElementById('companyActivity').value = '';
+        document.getElementById('companyEmail').value = '';
+        document.getElementById('companyPhone').value = '';
+        
+        alert(currentLanguage === 'fr' ? 
+            `Entreprise "${name}" ajoutée avec succès !` : 
+            `¡Empresa "${name}" agregada con éxito!`);
+    };
 
-        function addCustomCompany() {
-            const name = document.getElementById('companyName').value.trim();
-            const activity = document.getElementById('companyActivity').value.trim();
-            const email = document.getElementById('companyEmail').value.trim();
-            const phone = document.getElementById('companyPhone').value.trim();
+    window.deleteCustomCompany = function(companyId) {
+        if (confirm(currentLanguage === 'fr' ? 
+            'Supprimer cette entreprise ?' : 
+            '¿Eliminar esta empresa?')) {
             
-            if (!name || !activity) {
-                alert(currentLanguage === 'fr' ? 
-                    'Veuillez remplir au minimum le nom et l\'activité de l\'entreprise' : 
-                    'Por favor complete al menos el nombre y la actividad de la empresa');
-                return;
+            customCompanies = customCompanies.filter(company => company.id !== companyId);
+            
+            const companyCard = document.getElementById(`company-${companyId}`);
+            if (companyCard) {
+                companyCard.remove();
             }
+        }
+    };
+
+    window.addCompany = function() {
+        const companyName = prompt(currentLanguage === 'fr' ? 'Nom de l\'entreprise :' : 'Nombre de la empresa:');
+        if (companyName) {
+            const companyInfo = prompt(currentLanguage === 'fr' ? 'Description de l\'entreprise :' : 'Descripción de la empresa:');
+            const companyTags = prompt(currentLanguage === 'fr' ? 'Tags (séparés par des virgules) :' : 'Tags (separados por comas):');
             
             const newCompany = {
-                id: 'company_' + Date.now(),
-                name: name,
-                activity: activity,
-                email: email,
-                phone: phone,
-                tags: [activity.split(' ')[0], 'Nouveau']
+                name: companyName,
+                info: companyInfo || 'Nouvelle entreprise',
+                tags: companyTags ? companyTags.split(',').map(tag => tag.trim()) : ['Nouveau']
             };
             
-            customCompanies.push(newCompany);
-            
-            const companiesGrid = document.getElementById('customCompaniesGrid');
+            const companiesGrid = document.getElementById('companiesGrid');
             const companyCard = document.createElement('div');
             companyCard.className = 'company-card';
-            companyCard.style.background = 'linear-gradient(135deg, rgba(149,193,31,0.1), rgba(243,146,0,0.1))';
-            companyCard.style.borderColor = '#95c11f';
-            companyCard.id = `company-${newCompany.id}`;
             companyCard.innerHTML = `
-                <button class="delete-btn" onclick="event.stopPropagation(); deleteCustomCompany('${newCompany.id}')" title="Supprimer">×</button>
                 <div class="company-name">${newCompany.name}</div>
-                <div class="company-info">${newCompany.activity}</div>
+                <div class="company-info">${newCompany.info}</div>
                 <div class="company-tags">
                     ${newCompany.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                 </div>
-                <div style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.8); border-radius: 12px; font-size: 0.9rem;">
-                    ${email ? `<div style="margin-bottom: 8px;"><strong>📧 Email:</strong> <a href="mailto:${email}" style="color: #2897d5;">${email}</a></div>` : ''}
-                    ${phone ? `<div><strong>📞 Tél:</strong> <a href="tel:${phone}" style="color: #2897d5;">${phone}</a></div>` : ''}
-                </div>
                 <div class="company-actions">
-                    ${email ? `<button class="action-icon" onclick="event.stopPropagation(); window.location.href='mailto:${email}'" title="Envoyer email">📧</button>` : ''}
-                    ${phone ? `<button class="action-icon" onclick="event.stopPropagation(); window.location.href='tel:${phone}'" title="Appeler">📞</button>` : ''}
+                    <button class="action-icon" onclick="event.stopPropagation(); contactCompany('${newCompany.name}')" title="Contacter">📞</button>
+                    <button class="action-icon" onclick="event.stopPropagation(); visitWebsite('${newCompany.name}')" title="Site web">🌐</button>
                     <button class="action-icon" onclick="event.stopPropagation(); saveCompany('${newCompany.name}')" title="Sauvegarder">💾</button>
                 </div>
             `;
             companiesGrid.appendChild(companyCard);
-            
-            document.getElementById('companyName').value = '';
-            document.getElementById('companyActivity').value = '';
-            document.getElementById('companyEmail').value = '';
-            document.getElementById('companyPhone').value = '';
-            
-            alert(currentLanguage === 'fr' ? 
-                `Entreprise "${name}" ajoutée avec succès !` : 
-                `¡Empresa "${name}" agregada con éxito!`);
         }
+    };
 
-        function deleteCustomCompany(companyId) {
-            if (confirm(currentLanguage === 'fr' ? 
-                'Supprimer cette entreprise ?' : 
-                '¿Eliminar esta empresa?')) {
-                
-                customCompanies = customCompanies.filter(company => company.id !== companyId);
-                
-                const companyCard = document.getElementById(`company-${companyId}`);
-                if (companyCard) {
-                    companyCard.remove();
-                }
-            }
+    window.deleteCompany = function(sector, index) {
+        if (confirm(currentLanguage === 'fr' ? 'Supprimer cette entreprise ?' : '¿Eliminar esta empresa?')) {
+            sectorsData[sector].companies.splice(index, 1);
+            showStandInfo(sector);
         }
+    };
 
-        function addCompany() {
-            const companyName = prompt(currentLanguage === 'fr' ? 'Nom de l\'entreprise :' : 'Nombre de la empresa:');
-            if (companyName) {
-                const companyInfo = prompt(currentLanguage === 'fr' ? 'Description de l\'entreprise :' : 'Descripción de la empresa:');
-                const companyTags = prompt(currentLanguage === 'fr' ? 'Tags (séparés par des virgules) :' : 'Tags (separados por comas):');
-                
-                const newCompany = {
-                    name: companyName,
-                    info: companyInfo || 'Nouvelle entreprise',
-                    tags: companyTags ? companyTags.split(',').map(tag => tag.trim()) : ['Nouveau']
-                };
-                
-                const companiesGrid = document.getElementById('companiesGrid');
-                const companyCard = document.createElement('div');
-                companyCard.className = 'company-card';
-                companyCard.innerHTML = `
-                    <div class="company-name">${newCompany.name}</div>
-                    <div class="company-info">${newCompany.info}</div>
-                    <div class="company-tags">
-                        ${newCompany.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                    </div>
-                    <div class="company-actions">
-                        <button class="action-icon" onclick="event.stopPropagation(); contactCompany('${newCompany.name}')" title="Contacter">📞</button>
-                        <button class="action-icon" onclick="event.stopPropagation(); visitWebsite('${newCompany.name}')" title="Site web">🌐</button>
-                        <button class="action-icon" onclick="event.stopPropagation(); saveCompany('${newCompany.name}')" title="Sauvegarder">💾</button>
-                    </div>
-                `;
-                companiesGrid.appendChild(companyCard);
-            }
+    window.contactCompany = function(companyName) {
+        alert(currentLanguage === 'fr' ? 
+            `Contact avec ${companyName} enregistré !` :
+            `¡Contacto con ${companyName} registrado!`);
+    };
+
+    window.visitWebsite = function(companyName) {
+        alert(currentLanguage === 'fr' ? 
+            `Visite du site web de ${companyName}` :
+            `Visita del sitio web de ${companyName}`);
+    };
+
+    window.saveCompany = function(companyName) {
+        if (!gameData.visitedCompanies.includes(companyName)) {
+            gameData.visitedCompanies.push(companyName);
         }
+        alert(currentLanguage === 'fr' ? 
+            `${companyName} ajouté aux favoris !` :
+            `¡${companyName} agregado a favoritos!`);
+    };
 
-        function deleteCompany(sector, index) {
-            if (confirm(currentLanguage === 'fr' ? 'Supprimer cette entreprise ?' : '¿Eliminar esta empresa?')) {
-                sectorsData[sector].companies.splice(index, 1);
-                showStandInfo(sector);
-            }
-        }
+    window.showPathInfo = function() {
+        alert(currentLanguage === 'fr' ? 
+            'Suis les flèches pour découvrir ton parcours idéal !' :
+            '¡Sigue las flechas para descubrir tu recorrido ideal!');
+    };
 
-        function contactCompany(companyName) {
-            alert(currentLanguage === 'fr' ? 
-                `Contact avec ${companyName} enregistré !` :
-                `¡Contacto con ${companyName} registrado!`);
-        }
+    window.showRestInfo = function() {
+        alert(currentLanguage === 'fr' ? 
+            'Zone de détente : Prends une pause, échange avec d\'autres participants !' :
+            'Zona de descanso: ¡Tómate un descanso, intercambia con otros participantes!');
+    };
 
-        function visitWebsite(companyName) {
-            alert(currentLanguage === 'fr' ? 
-                `Visite du site web de ${companyName}` :
-                `Visita del sitio web de ${companyName}`);
-        }
-
-        function saveCompany(companyName) {
-            if (!gameData.visitedCompanies.includes(companyName)) {
-                gameData.visitedCompanies.push(companyName);
-            }
-            alert(currentLanguage === 'fr' ? 
-                `${companyName} ajouté aux favoris !` :
-                `¡${companyName} agregado a favoritos!`);
-        }
-
-        function showPathInfo() {
-            alert(currentLanguage === 'fr' ? 
-                'Suis les flèches pour découvrir ton parcours idéal !' :
-                '¡Sigue las flechas para descubrir tu recorrido ideal!');
-        }
-
-        function showRestInfo() {
-            alert(currentLanguage === 'fr' ? 
-                'Zone de détente : Prends une pause, échange avec d\'autres participants !' :
-                'Zona de descanso: ¡Tómate un descanso, intercambia con otros participantes!');
-        }
-
-        // Fonctions des défis
-        function completeChallenge(card, level) {
-            if (!gameData.completedChallenges.includes(level)) {
-                gameData.completedChallenges.push(level);
-                card.classList.add('completed');
-                
-                const points = challengePoints[level];
-                gameData.points += points;
-                updatePointsDisplay();
-                
-                showPointsAnimation(points);
-                
-                setTimeout(() => {
-                    alert(currentLanguage === 'fr' ? 
-                        `Défi ${level} accompli ! +${points} points ! Badge débloqué !` :
-                        `¡Desafío ${level} completado! ¡+${points} puntos! ¡Insignia desbloqueada!`);
-                }, 300);
-            }
-        }
-
-        function updatePointsDisplay() {
-            document.getElementById('totalPoints').textContent = gameData.points;
+    // Fonctions des défis
+    window.completeChallenge = function(card, level) {
+        if (!gameData.completedChallenges.includes(level)) {
+            gameData.completedChallenges.push(level);
+            card.classList.add('completed');
             
-            let currentRankData = pointsRewards[0];
-            let nextRankPoints = 500;
-            let currentRankPoints = 0;
+            const points = challengePoints[level];
+            gameData.points += points;
+            updatePointsDisplay();
             
-            const sortedRanks = Object.keys(pointsRewards).map(Number).sort((a, b) => a - b);
-            
-            for (const points of sortedRanks) {
-                if (gameData.points >= points) {
-                    currentRankData = pointsRewards[points];
-                    currentRankPoints = points;
-                    }
-            }
-            
-            for (const points of sortedRanks) {
-                if (gameData.points < points) {
-                    nextRankPoints = points;
-                    break;
-                }
-            }
-            
-            const rankElement = document.getElementById('currentRank');
-            if (rankElement) {
-                rankElement.innerHTML = `${currentRankData.icon} <span data-fr="${currentRankData.name}" data-es="${currentRankData.name}">${currentRankData.name}</span>`;
-                rankElement.style.background = `linear-gradient(135deg, ${currentRankData.color}, rgba(255,255,255,0.2))`;
-            }
-            
-            const progressBar = document.getElementById('progressBar');
-            const nextRankInfo = document.getElementById('nextRankInfo');
-            
-            if (progressBar && nextRankInfo) {
-                if (gameData.points >= 2000) {
-                    progressBar.style.width = '100%';
-                    nextRankInfo.innerHTML = currentLanguage === 'fr' ? 
-                        '👑 Rang maximum atteint ! Félicitations !' :
-                        '👑 ¡Rango máximo alcanzado! ¡Felicitaciones!';
-                } else {
-                    const progress = ((gameData.points - currentRankPoints) / (nextRankPoints - currentRankPoints)) * 100;
-                    progressBar.style.width = Math.min(progress, 100) + '%';
-                    
-                    const nextRankData = pointsRewards[nextRankPoints];
-                    if (nextRankData) {
-                        nextRankInfo.innerHTML = currentLanguage === 'fr' ? 
-                            `Prochain rang : ${nextRankData.icon} ${nextRankData.name} (${nextRankPoints} pts)` :
-                            `Próximo rango: ${nextRankData.icon} ${nextRankData.name} (${nextRankPoints} pts)`;
-                    }
-                }
-            }
-        }
-
-        function showPointsAnimation(points) {
-            const pointsElement = document.createElement('div');
-            pointsElement.textContent = `+${points} pts!`;
-            pointsElement.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: linear-gradient(45deg, #f39200, #95c11f);
-                color: white;
-                padding: 15px 30px;
-                border-radius: 25px;
-                font-size: clamp(1.5rem, 4vw, 2rem);
-                font-weight: 800;
-                z-index: 3000;
-                border: 4px solid white;
-                box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-                animation: pointsPopup 2s ease-out forwards;
-                pointer-events: none;
-            `;
-            
-            if (!document.getElementById('pointsAnimationStyle')) {
-                const style = document.createElement('style');
-                style.id = 'pointsAnimationStyle';
-                style.textContent = `
-                    @keyframes pointsPopup {
-                        0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
-                        20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-                        40% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-                        100% { transform: translate(-50%, -80%) scale(0.8); opacity: 0; }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            document.body.appendChild(pointsElement);
-            
-            setTimeout(() => {
-                if (pointsElement.parentNode) {
-                    pointsElement.parentNode.removeChild(pointsElement);
-                }
-            }, 2000);
-        }
-
-        // Fonction pour mettre à jour le compteur d'entreprises visitées
-        function updateCompaniesCounter() {
-            const companyInputs = document.querySelectorAll('.company-name-input');
-            let count = 0;
-            gameData.visitedCompanies = [];
-            
-            companyInputs.forEach(input => {
-                if (input.value.trim() !== '') {
-                    count++;
-                    gameData.visitedCompanies.push(input.value.trim());
-                }
-            });
-            
-            document.getElementById('companiesVisitedCounter').textContent = count;
-        }
-
-        // Fonctions de suivi
-        function toggleCheck(checkbox) {
-            checkbox.classList.toggle('checked');
-        }
-
-        // Fonctions des questions
-        function selectQuestion(questionItem) {
-            document.querySelectorAll('.question-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-            
-            questionItem.classList.add('selected');
+            showPointsAnimation(points);
             
             setTimeout(() => {
                 alert(currentLanguage === 'fr' ? 
-                    'Question sélectionnée ! Tu peux maintenant la poser aux entreprises.' :
-                    '¡Pregunta seleccionada! Ahora puedes hacerla a las empresas.');
-            }, 200);
+                    `Défi ${level} accompli ! +${points} points ! Badge débloqué !` :
+                    `¡Desafío ${level} completado! ¡+${points} puntos! ¡Insignia desbloqueada!`);
+            }, 300);
         }
+    };
 
-        function addPersonalQuestion() {
-            const question = prompt(currentLanguage === 'fr' ? 
-                'Écris ta question personnelle :' :
-                'Escribe tu pregunta personal:');
-            
-            if (question) {
-                const questionsContainer = document.querySelector('.questions-container');
-                const questionItem = document.createElement('div');
-                questionItem.className = 'question-item';
-                questionItem.onclick = function() { selectQuestion(this); };
-                questionItem.innerHTML = `
-                    <div class="question-icon">✏️</div>
-                    <div>${question}</div>
-                `;
-                
-                const button = document.querySelector('.personal-questions');
-                questionsContainer.insertBefore(questionItem, button);
+    window.updatePointsDisplay = function()
+        {
+        document.getElementById('totalPoints').textContent = gameData.points;
+        
+        let currentRankData = pointsRewards[0];
+        let nextRankPoints = 500;
+        let currentRankPoints = 0;
+        
+        const sortedRanks = Object.keys(pointsRewards).map(Number).sort((a, b) => a - b);
+        
+        for (const points of sortedRanks) {
+            if (gameData.points >= points) {
+                currentRankData = pointsRewards[points];
+                currentRankPoints = points;
             }
         }
-
-        // Fonctions de validation
-        function unlockBadge(badge, level) {
-            if (!gameData.badges.includes(level)) {
-                gameData.badges.push(level);
-                badge.classList.add('unlocked');
-                
-                setTimeout(() => {
-                    alert(currentLanguage === 'fr' ? 
-                        `Badge ${level} débloqué ! Félicitations !` :
-                        `¡Insignia ${level} desbloqueada! ¡Felicitaciones!`);
-                }, 300);
+        
+        for (const points of sortedRanks) {
+            if (gameData.points < points) {
+                nextRankPoints = points;
+                break;
             }
         }
-
-        function updateMobility() {
-            const steps = parseFloat(document.getElementById('steps').value) || 0;
-            const bike = parseFloat(document.getElementById('bike').value) || 0;
-            const publicTransport = document.getElementById('publicTransport').checked;
-            const carpool = document.getElementById('carpool').checked;
-            
-            gameData.mobility = { steps, bike, publicTransport, carpool };
-            
-            let ecoScore = 0;
-            ecoScore += Math.floor(steps / 100);
-            ecoScore += bike * 20;
-            if (publicTransport) ecoScore += 50;
-            if (carpool) ecoScore += 30;
-            
-            document.getElementById('ecoScore').textContent = ecoScore;
-            
-            if (ecoScore >= 100) {
-                const ecoBadge = document.querySelector('.ml-badge-bonus');
-                if (!ecoBadge.classList.contains('unlocked')) {
-                    unlockBadge(ecoBadge, 6);
-                    if (!gameData.completedChallenges.includes(6)) {
-                        gameData.completedChallenges.push(6);
-                        gameData.points += challengePoints[6];
-                        updatePointsDisplay();
-                        showPointsAnimation(challengePoints[6]);
-                    }
+        
+        const rankElement = document.getElementById('currentRank');
+        if (rankElement) {
+            rankElement.innerHTML = `${currentRankData.icon} <span data-fr="${currentRankData.name}" data-es="${currentRankData.name}">${currentRankData.name}</span>`;
+            rankElement.style.background = `linear-gradient(135deg, ${currentRankData.color}, rgba(255,255,255,0.2))`;
+        }
+        
+        const progressBar = document.getElementById('progressBar');
+        const nextRankInfo = document.getElementById('nextRankInfo');
+        
+        if (progressBar && nextRankInfo) {
+            if (gameData.points >= 2000) {
+                progressBar.style.width = '100%';
+                nextRankInfo.innerHTML = currentLanguage === 'fr' ? 
+                    '👑 Rang maximum atteint ! Félicitations !' :
+                    '👑 ¡Rango máximo alcanzado! ¡Felicitaciones!';
+            } else {
+                const progress = ((gameData.points - currentRankPoints) / (nextRankPoints - currentRankPoints)) * 100;
+                progressBar.style.width = Math.min(progress, 100) + '%';
+                
+                const nextRankData = pointsRewards[nextRankPoints];
+                if (nextRankData) {
+                    nextRankInfo.innerHTML = currentLanguage === 'fr' ? 
+                        `Prochain rang : ${nextRankData.icon} ${nextRankData.name} (${nextRankPoints} pts)` :
+                        `Próximo rango: ${nextRankData.icon} ${nextRankData.name} (${nextRankPoints} pts)`;
                 }
             }
         }
+    };
 
-        function generateQR() {
-            document.getElementById('qrCode').style.display = 'block';
-            document.getElementById('qrCode').innerHTML = `
-                <div style="font-size: 0.8rem; text-align: center;">
-                    <div style="margin-bottom: 10px;">📱 QR Code généré !</div>
-                    <div style="background: white; padding: 10px; border-radius: 8px; color: black;">
-                        ${playerData.firstName} ${playerData.lastName}<br>
-                        Badges: ${gameData.badges.length}/6<br>
-                        Score: ${gameData.points} pts<br>
-                        Entreprises: ${gameData.visitedCompanies.length}
-                    </div>
-                </div>
+    window.showPointsAnimation = function(points) {
+        const pointsElement = document.createElement('div');
+        pointsElement.textContent = `+${points} pts!`;
+        pointsElement.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, #f39200, #95c11f);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            z-index: 3000;
+            border: 4px solid white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            animation: pointsPopup 2s ease-out forwards;
+            pointer-events: none;
+        `;
+        
+        if (!document.getElementById('pointsAnimationStyle')) {
+            const style = document.createElement('style');
+            style.id = 'pointsAnimationStyle';
+            style.textContent = `
+                @keyframes pointsPopup {
+                    0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+                    20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+                    40% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                    100% { transform: translate(-50%, -80%) scale(0.8); opacity: 0; }
+                }
             `;
+            document.head.appendChild(style);
         }
-
-        // Fonction pour télécharger le rapport en PDF
-        function downloadPDFReport() {
-            if (typeof window.jspdf === 'undefined') {
-                alert('Erreur : Bibliothèque PDF non chargée. Téléchargement du rapport en texte...');
-                downloadReport();
-                return;
+        
+        document.body.appendChild(pointsElement);
+        
+        setTimeout(() => {
+            if (pointsElement.parentNode) {
+                pointsElement.parentNode.removeChild(pointsElement);
             }
+        }, 2000);
+    };
 
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+    // Fonction pour mettre à jour le compteur d'entreprises visitées
+    window.updateCompaniesCounter = function() {
+        const companyInputs = document.querySelectorAll('.company-name-input');
+        let count = 0;
+        gameData.visitedCompanies = [];
+        
+        companyInputs.forEach(input => {
+            if (input.value.trim() !== '') {
+                count++;
+                gameData.visitedCompanies.push(input.value.trim());
+            }
+        });
+        
+        document.getElementById('companiesVisitedCounter').textContent = count;
+    };
 
-            let currentRank = 'Débutant Motivé';
-            const sortedRanks = Object.keys(pointsRewards).map(Number).sort((a, b) => a - b);
-            for (const points of sortedRanks) {
-                if (gameData.points >= points) {
-                    currentRank = pointsRewards[points].name;
+    // Fonctions de suivi
+    window.toggleCheck = function(checkbox) {
+        checkbox.classList.toggle('checked');
+    };
+
+    // Fonctions des questions
+    window.selectQuestion = function(questionItem) {
+        document.querySelectorAll('.question-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+        
+        questionItem.classList.add('selected');
+        
+        setTimeout(() => {
+            alert(currentLanguage === 'fr' ? 
+                'Question sélectionnée ! Tu peux maintenant la poser aux entreprises.' :
+                '¡Pregunta seleccionada! Ahora puedes hacerla a las empresas.');
+        }, 200);
+    };
+
+    window.addPersonalQuestion = function() {
+        const question = prompt(currentLanguage === 'fr' ? 
+            'Écris ta question personnelle :' :
+            'Escribe tu pregunta personal:');
+        
+        if (question) {
+            const questionsContainer = document.querySelector('.questions-container');
+            const questionItem = document.createElement('div');
+            questionItem.className = 'question-item';
+            questionItem.onclick = function() { selectQuestion(this); };
+            questionItem.innerHTML = `
+                <div class="question-icon">✏️</div>
+                <div>${question}</div>
+            `;
+            
+            const button = document.querySelector('.personal-questions');
+            questionsContainer.insertBefore(questionItem, button);
+        }
+    };
+
+    // Fonctions de validation
+    window.unlockBadge = function(badge, level) {
+        if (!gameData.badges.includes(level)) {
+            gameData.badges.push(level);
+            badge.classList.add('unlocked');
+            
+            setTimeout(() => {
+                alert(currentLanguage === 'fr' ? 
+                    `Badge ${level} débloqué ! Félicitations !` :
+                    `¡Insignia ${level} desbloqueada! ¡Felicitaciones!`);
+            }, 300);
+        }
+    };
+
+    window.updateMobility = function() {
+        const steps = parseFloat(document.getElementById('steps').value) || 0;
+        const bike = parseFloat(document.getElementById('bike').value) || 0;
+        const publicTransport = document.getElementById('publicTransport').checked;
+        const carpool = document.getElementById('carpool').checked;
+        
+        gameData.mobility = { steps, bike, publicTransport, carpool };
+        
+        let ecoScore = 0;
+        ecoScore += Math.floor(steps / 100);
+        ecoScore += bike * 20;
+        if (publicTransport) ecoScore += 50;
+        if (carpool) ecoScore += 30;
+        
+        document.getElementById('ecoScore').textContent = ecoScore;
+        
+        if (ecoScore >= 100) {
+            const ecoBadge = document.querySelector('.ml-badge-bonus');
+            if (!ecoBadge.classList.contains('unlocked')) {
+                unlockBadge(ecoBadge, 6);
+                if (!gameData.completedChallenges.includes(6)) {
+                    gameData.completedChallenges.push(6);
+                    gameData.points += challengePoints[6];
+                    updatePointsDisplay();
+                    showPointsAnimation(challengePoints[6]);
                 }
             }
+        }
+    };
 
-            doc.setFillColor(243, 146, 0);
-            doc.rect(0, 0, 210, 40, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(24);
-            doc.setFont(undefined, 'bold');
-            doc.text('RAPPORT MISSION EMPLOI', 105, 20, { align: 'center' });
-            doc.setFontSize(12);
-            doc.text('Forum Mission Locale Pays Basque', 105, 30, { align: 'center' });
+    window.generateQR = function() {
+        document.getElementById('qrCode').style.display = 'block';
+        document.getElementById('qrCode').innerHTML = `
+            <div style="font-size: 0.8rem; text-align: center;">
+                <div style="margin-bottom: 10px;">📱 QR Code généré !</div>
+                <div style="background: white; padding: 10px; border-radius: 8px; color: black;">
+                    ${playerData.firstName} ${playerData.lastName}<br>
+                    Badges: ${gameData.badges.length}/6<br>
+                    Score: ${gameData.points} pts<br>
+                    Entreprises: ${gameData.visitedCompanies.length}
+                </div>
+            </div>
+        `;
+    };
 
-            doc.setTextColor(0, 0, 0);
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('PARTICIPANT', 20, 55);
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            doc.text(`Nom: ${playerData.firstName} ${playerData.lastName}`, 20, 65);
-            doc.text(`Date: ${new Date().toLocaleDateString('fr-FR')}`, 20, 72);
+    // Fonction pour télécharger le rapport en PDF
+    window.downloadPDFReport = function() {
+        if (typeof window.jspdf === 'undefined') {
+            alert('Erreur : Bibliothèque PDF non chargée. Téléchargement du rapport en texte...');
+            downloadReport();
+            return;
+        }
 
-            doc.setFillColor(149, 193, 31);
-            doc.rect(0, 80, 210, 35, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(16);
-            doc.setFont(undefined, 'bold');
-            doc.text(`SCORE TOTAL: ${gameData.points} POINTS`, 105, 95, { align: 'center' });
-            doc.setFontSize(12);
-            doc.text(`Rang: ${currentRank}`, 105, 105, { align: 'center' });
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
 
-            doc.setTextColor(0, 0, 0);
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('BADGES OBTENUS', 20, 130);
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            
-            const badges = [
-                { level: 1, name: 'Premier Contact', points: 100 },
-                { level: 2, name: 'Communicateur', points: 150 },
-                { level: 3, name: 'Candidat Pro', points: 200 },
-                { level: 4, name: 'Networker', points: 300 },
-                { level: 5, name: 'Job Hunter', points: 500 },
-                { level: 6, name: 'Eco-Warrior', points: 250 }
-            ];
+        let currentRank = 'Débutant Motivé';
+        const sortedRanks = Object.keys(pointsRewards).map(Number).sort((a, b) => a - b);
+        for (const points of sortedRanks) {
+            if (gameData.points >= points) {
+                currentRank = pointsRewards[points].name;
+            }
+        }
 
-            let yPos = 140;
-            badges.forEach(badge => {
-                const obtained = gameData.badges.includes(badge.level) ? '✓' : '✗';
-                doc.text(`${obtained} ${badge.name} (+${badge.points} pts)`, 25, yPos);
+        doc.setFillColor(243, 146, 0);
+        doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(24);
+        doc.setFont(undefined, 'bold');
+        doc.text('RAPPORT MISSION EMPLOI', 105, 20, { align: 'center' });
+        doc.setFontSize(12);
+        doc.text('Forum Mission Locale Pays Basque', 105, 30, { align: 'center' });
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('PARTICIPANT', 20, 55);
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Nom: ${playerData.firstName} ${playerData.lastName}`, 20, 65);
+        doc.text(`Date: ${new Date().toLocaleDateString('fr-FR')}`, 20, 72);
+
+        doc.setFillColor(149, 193, 31);
+        doc.rect(0, 80, 210, 35, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(16);
+        doc.setFont(undefined, 'bold');
+        doc.text(`SCORE TOTAL: ${gameData.points} POINTS`, 105, 95, { align: 'center' });
+        doc.setFontSize(12);
+        doc.text(`Rang: ${currentRank}`, 105, 105, { align: 'center' });
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('BADGES OBTENUS', 20, 130);
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        
+        const badges = [
+            { level: 1, name: 'Premier Contact', points: 100 },
+            { level: 2, name: 'Communicateur', points: 150 },
+            { level: 3, name: 'Candidat Pro', points: 200 },
+            { level: 4, name: 'Networker', points: 300 },
+            { level: 5, name: 'Job Hunter', points: 500 },
+            { level: 6, name: 'Eco-Warrior', points: 250 }
+        ];
+
+        let yPos = 140;
+        badges.forEach(badge => {
+            const obtained = gameData.badges.includes(badge.level) ? '✓' : '✗';
+            doc.text(`${obtained} ${badge.name} (+${badge.points} pts)`, 25, yPos);
+            yPos += 7;
+        });
+
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('ENTREPRISES VISITEES', 20, yPos + 10);
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Nombre total: ${gameData.visitedCompanies.length}`, 20, yPos + 20);
+        
+        yPos += 30;
+        if (gameData.visitedCompanies.length > 0) {
+            gameData.visitedCompanies.forEach((company, index) => {
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                doc.text(`${index + 1}. ${company}`, 25, yPos);
                 yPos += 7;
             });
-
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('ENTREPRISES VISITEES', 20, yPos + 10);
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            doc.text(`Nombre total: ${gameData.visitedCompanies.length}`, 20, yPos + 20);
-            
-            yPos += 30;
-            if (gameData.visitedCompanies.length > 0) {
-                gameData.visitedCompanies.forEach((company, index) => {
-                    if (yPos > 270) {
-                        doc.addPage();
-                        yPos = 20;
-                    }
-                    doc.text(`${index + 1}. ${company}`, 25, yPos);
-                    yPos += 7;
-                });
-            } else {
-                doc.text('Aucune entreprise visitee', 25, yPos);
-                yPos += 7;
-            }
-
-            if (yPos > 240) {
-                doc.addPage();
-                yPos = 20;
-            }
-            
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('MOBILITE DURABLE', 20, yPos + 10);
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            yPos += 20;
-            doc.text(`Nombre de pas: ${gameData.mobility.steps}`, 25, yPos);
+        } else {
+            doc.text('Aucune entreprise visitee', 25, yPos);
             yPos += 7;
-            doc.text(`Velo: ${gameData.mobility.bike} km`, 25, yPos);
-            yPos += 7;
-            doc.text(`Transport public: ${gameData.mobility.publicTransport ? 'Oui' : 'Non'}`, 25, yPos);
-            yPos += 7;
-            doc.text(`Covoiturage: ${gameData.mobility.carpool ? 'Oui' : 'Non'}`, 25, yPos);
-            yPos += 7;
-            doc.text(`Score Eco: ${document.getElementById('ecoScore').textContent} points`, 25, yPos);
-
-            const pageCount = doc.internal.getNumberOfPages();
-            for (let i = 1; i <= pageCount; i++) {
-                doc.setPage(i);
-                doc.setFontSize(9);
-                doc.setTextColor(128, 128, 128);
-                doc.text(`Page ${i} / ${pageCount}`, 105, 290, { align: 'center' });
-            }
-
-            doc.save(`rapport-mission-emploi-${playerData.firstName}-${playerData.lastName}.pdf`);
         }
 
-        function downloadReport() {
-            let currentRank = 'Débutant Motivé';
-            const sortedRanks = Object.keys(pointsRewards).map(Number).sort((a, b) => a - b);
-            for (const points of sortedRanks) {
-                if (gameData.points >= points) {
-                    currentRank = pointsRewards[points].name;
-                }
+        if (yPos > 240) {
+            doc.addPage();
+            yPos = 20;
+        }
+        
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('MOBILITE DURABLE', 20, yPos + 10);
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        yPos += 20;
+        doc.text(`Nombre de pas: ${gameData.mobility.steps}`, 25, yPos);
+        yPos += 7;
+        doc.text(`Velo: ${gameData.mobility.bike} km`, 25, yPos);
+        yPos += 7;
+        doc.text(`Transport public: ${gameData.mobility.publicTransport ? 'Oui' : 'Non'}`, 25, yPos);
+        yPos += 7;
+        doc.text(`Covoiturage: ${gameData.mobility.carpool ? 'Oui' : 'Non'}`, 25, yPos);
+        yPos += 7;
+        doc.text(`Score Eco: ${document.getElementById('ecoScore').textContent} points`, 25, yPos);
+
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(9);
+            doc.setTextColor(128, 128, 128);
+            doc.text(`Page ${i} / ${pageCount}`, 105, 290, { align: 'center' });
+        }
+
+        doc.save(`rapport-mission-emploi-${playerData.firstName}-${playerData.lastName}.pdf`);
+    };
+
+    window.downloadReport = function() {
+        let currentRank = 'Débutant Motivé';
+        const sortedRanks = Object.keys(pointsRewards).map(Number).sort((a, b) => a - b);
+        for (const points of sortedRanks) {
+            if (gameData.points >= points) {
+                currentRank = pointsRewards[points].name;
             }
-            
-            let companiesList = '';
-            if (gameData.visitedCompanies.length > 0) {
-                companiesList = gameData.visitedCompanies.map((company, index) => 
-                    `${index + 1}. ${company}`
-                ).join('\n');
-            } else {
-                companiesList = 'Aucune entreprise visitée';
-            }
-            
-            const report = `
+        }
+        
+        let companiesList = '';
+        if (gameData.visitedCompanies.length > 0) {
+            companiesList = gameData.visitedCompanies.map((company, index) => 
+                `${index + 1}. ${company}`
+            ).join('\n');
+        } else {
+            companiesList = 'Aucune entreprise visitée';
+        }
+        
+        const report = `
 RAPPORT MISSION EMPLOI
 ======================
 
@@ -4280,48 +4296,54 @@ MOBILITE DURABLE:
 - Score Éco: ${document.getElementById('ecoScore').textContent} points
 
 Date: ${new Date().toLocaleDateString()}
-            `;
-            
-            const blob = new Blob([report], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `rapport-mission-emploi-${playerData.firstName}-${playerData.lastName}.txt`;
-            link.click();
-        }
+        `;
+        
+        const blob = new Blob([report], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `rapport-mission-emploi-${playerData.firstName}-${playerData.lastName}.txt`;
+        link.click();
+    };
 
-        function shareResults() {
-            let currentRank = 'Débutant Motivé';
-            const sortedRanks = Object.keys(pointsRewards).map(Number).sort((a, b) => a - b);
-            for (const points of sortedRanks) {
-                if (gameData.points >= points) {
-                    currentRank = pointsRewards[points].name;
-                }
-            }
-            
-            const text = `J'ai participé au Forum Mission Locale Pays Basque ! 🏆 ${gameData.points} points - Rang: ${currentRank} ! 🎯 ${gameData.badges.length}/6 badges obtenus ! 🏢 ${gameData.visitedCompanies.length} entreprises visitées ! Score éco: ${document.getElementById('ecoScore').textContent} points 🌱`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Mission Emploi - Mes résultats',
-                    text: text
-                });
-            } else {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert(currentLanguage === 'fr' ? 
-                        'Résultats copiés dans le presse-papiers !' :
-                        '¡Resultados copiados al portapapeles!');
-                });
+    window.shareResults = function() {
+        let currentRank = 'Débutant Motivé';
+        const sortedRanks = Object.keys(pointsRewards).map(Number).sort((a, b) => a - b);
+        for (const points of sortedRanks) {
+            if (gameData.points >= points) {
+                currentRank = pointsRewards[points].name;
             }
         }
+        
+        const text = `J'ai participé au Forum Mission Locale Pays Basque ! 🏆 ${gameData.points} points - Rang: ${currentRank} ! 🎯 ${gameData.badges.length}/6 badges obtenus ! 🏢 ${gameData.visitedCompanies.length} entreprises visitées ! Score éco: ${document.getElementById('ecoScore').textContent} points 🌱`;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Mission Emploi - Mes résultats',
+                text: text
+            });
+        } else {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(currentLanguage === 'fr' ? 
+                    'Résultats copiés dans le presse-papiers !' :
+                    '¡Resultados copiados al portapapeles!');
+            });
+        }
+    };
 
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            setLanguage('fr');
-            showPage(1);
-            updateMobility();
-            updatePointsDisplay();
-            updateCompaniesCounter();
-        });
-    </script>
-</body>
-</html>
+    // Initialisation au chargement de la page
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Page chargée, initialisation...');
+        
+        // Test de disponibilité des fonctions
+        console.log('showStandInfo disponible:', typeof window.showStandInfo);
+        console.log('sectorsData disponible:', typeof sectorsData);
+        
+        setLanguage('fr');
+        showPage(1);
+        updateMobility();
+        updatePointsDisplay();
+        updateCompaniesCounter();
+        
+        console.log('Initialisation terminée');
+    });
+</script>
