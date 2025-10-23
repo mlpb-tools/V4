@@ -1,0 +1,3692 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape Game Pro – Mission Forum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Muli', Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding-bottom: 100px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 15% 20%, #f39200 0%, transparent 25%),
+                radial-gradient(circle at 85% 80%, #2897d5 0%, transparent 30%),
+                linear-gradient(45deg, transparent 40%, #95c11f 40%, #95c11f 60%, transparent 60%);
+            opacity: 0.08;
+            z-index: -1;
+        }
+
+        .container {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #171718, #2897d5);
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .forum-logo {
+            width: 40px;
+            height: 40px;
+            background: #f39200;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border: 2px solid white;
+            flex-shrink: 0;
+        }
+
+        .forum-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .download-section {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+            touch-action: manipulation;
+        }
+
+        .download-btn:active {
+            transform: scale(0.95);
+            background: rgba(255,255,255,0.3);
+        }
+
+        .language-selector {
+            position: fixed;
+            top: 80px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #171718;
+            border-radius: 25px;
+            padding: 6px 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Muli', Arial, sans-serif;
+            font-size: 0.85rem;
+            touch-action: manipulation;
+        }
+
+        .lang-btn.active {
+            background: #f39200;
+            color: white;
+            border-color: #f39200;
+        }
+
+        .lang-btn:active {
+            transform: scale(0.95);
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 15px;
+            padding-bottom: 100px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-family: 'Muli', Arial, sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #171718;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+            line-height: 1.2;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background: #f39200;
+        }
+
+        .page-subtitle {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-top: 10px;
+        }
+
+        .identity-block {
+            background: linear-gradient(135deg, rgba(149,193,31,0.1), rgba(214,11,82,0.1));
+            border: 3px solid #95c11f;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .identity-block h3 {
+            color: #95c11f;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .identity-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .name-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .name-input {
+            padding: 12px 15px;
+            border: 2px solid #95c11f;
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            background: white;
+            width: 100%;
+        }
+
+        .name-input:focus {
+            border-color: #d60b52;
+            outline: none;
+            box-shadow: 0 0 10px rgba(214,11,82,0.2);
+        }
+
+        .cv-upload-section {
+            display: flex;
+            justify-content: center;
+        }
+
+        .cv-upload-area-main {
+            background: white;
+            border: 3px dashed #95c11f;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        .cv-upload-area-main:active {
+            transform: scale(0.98);
+        }
+
+        .cv-upload-area-main.has-cv {
+            border-style: solid;
+            background: rgba(149,193,31,0.1);
+        }
+
+        .cv-upload-content-main {
+            text-align: center;
+        }
+
+        .cv-upload-icon-main {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .cv-upload-text-main strong {
+            color: #171718;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .cv-upload-text-main small {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .cv-preview-main {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 10px;
+        }
+
+        .cv-file-info-main {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .cv-file-icon-main {
+            font-size: 2rem;
+            color: #95c11f;
+        }
+
+        .cv-file-name-main {
+            font-weight: 600;
+            color: #171718;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+
+        .remove-cv-main {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #d60b52;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            touch-action: manipulation;
+        }
+
+        .remove-cv-main:active {
+            transform: scale(0.9);
+        }
+
+        .forum-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.95);
+            border: 3px solid #171718;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .legend-icon {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #171718;
+            font-weight: 900;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .legend-icon.hq {
+            background: #f39200;
+            color: white;
+            clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+        }
+
+        .legend-icon.sector {
+            background: #2897d5;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .legend-icon.path {
+            background: #95c11f;
+            color: white;
+            border-radius: 50%;
+        }
+
+        .forum-map {
+            background: #ffffff;
+            border: 4px solid #171718;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 8px 8px 0px #f39200;
+            position: relative;
+        }
+
+        .forum-map::before {
+            content: '🎯 MISSION EMPLOI 🎲';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #f39200, #95c11f);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            border: 3px solid #171718;
+            white-space: nowrap;
+        }
+
+        .forum-entrance {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .entrance-sign {
+            background: linear-gradient(135deg, #2897d5, #95c11f);
+            color: white;
+            padding: 20px;
+            border: 3px solid #171718;
+            border-radius: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        .entrance-sign:active {
+            transform: scale(0.98);
+        }
+
+        .entrance-sign h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.2rem;
+        }
+
+        .entrance-sign p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .player-info {
+            margin-top: 12px;
+        }
+
+        .player-badge {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: 15px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .player-icon {
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .player-details {
+            flex: 1;
+            text-align: left;
+        }
+
+        .player-name {
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+
+        .player-status {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        .headquarters {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hq-building {
+            background: #f39200;
+            color: white;
+            border: 4px solid #171718;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            width: 100%;
+            max-width: 350px;
+            border-radius: 20px;
+            box-shadow: 6px 6px 0px #171718;
+            touch-action: manipulation;
+        }
+
+        .hq-building:active {
+            transform: scale(0.98);
+        }
+
+        .hq-flag {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .hq-building h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .hq-building h4 {
+            margin: 0 0 15px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .hq-services {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .sectors-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .sector-stand {
+            background: #ffffff;
+            border: 3px solid #171718;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            min-height: 140px;
+            border-radius: 12px;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            touch-action: manipulation;
+        }
+
+        .sector-stand:active {
+            transform: scale(0.98);
+        }
+
+        .tech-sector { 
+            background: linear-gradient(135deg, rgba(40,151,213,0.1), rgba(40,151,213,0.2));
+            border-color: #2897d5;
+        }
+
+        .resto-sector { 
+            background: linear-gradient(135deg, rgba(149,193,31,0.1), rgba(149,193,31,0.2));
+            border-color: #95c11f;
+        }
+
+        .sante-sector { 
+            background: linear-gradient(135deg, rgba(214,11,82,0.1), rgba(214,11,82,0.2));
+            border-color: #d60b52;
+        }
+
+        .commerce-sector { 
+            background: linear-gradient(135deg, rgba(163,25,91,0.1), rgba(163,25,91,0.2));
+            border-color: #a3195b;
+        }
+
+        .artisan-sector { 
+            background: linear-gradient(135deg, rgba(159,61,63,0.1), rgba(159,61,63,0.2));
+            border-color: #9f3d3f;
+        }
+
+        .service-sector { 
+            background: linear-gradient(135deg, rgba(23,23,24,0.1), rgba(23,23,24,0.2));
+            border-color: #171718;
+        }
+
+        .tourisme-sector { 
+            background: linear-gradient(135deg, rgba(40,151,213,0.1), rgba(149,193,31,0.1));
+            border-color: #2897d5;
+        }
+
+        .transport-sector { 
+            background: linear-gradient(135deg, rgba(243,146,0,0.1), rgba(243,146,0,0.2));
+            border-color: #f39200;
+        }
+
+        .custom-sector { 
+            background: linear-gradient(135deg, rgba(23,23,24,0.05), rgba(149,193,31,0.1));
+            border: 3px dashed #95c11f;
+        }
+
+        .custom-sector::after {
+            content: "NOUVEAU";
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #95c11f;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 10px;
+            transform: rotate(15deg);
+            border: 2px solid white;
+        }
+
+        .sector-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .sector-info h4 {
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: #171718;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .company-count {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .sector-tags {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .sector-tags .tag {
+            background: #171718;
+            color: white;
+            padding: 3px 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            border-radius: 10px;
+        }
+
+        .rules-container {
+            background: #ffffff;
+            border: 4px solid #171718;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 8px 8px 0px #2897d5;
+            position: relative;
+            border-radius: 20px;
+        }
+
+        .rules-container::before {
+            content: '🃏 CARTES DÉFIS 🎯';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #171718;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+        }
+
+        .challenge-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .challenge-card {
+            background: linear-gradient(135deg, #ffffff, #f8f8f8);
+            border: 3px solid #171718;
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+            touch-action: manipulation;
+        }
+
+        .challenge-card:active {
+            transform: scale(0.98);
+        }
+
+        .challenge-card.completed {
+            background: linear-gradient(135deg, #95c11f, #f39200);
+            color: white;
+            border-color: #95c11f;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-level {
+            background: #171718;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            margin-right: 15px;
+            font-size: 1.2rem;
+            border: 3px solid white;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #171718;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .challenge-card.completed .card-title {
+            color: white;
+        }
+
+        .card-mission {
+            font-size: 0.95rem;
+            color: #666;
+            margin: 15px 0;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .challenge-card.completed .card-mission {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .card-reward {
+            background: #f39200;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-weight: 700;
+            text-align: center;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-top: 12px;
+            border: 2px solid white;
+        }
+
+        .challenge-card.completed .card-reward {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .card-bonus {
+            border: 3px dashed #f39200 !important;
+        }
+
+        .card-bonus.completed {
+            border-style: solid !important;
+        }
+
+        .card-bonus::after {
+            content: "BONUS";
+            position: absolute;
+            top: -12px;
+            right: 15px;
+            background: #f39200;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 12px;
+            transform: rotate(15deg);
+            border: 2px solid white;
+        }
+
+        .card-jackpot {
+            border: 3px solid #d60b52 !important;
+        }
+
+        .card-jackpot.completed {
+            background: linear-gradient(135deg, #d60b52, #a3195b) !important;
+        }
+
+        .card-jackpot::after {
+            content: "JACKPOT";
+            position: absolute;
+            top: -12px;
+            right: 15px;
+            background: #d60b52;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 12px;
+            transform: rotate(-15deg);
+            border: 2px solid white;
+        }
+
+        .tracking-table {
+            background: #ffffff;
+            border: 4px solid #171718;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 8px 8px 0px #95c11f;
+            overflow-x: auto;
+            position: relative;
+            border-radius: 20px;
+        }
+
+        .companies-visited-summary {
+            background: linear-gradient(135deg, rgba(243,146,0,0.1), rgba(149,193,31,0.1));
+            border: 3px solid #f39200;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .companies-visited-summary h3 {
+            color: #f39200;
+            font-weight: 800;
+            margin: 0 0 15px 0;
+            font-size: 1.2rem;
+        }
+
+        .company-counter {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #171718;
+            margin: 10px 0;
+        }
+
+        .companies-list {
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .companies-list h4 {
+            color: #95c11f;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .company-item {
+            background: white;
+            border: 2px solid #95c11f;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .company-item-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .company-item-name {
+            font-weight: 700;
+            color: #171718;
+            flex: 1;
+        }
+
+        .company-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: white;
+        }
+
+        .company-row-header {
+            background: #f39200;
+            color: white;
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .company-input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 600;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+
+        .company-input:focus {
+            border-color: #f39200;
+            outline: none;
+            box-shadow: 0 0 8px rgba(243,146,0,0.3);
+        }
+
+        .checkboxes-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .checkbox-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #666;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .custom-checkbox {
+            width: 35px;
+            height: 35px;
+            border: 3px solid #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        .custom-checkbox:active {
+            transform: scale(0.9);
+        }
+
+        .custom-checkbox.checked {
+            background: #95c11f;
+            border-color: #95c11f;
+        }
+
+        .custom-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .questions-container {
+            background: rgba(255,255,255,0.98);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border: 3px solid #171718;
+        }
+
+        .question-item {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, rgba(40,151,213,0.1) 0%, rgba(214,11,82,0.1) 100%);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            touch-action: manipulation;
+        }
+
+        .question-item:active {
+            transform: scale(0.98);
+        }
+
+        .question-item.selected {
+            background: linear-gradient(90deg, #f39200, #95c11f);
+            color: white;
+            border-color: #171718;
+        }
+
+        .question-icon {
+            background: #2897d5;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            border: 2px solid white;
+            flex-shrink: 0;
+        }
+
+        .question-item.selected .question-icon {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .question-text {
+            flex: 1;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .personal-questions {
+            background: linear-gradient(45deg, #d60b52, #a3195b);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 1rem;
+            border: 3px solid white;
+            width: 100%;
+            touch-action: manipulation;
+        }
+
+        .personal-questions:active {
+            transform: scale(0.98);
+        }
+
+        .validation-container {
+            background: rgba(255,255,255,0.98);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            border: 3px solid #171718;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #f39200, #d60b52);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 15px 0;
+            border: 4px solid #171718;
+            box-shadow: 6px 6px 0px #95c11f;
+        }
+
+        .score-display h2 {
+            margin: 0 0 12px 0;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .total-points {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .current-rank {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .progress-container {
+            margin-top: 15px;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255,255,255,0.3);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #95c11f, #2897d5);
+            height: 100%;
+            width: 0%;
+            transition: width 0.8s ease;
+            border-radius: 4px;
+        }
+
+        .next-rank-info {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .sticker-collection {
+            background: linear-gradient(135deg, #f39200, #95c11f);
+            border: 4px solid #171718;
+            border-radius: 20px;
+            padding: 25px 15px;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 8px 8px 0px #2897d5;
+        }
+
+        .sticker-collection::before {
+            content: "🏆 BADGES 🏆";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #171718;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+        }
+
+        .sticker-collection h3 {
+            color: white;
+            margin: 20px 0 25px 0;
+            font-size: 1.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 800;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .badge-sticker {
+            background: white;
+            border: 4px solid #171718;
+            border-radius: 50%;
+            width: 100%;
+            aspect-ratio: 1;
+            max-width: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+            margin: 0 auto;
+            touch-action: manipulation;
+        }
+
+        .badge-sticker:active {
+            transform: scale(0.95);
+        }
+
+        .badge-sticker.unlocked {
+            background: linear-gradient(135deg, #f39200, #95c11f);
+            color: white;
+            border-color: #95c11f;
+        }
+
+        .badge-sticker::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 25px;
+            height: 25px;
+            background: #d60b52;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 800;
+            border: 2px solid white;
+        }
+
+        .badge-sticker.unlocked::before {
+            content: '✓';
+            display: flex;
+        }
+
+        .badge-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .badge-name {
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-align: center;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 0 5px;
+        }
+
+        .ml-badge-1 { border-color: #2897d5; }
+        .ml-badge-1.unlocked { background: linear-gradient(135deg, #2897d5, #95c11f); }
+
+        .ml-badge-2 { border-color: #f39200; }
+        .ml-badge-2.unlocked { background: linear-gradient(135deg, #f39200, #d60b52); }
+
+        .ml-badge-3 { border-color: #95c11f; }
+        .ml-badge-3.unlocked { background: linear-gradient(135deg, #95c11f, #2897d5); }
+
+        .ml-badge-4 { border-color: #d60b52; }
+        .ml-badge-4.unlocked { background: linear-gradient(135deg, #d60b52, #f39200); }
+
+        .ml-badge-5 { border-color: #a3195b; }
+        .ml-badge-5.unlocked { background: linear-gradient(135deg, #a3195b, #95c11f); }
+
+        .ml-badge-bonus { 
+            border-color: #171718;
+            border-style: dashed;
+            border-width: 3px;
+        }
+        .ml-badge-bonus.unlocked { 
+            background: linear-gradient(135deg, #171718, #f39200);
+            border-style: solid;
+        }
+
+        .mobility-tracker {
+            background: linear-gradient(135deg, rgba(149,193,31,0.1), rgba(95,195,31,0.1));
+            border: 3px dashed #95c11f;
+            border-radius: 20px;
+            padding: 25px 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .mobility-tracker h3 {
+            color: #95c11f;
+            font-weight: 800;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .mobility-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .mobility-item {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+        }
+
+        .mobility-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .mobility-counter input[type="number"] {
+            width: 100%;
+            max-width: 100px;
+            padding: 8px;
+            border: 2px solid #95c11f;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            margin: 8px auto;
+            font-size: 1rem;
+        }
+
+        .mobility-counter input[type="checkbox"] {
+            width: 30px;
+            height: 30px;
+            margin: 8px auto;
+            cursor: pointer;
+        }
+
+        .mobility-counter label {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .eco-score {
+            background: linear-gradient(45deg, #95c11f, #2897d5);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            display: inline-block;
+            min-width: 200px;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .eco-score-value {
+            font-size: 1.6rem;
+            margin: 0 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .action-btn {
+            background: linear-gradient(45deg, #2897d5, #d60b52);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            border: 3px solid white;
+            width: 100%;
+            touch-action: manipulation;
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .qr-code {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            aspect-ratio: 1;
+            background: #171718;
+            border-radius: 15px;
+            margin: 20px auto;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 3px solid #f39200;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            padding: 8px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 2px solid #171718;
+        }
+
+        .nav-btn {
+            background: #ffffff;
+            border: 3px solid #171718;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            touch-action: manipulation;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.9);
+        }
+
+        .nav-btn.active {
+            background: #171718;
+            color: white;
+            box-shadow: 3px 3px 0px #f39200;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 20px auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 95%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            border: 4px solid #171718;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #f39200, #95c11f);
+            color: white;
+            padding: 20px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin: 0;
+            flex: 1;
+        }
+
+        .close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255,255,255,0.3);
+            flex-shrink: 0;
+            touch-action: manipulation;
+        }
+
+        .close:active {
+            transform: scale(0.9);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .companies-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .company-card {
+            background: linear-gradient(135deg, rgba(243,146,0,0.1), rgba(149,193,31,0.1));
+            border: 3px solid #f39200;
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .company-name {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #171718;
+            margin-bottom: 10px;
+        }
+
+        .company-info {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .company-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: #2897d5;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .company-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .action-icon {
+            background: #95c11f;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            border: 2px solid white;
+            touch-action: manipulation;
+        }
+
+        .action-icon:active {
+            transform: scale(0.9);
+        }
+
+        .add-company-btn {
+            background: linear-gradient(45deg, #d60b52, #a3195b);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            border: 3px solid white;
+            width: 100%;
+            touch-action: manipulation;
+        }
+
+        .add-company-btn:active {
+            transform: scale(0.98);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #d60b52;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: 2px solid white;
+            touch-action: manipulation;
+        }
+
+        .delete-btn:active {
+            transform: scale(0.9);
+        }
+
+        .custom-sector-modal .modal-body {
+            padding: 15px;
+        }
+
+        .form-section {
+            background: linear-gradient(135deg, rgba(149,193,31,0.1), rgba(40,151,213,0.1));
+            border: 3px solid #95c11f;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-section h3 {
+            color: #95c11f;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #171718;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #95c11f;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-input:focus {
+            border-color: #2897d5;
+            outline: none;
+            box-shadow: 0 0 8px rgba(40,151,213,0.3);
+        }
+
+        .form-btn {
+            background: linear-gradient(45deg, #95c11f, #2897d5);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            font-size: 1rem;
+            border: 3px solid white;
+            touch-action: manipulation;
+        }
+
+        .form-btn:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes playerAppear {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes pointsPopup {
+            0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+            20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            40% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -80%) scale(0.8); opacity: 0; }
+        }
+
+        @keyframes badgeUnlock {
+            0% { transform: scale(0.3) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.3) rotate(180deg); opacity: 0.8; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+        }
+
+        /* Amélioration tactile */
+        @media (hover: none) {
+            .sector-stand:hover,
+            .challenge-card:hover,
+            .question-item:hover,
+            .badge-sticker:hover {
+                transform: none;
+            }
+        }
+
+        /* Optimisations supplémentaires pour petits écrans */
+        @media (max-width: 380px) {
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .forum-title {
+                font-size: 1rem;
+            }
+
+            .sectors-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .badges-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .badge-sticker {
+                max-width: 110px;
+            }
+
+            .badge-icon {
+                font-size: 2rem;
+            }
+
+            .badge-name {
+                font-size: 0.7rem;
+            }
+
+            .mobility-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Optimisation pour les très petits écrans */
+        @media (max-width: 320px) {
+            .page-title {
+                font-size: 1.3rem;
+            }
+
+            .header-banner {
+                padding: 10px;
+            }
+
+            .forum-logo {
+                width: 35px;
+                height: 35px;
+                font-size: 1.1rem;
+            }
+
+            .checkboxes-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Bandeau d'accueil -->
+        <div class="header-banner">
+            <div class="logo-section">
+                <div class="forum-logo">🎯</div>
+                <h1 class="forum-title" id="forumTitleHeader">Forum Mission Locale Pays Basque</h1>
+            </div>
+            <div class="download-section">
+                <button class="download-btn" onclick="downloadLogo()">📥 Logo</button>
+                <button class="download-btn" onclick="downloadForumName()">📥 Nom</button>
+            </div>
+        </div>
+
+        <!-- Sélecteur de langue -->
+        <div class="language-selector">
+            <button class="lang-btn active" onclick="setLanguage('fr')">🇫🇷</button>
+            <button class="lang-btn" onclick="setLanguage('es')">🇪🇸</button>
+        </div>
+
+        <!-- Page 1 - Plan du Forum -->
+        <div class="page active" id="page1">
+            <!-- Bloc Identité -->
+            <div class="identity-block">
+                <h3 data-fr="👤 Mon Identité" data-es="👤 Mi Identidad">👤 Mon Identité</h3>
+                <div class="identity-grid">
+                    <div class="name-section">
+                        <input type="text" id="firstName" class="name-input" placeholder="Prénom" data-fr="Prénom" data-es="Nombre" oninput="updateIdentity()">
+                        <input type="text" id="lastName" class="name-input" placeholder="Nom" data-fr="Nom" data-es="Apellido" oninput="updateIdentity()">
+                    </div>
+                    
+                    <div class="cv-upload-section">
+                        <div class="cv-upload-area-main" id="cvUploadAreaMain" onclick="triggerMainCVUpload()">
+                            <div class="cv-upload-content-main" id="cvUploadContentMain">
+                                <div class="cv-upload-icon-main">📄</div>
+                                <div class="cv-upload-text-main">
+                                    <strong data-fr="Mon CV" data-es="Mi CV">Mon CV</strong>
+                                    <br>
+                                    <small data-fr="PDF, JPG, DOC" data-es="PDF, JPG, DOC">PDF, JPG, DOC</small>
+                                </div>
+                            </div>
+                            <div class="cv-preview-main" id="cvPreviewMain" style="display: none;">
+                                <div class="cv-file-info-main">
+                                    <div class="cv-file-icon-main">📄</div>
+                                    <div class="cv-file-name-main" id="cvFileNameMain"></div>
+                                </div>
+                                <button class="remove-cv-main" onclick="removeMainCV(event)" title="Supprimer">×</button>
+                            </div>
+                        </div>
+                        <input type="file" id="cvFileInputMain" accept=".pdf,.jpg,.jpeg,.doc,.docx" style="display: none;" onchange="handleMainCVUpload(event)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title" data-fr="Plan du forum" data-es="Plano del foro">Plan du forum</h1>
+                <p class="page-subtitle" data-fr="Découvre les secteurs" data-es="Descubre los sectores">Découvre les secteurs</p>
+            </div>
+            
+            <!-- Légende du plan -->
+            <div class="forum-legend">
+                <div class="legend-item">
+                    <div class="legend-icon hq">🏠</div>
+                    <span data-fr="QG - Mission Locale" data-es="QG - Misión Local">QG - Mission Locale</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon sector">🏢</div>
+                    <span data-fr="Secteurs d'activité" data-es="Sectores">Secteurs d'activité</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon path">→</div>
+                    <span data-fr="Parcours libre" data-es="Recorrido">Parcours libre</span>
+                </div>
+            </div>
+            
+            <div class="forum-map">
+                <!-- Entrée du Forum -->
+                <div class="forum-entrance">
+                    <div class="entrance-sign" onclick="registerPlayer()">
+                        <h3 data-fr="🚪 ENTRÉE FORUM" data-es="🚪 ENTRADA">🚪 ENTRÉE FORUM</h3>
+                        <p data-fr="Clique pour t'identifier" data-es="Identifícate">Clique pour t'identifier</p>
+                        <div id="playerInfo" class="player-info" style="display: none;">
+                            <div class="player-badge">
+                                <span class="player-icon">👤</span>
+                                <div class="player-details">
+                                    <div class="player-name" id="playerName"></div>
+                                    <div class="player-status" data-fr="Mission en cours..." data-es="Misión en curso...">Mission en cours...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mission Locale - QG -->
+                <div class="headquarters">
+                    <div class="hq-building" onclick="showStandInfo('mission')">
+                        <div class="hq-flag">🏠</div>
+                        <h3 data-fr="QUARTIER GÉNÉRAL" data-es="CUARTEL">QUARTIER GÉNÉRAL</h3>
+                        <h4 data-fr="Mission Locale" data-es="Misión Local">Mission Locale</h4>
+                        <div class="hq-services">
+                            <span data-fr="• Départ Mission" data-es="• Inicio">• Départ Mission</span>
+                            <span data-fr="• Validation Badges" data-es="• Validación">• Validation Badges</span>
+                            <span data-fr="• Bilan Final" data-es="• Balance">• Bilan Final</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secteurs d'activité -->
+                <div class="sectors-grid">
+                    <div class="sector-stand tech-sector" onclick="showStandInfo('tech')">
+                        <div class="sector-icon">💻</div>
+                        <div class="sector-info">
+                            <h4 data-fr="TECH & DIGITAL" data-es="TECH & DIGITAL">TECH & DIGITAL</h4>
+                            <div class="company-count" data-fr="5 entreprises" data-es="5 empresas">5 entreprises</div>
+                            <div class="sector-tags">
+                                <span class="tag">Dev</span>
+                                <span class="tag">Web</span>
+                                <span class="tag">IA</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sector-stand resto-sector" onclick="showStandInfo('resto')">
+                        <div class="sector-icon">🍽️</div>
+                        <div class="sector-info">
+                            <h4 data-fr="RESTAURATION" data-es="RESTAURACIÓN">RESTAURATION</h4>
+                            <div class="company-count" data-fr="8 entreprises" data-es="8 empresas">8 entreprises</div>
+                            <div class="sector-tags">
+                                <span class="tag">Chef</span>
+                                <span class="tag">Service</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sector-stand sante-sector" onclick="showStandInfo('sante')">
+                        <div class="sector-icon">🏥</div>
+                        <div class="sector-info">
+                            <h4 data-fr="SANTÉ & SOCIAL" data-
+<div class="sector-stand commerce-sector" onclick="showStandInfo('commerce')">
+                    <div class="sector-icon">🛍️</div>
+                    <div class="sector-info">
+                        <h4 data-fr="COMMERCE" data-es="COMERCIO">COMMERCE</h4>
+                        <div class="company-count" data-fr="12 entreprises" data-es="12 empresas">12 entreprises</div>
+                        <div class="sector-tags">
+                            <span class="tag">Vente</span>
+                            <span class="tag">Accueil</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sector-stand artisan-sector" onclick="showStandInfo('artisan')">
+                    <div class="sector-icon">🔨</div>
+                    <div class="sector-info">
+                        <h4 data-fr="ARTISANAT & BTP" data-es="ARTESANÍA">ARTISANAT & BTP</h4>
+                        <div class="company-count" data-fr="7 entreprises" data-es="7 empresas">7 entreprises</div>
+                        <div class="sector-tags">
+                            <span class="tag">Bois</span>
+                            <span class="tag">Bâti</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sector-stand service-sector" onclick="showStandInfo('service')">
+                    <div class="sector-icon">🏢</div>
+                    <div class="sector-info">
+                        <h4 data-fr="SERVICES" data-es="SERVICIOS">SERVICES</h4>
+                        <div class="company-count" data-fr="9 entreprises" data-es="9 empresas">9 entreprises</div>
+                        <div class="sector-tags">
+                            <span class="tag">Admin</span>
+                            <span class="tag">Conseil</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sector-stand tourisme-sector" onclick="showStandInfo('tourisme')">
+                    <div class="sector-icon">🏨</div>
+                    <div class="sector-info">
+                        <h4 data-fr="TOURISME" data-es="TURISMO">TOURISME</h4>
+                        <div class="company-count" data-fr="6 entreprises" data-es="6 empresas">6 entreprises</div>
+                        <div class="sector-tags">
+                            <span class="tag">Hôtel</span>
+                            <span class="tag">Guide</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sector-stand transport-sector" onclick="showStandInfo('transport')">
+                    <div class="sector-icon">🚛</div>
+                    <div class="sector-info">
+                        <h4 data-fr="TRANSPORT" data-es="TRANSPORTE">TRANSPORT</h4>
+                        <div class="company-count" data-fr="4 entreprises" data-es="4 empresas">4 entreprises</div>
+                        <div class="sector-tags">
+                            <span class="tag">Conduite</span>
+                            <span class="tag">Stock</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sector-stand custom-sector" onclick="showCustomSectorModal()">
+                    <div class="sector-icon">➕</div>
+                    <div class="sector-info">
+                        <h4 data-fr="AJOUTER" data-es="AGREGAR">AJOUTER</h4>
+                        <div class="company-count" data-fr="Nouveau secteur" data-es="Nuevo sector">Nouveau secteur</div>
+                        <div class="sector-tags">
+                            <span class="tag">Nouveau</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2 - Règles du jeu -->
+    <div class="page" id="page2">
+        <div class="page-header">
+            <h1 class="page-title" data-fr="Ta mission" data-es="Tu misión">Ta mission</h1>
+            <p class="page-subtitle" data-fr="5 niveaux de défis" data-es="5 niveles">5 niveaux de défis</p>
+        </div>
+        
+        <div class="rules-container">
+            <div class="challenge-cards">
+                <div class="challenge-card" onclick="completeChallenge(this, 1)">
+                    <div class="card-header">
+                        <div class="card-level">1</div>
+                        <div class="card-title" data-fr="Premier Contact" data-es="Primer Contacto">Premier Contact</div>
+                    </div>
+                    <div class="card-mission" data-fr="Dire bonjour et se présenter à un employeur. Donner son prénom, son âge et ce qu'on recherche." data-es="Decir hola y presentarse a un empleador.">Dire bonjour et se présenter à un employeur. Donner son prénom, son âge et ce qu'on recherche.</div>
+                    <div class="card-reward">🎯 <span data-fr="Badge Premier Contact" data-es="Insignia">Badge Premier Contact</span> <strong>+100 pts</strong></div>
+                </div>
+                
+                <div class="challenge-card" onclick="completeChallenge(this, 2)">
+                    <div class="card-header">
+                        <div class="card-level">2</div>
+                        <div class="card-title" data-fr="Communicateur" data-es="Comunicador">Communicateur</div>
+                    </div>
+                    <div class="card-mission" data-fr="Poser une question sur le métier, les missions ou les qualités recherchées. Montrer son intérêt !" data-es="Hacer una pregunta sobre el oficio.">Poser une question sur le métier, les missions ou les qualités recherchées. Montrer son intérêt !</div>
+                    <div class="card-reward">🗣️ <span data-fr="Badge Communicateur" data-es="Insignia">Badge Communicateur</span> <strong>+150 pts</strong></div>
+                </div>
+                
+                <div class="challenge-card" onclick="completeChallenge(this, 3)">
+                    <div class="card-header">
+                        <div class="card-level">3</div>
+                        <div class="card-title" data-fr="Candidat Pro" data-es="Candidato Pro">Candidat Pro</div>
+                    </div>
+                    <div class="card-mission" data-fr="Déposer son CV ou laisser ses coordonnées. Faire bonne impression avec un document soigné." data-es="Entregar su CV o dejar sus datos.">Déposer son CV ou laisser ses coordonnées. Faire bonne impression avec un document soigné.</div>
+                    <div class="card-reward">📋 <span data-fr="Badge Candidat Pro" data-es="Insignia">Badge Candidat Pro</span> <strong>+200 pts</strong></div>
+                </div>
+                
+                <div class="challenge-card card-bonus" onclick="completeChallenge(this, 4)">
+                    <div class="card-header">
+                        <div class="card-level">4</div>
+                        <div class="card-title" data-fr="Networker" data-es="Networker">Networker</div>
+                    </div>
+                    <div class="card-mission" data-fr="Obtenir une promesse de stage, période d'immersion ou contact privilégié. Créer du lien !" data-es="Obtener una promesa de prácticas.">Obtenir une promesse de stage, période d'immersion ou contact privilégié. Créer du lien !</div>
+                    <div class="card-reward">🤝 <span data-fr="Badge Networker" data-es="Insignia">Badge Networker</span> <strong>+300 pts</strong></div>
+                </div>
+                
+                <div class="challenge-card card-jackpot" onclick="completeChallenge(this, 5)">
+                    <div class="card-header">
+                        <div class="card-level">5</div>
+                        <div class="card-title" data-fr="Job Hunter" data-es="Job Hunter">Job Hunter</div>
+                    </div>
+                    <div class="card-mission" data-fr="Être rappelé pour un entretien d'embauche ou obtenir une proposition concrète. Le Graal !" data-es="Ser llamado para una entrevista.">Être rappelé pour un entretien d'embauche ou obtenir une proposition concrète. Le Graal !</div>
+                    <div class="card-reward">🏆 <span data-fr="Badge Job Hunter" data-es="Insignia">Badge Job Hunter</span> <strong>+500 pts</strong></div>
+                </div>
+                
+                <div class="challenge-card card-bonus" onclick="completeChallenge(this, 6)">
+                    <div class="card-header">
+                        <div class="card-level">🌱</div>
+                        <div class="card-title" data-fr="Éco-Warrior" data-es="Eco-Warrior">Éco-Warrior</div>
+                    </div>
+                    <div class="card-mission" data-fr="Venir au forum en transport éco-responsable : vélo, marche, covoiturage ou transport public." data-es="Venir en transporte eco-responsable.">Venir au forum en transport éco-responsable : vélo, marche, covoiturage ou transport public.</div>
+                    <div class="card-reward">🌱 <span data-fr="Badge Éco-Warrior" data-es="Insignia">Badge Éco-Warrior</span> <strong>+250 pts</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3 - Suivi de parcours -->
+    <div class="page" id="page3">
+        <div class="page-header">
+            <h1 class="page-title" data-fr="Suivi parcours" data-es="Seguimiento">Suivi parcours</h1>
+            <p class="page-subtitle" data-fr="Tes interactions" data-es="Tus interacciones">Tes interactions</p>
+        </div>
+
+        <!-- Résumé des entreprises visitées -->
+        <div class="companies-visited-summary">
+            <h3 data-fr="📊 Entreprises Visitées" data-es="📊 Empresas Visitadas">📊 Entreprises Visitées</h3>
+            <div class="company-counter" id="companiesVisitedCount">0</div>
+            <p data-fr="entreprise(s) rencontrée(s)" data-es="empresa(s) visitada(s)">entreprise(s) rencontrée(s)</p>
+            
+            <div class="companies-list" id="companiesList" style="display: none;">
+                <h4 data-fr="📝 Liste de mes contacts :" data-es="📝 Lista de contactos:">📝 Liste de mes contacts :</h4>
+                <div id="companiesListContent"></div>
+            </div>
+        </div>
+        
+        <div class="tracking-table">
+            <div class="company-row-header" data-fr="Note tes interactions" data-es="Anota interacciones">Note tes interactions</div>
+            
+            <div class="company-row" id="companyRow1">
+                <input type="text" class="company-input" placeholder="Nom entreprise" data-fr="Nom entreprise" data-es="Nombre empresa" oninput="updateCompaniesCount()">
+                <div class="checkboxes-row">
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Présentation" data-es="Presentación">Présentation</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Question" data-es="Pregunta">Question</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="CV déposé" data-es="CV">CV déposé</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Suivi" data-es="Seguimiento">Suivi</div>
+                    </div>
+                </div>
+                <input type="text" class="company-input" placeholder="Mon ressenti..." data-fr="Mon ressenti..." data-es="Mi impresión...">
+            </div>
+            
+            <div class="company-row" id="companyRow2">
+                <input type="text" class="company-input" placeholder="Nom entreprise" data-fr="Nom entreprise" data-es="Nombre empresa" oninput="updateCompaniesCount()">
+                <div class="checkboxes-row">
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Présentation" data-es="Presentación">Présentation</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Question" data-es="Pregunta">Question</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="CV déposé" data-es="CV">CV déposé</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Suivi" data-es="Seguimiento">Suivi</div>
+                    </div>
+                </div>
+                <input type="text" class="company-input" placeholder="Mon ressenti..." data-fr="Mon ressenti..." data-es="Mi impresión...">
+            </div>
+            
+            <div class="company-row" id="companyRow3">
+                <input type="text" class="company-input" placeholder="Nom entreprise" data-fr="Nom entreprise" data-es="Nombre empresa" oninput="updateCompaniesCount()">
+                <div class="checkboxes-row">
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Présentation" data-es="Presentación">Présentation</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Question" data-es="Pregunta">Question</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="CV déposé" data-es="CV">CV déposé</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Suivi" data-es="Seguimiento">Suivi</div>
+                    </div>
+                </div>
+                <input type="text" class="company-input" placeholder="Mon ressenti..." data-fr="Mon ressenti..." data-es="Mi impresión...">
+            </div>
+            
+            <div class="company-row" id="companyRow4">
+                <input type="text" class="company-input" placeholder="Nom entreprise" data-fr="Nom entreprise" data-es="Nombre empresa" oninput="updateCompaniesCount()">
+                <div class="checkboxes-row">
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Présentation" data-es="Presentación">Présentation</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Question" data-es="Pregunta">Question</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="CV déposé" data-es="CV">CV déposé</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Suivi" data-es="Seguimiento">Suivi</div>
+                    </div>
+                </div>
+                <input type="text" class="company-input" placeholder="Mon ressenti..." data-fr="Mon ressenti..." data-es="Mi impresión...">
+            </div>
+            
+            <div class="company-row" id="companyRow5">
+                <input type="text" class="company-input" placeholder="Nom entreprise" data-fr="Nom entreprise" data-es="Nombre empresa" oninput="updateCompaniesCount()">
+                <div class="checkboxes-row">
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Présentation" data-es="Presentación">Présentation</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Question" data-es="Pregunta">Question</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="CV déposé" data-es="CV">CV déposé</div>
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="custom-checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="checkbox-label" data-fr="Suivi" data-es="Seguimiento">Suivi</div>
+                    </div>
+                </div>
+                <input type="text" class="company-input" placeholder="Mon ressenti..." data-fr="Mon ressenti..." data-es="Mi impresión...">
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 4 - Questions -->
+    <div class="page" id="page4">
+        <div class="page-header">
+            <h1 class="page-title" data-fr="Questions types" data-es="Preguntas tipo">Questions types</h1>
+            <p class="page-subtitle" data-fr="Pour briser la glace" data-es="Para romper el hielo">Pour briser la glace</p>
+        </div>
+        
+        <div class="questions-container">
+            <div class="question-item" onclick="selectQuestion(this)">
+                <div class="question-icon">🎯</div>
+                <div class="question-text" data-fr="Quelles sont les qualités que vous recherchez le plus ?" data-es="¿Cuáles son las cualidades que más buscan?">Quelles sont les qualités que vous recherchez le plus ?</div>
+            </div>
+            
+            <div class="question-item" onclick="selectQuestion(this)">
+                <div class="question-icon">💼</div>
+                <div class="question-text" data-fr="Quels métiers recrutent le plus dans votre entreprise ?" data-es="¿Qué profesiones reclutan más?">Quels métiers recrutent le plus dans votre entreprise ?</div>
+            </div>
+            
+            <div class="question-item" onclick="selectQuestion(this)">
+                <div class="question-icon">🎓</div>
+                <div class="question-text" data-fr="Proposez-vous des stages ou des immersions ?" data-es="¿Ofrecen prácticas?">Proposez-vous des stages ou des immersions ?</div>
+            </div>
+            
+            <div class="question-item" onclick="selectQuestion(this)">
+                <div class="question-icon">📚</div>
+                <div class="question-text" data-fr="Faut-il un diplôme ou une expérience ?" data-es="¿Se necesita diploma?">Faut-il un diplôme ou une expérience ?</div>
+            </div>
+            
+            <div class="question-item" onclick="selectQuestion(this)">
+                <div class="question-icon">🌟</div>
+                <div class="question-text" data-fr="Peut-on postuler même si on n'a jamais travaillé ?" data-es="¿Se puede postular sin experiencia?">Peut-on postuler même si on n'a jamais travaillé ?</div>
+            </div>
+            
+            <div class="question-item" onclick="selectQuestion(this)">
+                <div class="question-icon">⏰</div>
+                <div class="question-text" data-fr="Comment se déroule une journée type ?" data-es="¿Cómo es un día típico?">Comment se déroule une journée type ?</div>
+            </div>
+            
+            <div class="question-item" onclick="selectQuestion(this)">
+                <div class="question-icon">🚀</div>
+                <div class="question-text" data-fr="Quelles sont les perspectives d'évolution ?" data-es="¿Cuáles son las perspectivas?">Quelles sont les perspectives d'évolution ?</div>
+            </div>
+            
+            <div class="question-item" onclick="selectQuestion(this)">
+                <div class="question-icon">🤝</div>
+                <div class="question-text" data-fr="Comment fonctionne l'équipe de travail ?" data-es="¿Cómo funciona el equipo?">Comment fonctionne l'équipe de travail ?</div>
+            </div>
+            
+            <div class="question-item" onclick="selectQuestion(this)">
+                <div class="question-icon">💰</div>
+                <div class="question-text" data-fr="Quels sont les horaires et la rémunération ?" data-es="¿Horarios y remuneración?">Quels sont les horaires et la rémunération ?</div>
+            </div>
+            
+            <div class="question-item" onclick="selectQuestion(this)">
+                <div class="question-icon">📞</div>
+                <div class="question-text" data-fr="Comment puis-je vous recontacter ?" data-es="¿Cómo puedo contactarlos?">Comment puis-je vous recontacter ?</div>
+            </div>
+            
+            <button class="personal-questions" onclick="addPersonalQuestion()">
+                <span data-fr="✏️ Mes questions personnelles" data-es="✏️ Mis preguntas">✏️ Mes questions personnelles</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Page 5 - Validation -->
+    <div class="page" id="page5">
+        <div class="page-header">
+            <h1 class="page-title" data-fr="Mission accomplie !" data-es="¡Misión cumplida!">Mission accomplie !</h1>
+            <p class="page-subtitle" data-fr="Collecte tes badges" data-es="Colecciona tus insignias">Collecte tes badges</p>
+        </div>
+        
+        <!-- Compteur de points -->
+        <div class="score-display">
+            <h2 data-fr="🏆 SCORE TOTAL 🏆" data-es="🏆 PUNTUACIÓN 🏆">🏆 SCORE TOTAL 🏆</h2>
+            <div class="total-points">
+                <span id="totalPoints">0</span> <span data-fr="POINTS" data-es="PUNTOS">POINTS</span>
+            </div>
+            <div id="currentRank" class="current-rank">
+                <span data-fr="🌟 Débutant Motivé" data-es="🌟 Principiante">🌟 Débutant Motivé</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <div id="nextRankInfo" class="next-rank-info">
+                    <span data-fr="Prochain rang : 🚀 Candidat Actif (500 pts)" data-es="Próximo rango: 🚀 Candidato (500 pts)">Prochain rang : 🚀 Candidat Actif (500 pts)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="validation-container">
+            <div class="sticker-collection">
+                <h3 data-fr="Colle tes badges Mission Locale !" data-es="¡Pega tus insignias!">Colle tes badges Mission Locale !</h3>
+                <div class="badges-grid">
+                    <div class="badge-sticker ml-badge-1" onclick="unlockBadge(this, 1)">
+                        <div class="badge-icon">🎯</div>
+                        <div class="badge-name" data-fr="Premier Contact" data-es="Primer Contacto">Premier Contact</div>
+                    </div>
+                    
+                    <div class="badge-sticker ml-badge-2" onclick="unlockBadge(this, 2)">
+                        <div class="badge-icon">🗣️</div>
+                        <div class="badge-name" data-fr="Communicateur" data-es="Comunicador">Communicateur</div>
+                    </div>
+                    
+                    <div class="badge-sticker ml-badge-3" onclick="unlockBadge(this, 3)">
+                        <div class="badge-icon">📋</div>
+                        <div class="badge-name" data-fr="Candidat Pro" data-es="Candidato Pro">Candidat Pro</div>
+                    </div>
+                    
+                    <div class="badge-sticker ml-badge-4" onclick="unlockBadge(this, 4)">
+                        <div class="badge-icon">🤝</div>
+                        <div class="badge-name" data-fr="Networker" data-es="Networker">Networker</div>
+                    </div>
+                    
+                    <div class="badge-sticker ml-badge-5" onclick="unlockBadge(this, 5)">
+                        <div class="badge-icon">🏆</div>
+                        <div class="badge-name" data-fr="Job Hunter" data-es="Job Hunter">Job Hunter</div>
+                    </div>
+                    
+                    <div class="badge-sticker ml-badge-bonus" onclick="unlockBadge(this, 6)">
+                        <div class="badge-icon">🌱</div>
+                        <div class="badge-name" data-fr="Éco-Warrior" data-es="Eco-Warrior">Éco-Warrior</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Compteur Mobilité -->
+            <div class="mobility-tracker">
+                <h3 data-fr="🌱 Challenge Mobilité Bien-être" data-es="🌱 Desafío Movilidad">🌱 Challenge Mobilité Bien-être</h3>
+                <div class="mobility-grid">
+                    <div class="mobility-item">
+                        <div class="mobility-icon">🚶‍♂️</div>
+                        <div class="mobility-counter">
+                            <input type="number" id="steps" min="0" step="100" placeholder="0" onchange="updateMobility()">
+                            <label data-fr="nombre de pas" data-es="número de pasos">nombre de pas</label>
+                        </div>
+                    </div>
+                    <div class="mobility-item">
+                        <div class="mobility-icon">🚴‍♂️</div>
+                        <div class="mobility-counter">
+                            <input type="number" id="bike" min="0" step="0.1" placeholder="0" onchange="updateMobility()">
+                            <label data-fr="km vélo" data-es="km bici">km vélo</label>
+                        </div>
+                    </div>
+                    <div class="mobility-item">
+                        <div class="mobility-icon">🚌</div>
+                        <div class="mobility-counter">
+                            <input type="checkbox" id="publicTransport" onchange="updateMobility()">
+                            <label data-fr="Transport public" data-es="Transporte público">Transport public</label>
+                        </div>
+                    </div>
+                    <div class="mobility-item">
+                        <div class="mobility-icon">🚗</div>
+                        <div class="mobility-counter">
+                            <input type="checkbox" id="carpool" onchange="updateMobility()">
+                            <label data-fr="Covoiturage" data-es="Carpooling">Covoiturage</label>
+                        </div>
+                    </div>
+                </div
+                  <div class="eco-score">
+                    <span data-fr="Score Éco :" data-es="Puntuación Eco:">Score Éco :</span>
+                    <span id="ecoScore" class="eco-score-value">0</span>
+                    <span data-fr="points" data-es="puntos">points</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn" onclick="generateQR()">
+                    <span data-fr="📱 Générer QR Code" data-es="📱 Generar QR">📱 Générer QR Code</span>
+                </button>
+                <button class="action-btn" onclick="downloadReportPDF()">
+                    <span data-fr="📄 Télécharger Bilan PDF" data-es="📄 Descargar PDF">📄 Télécharger Bilan PDF</span>
+                </button>
+                <button class="action-btn" onclick="shareResults()">
+                    <span data-fr="📤 Partager Résultats" data-es="📤 Compartir">📤 Partager Résultats</span>
+                </button>
+            </div>
+            
+            <div class="qr-code" id="qrCode">
+                <span data-fr="QR Code généré !" data-es="¡Código QR!">QR Code généré !</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-buttons">
+        <div class="nav-btn active" onclick="showPage(1)">1</div>
+        <div class="nav-btn" onclick="showPage(2)">2</div>
+        <div class="nav-btn" onclick="showPage(3)">3</div>
+        <div class="nav-btn" onclick="showPage(4)">4</div>
+        <div class="nav-btn" onclick="showPage(5)">5</div>
+    </div>
+
+    <!-- Modal fiches entreprises -->
+    <div id="companyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Secteur</h2>
+                <button class="close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <button class="add-company-btn" onclick="addCompany()">
+                    <span data-fr="➕ Ajouter une entreprise" data-es="➕ Agregar empresa">➕ Ajouter une entreprise</span>
+                </button>
+                <div class="companies-grid" id="companiesGrid">
+                    <!-- Les entreprises seront ajoutées dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal création secteur personnalisé -->
+    <div id="customSectorModal" class="modal custom-sector-modal">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #95c11f, #2897d5);">
+                <h2 class="modal-title" data-fr="🏢 Créer un nouveau secteur" data-es="🏢 Crear sector">🏢 Créer un nouveau secteur</h2>
+                <button class="close" onclick="closeCustomSectorModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <h3 data-fr="📋 Informations du secteur" data-es="📋 Información">📋 Informations du secteur</h3>
+                    <div class="form-row">
+                        <label class="form-label" data-fr="Nom du secteur :" data-es="Nombre del sector:">Nom du secteur :</label>
+                        <input type="text" id="customSectorName" class="form-input" placeholder="Ex: Agriculture & Environnement">
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label" data-fr="Icône (emoji) :" data-es="Icono (emoji):">Icône (emoji) :</label>
+                        <input type="text" id="customSectorIcon" class="form-input" placeholder="🌱" maxlength="2" style="text-align: center; font-size: 1.5rem;">
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label" data-fr="Tags (séparés par des virgules) :" data-es="Tags (separados por comas):">Tags (séparés par des virgules) :</label>
+                        <input type="text" id="customSectorTags" class="form-input" placeholder="Bio, Nature, Durable">
+                    </div>
+                    <button onclick="createCustomSector()" class="form-btn">
+                        <span data-fr="✅ Créer le secteur" data-es="✅ Crear sector">✅ Créer le secteur</span>
+                    </button>
+                </div>
+
+                <div class="form-section" style="background: linear-gradient(135deg, rgba(243,146,0,0.1), rgba(214,11,82,0.1)); border-color: #f39200;">
+                    <h3 style="color: #f39200;" data-fr="🏢 Ajouter une entreprise" data-es="🏢 Agregar empresa">🏢 Ajouter une entreprise</h3>
+                    <div class="form-row">
+                        <label class="form-label" data-fr="Nom de l'entreprise :" data-es="Nombre de la empresa:">Nom de l'entreprise :</label>
+                        <input type="text" id="companyName" class="form-input" placeholder="Ex: EcoFarm Solutions" style="border-color: #f39200;">
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label" data-fr="Activité :" data-es="Actividad:">Activité :</label>
+                        <input type="text" id="companyActivity" class="form-input" placeholder="Ex: Agriculture biologique" style="border-color: #f39200;">
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label" data-fr="Email de contact :" data-es="Email de contacto:">Email de contact :</label>
+                        <input type="email" id="companyEmail" class="form-input" placeholder="contact@ecofarm.fr" style="border-color: #f39200;">
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label" data-fr="Téléphone :" data-es="Teléfono:">Téléphone :</label>
+                        <input type="tel" id="companyPhone" class="form-input" placeholder="01 23 45 67 89" style="border-color: #f39200;">
+                    </div>
+                    <button onclick="addCustomCompany()" class="form-btn" style="background: linear-gradient(45deg, #f39200, #d60b52);">
+                        <span data-fr="➕ Ajouter l'entreprise" data-es="➕ Agregar empresa">➕ Ajouter l'entreprise</span>
+                    </button>
+                </div>
+
+                <div id="customCompaniesGrid" class="companies-grid">
+                    <!-- Les entreprises personnalisées apparaîtront ici -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    // Variables globales
+    let currentLanguage = 'fr';
+    let currentPage = 1;
+    let playerData = {
+        firstName: '',
+        lastName: '',
+        cvFile: null
+    };
+    let gameData = {
+        badges: [],
+        completedChallenges: [],
+        companies: {},
+        points: 0,
+        mobility: {
+            steps: 0,
+            bike: 0,
+            publicTransport: false,
+            carpool: false
+        },
+        visitedCompanies: []
+    };
+
+    // Système de points par défi
+    const challengePoints = {
+        1: 100,  // Premier Contact
+        2: 150,  // Communicateur
+        3: 200,  // Candidat Pro
+        4: 300,  // Networker (Bonus)
+        5: 500,  // Job Hunter (Jackpot)
+        6: 250   // Éco-Warrior (Bonus)
+    };
+
+    // Paliers de récompenses
+    const pointsRewards = {
+        0: { name: { fr: 'Débutant Motivé', es: 'Principiante Motivado' }, icon: '🌟', color: '#2897d5' },
+        500: { name: { fr: 'Candidat Actif', es: 'Candidato Activo' }, icon: '🚀', color: '#95c11f' },
+        1000: { name: { fr: 'Pro du Networking', es: 'Pro del Networking' }, icon: '🤝', color: '#f39200' },
+        1500: { name: { fr: 'Expert Mission', es: 'Experto Misión' }, icon: '🏆', color: '#d60b52' },
+        2000: { name: { fr: 'Légende du Forum', es: 'Leyenda del Foro' }, icon: '👑', color: '#a3195b' }
+    };
+
+    let customSectors = [];
+    let customCompanies = [];
+
+    // Données des secteurs
+    const sectorsData = {
+        mission: {
+            name: { fr: 'Mission Locale', es: 'Misión Local' },
+            companies: [
+                { name: 'Mission Locale Pays Basque', info: 'Accompagnement emploi et formation des jeunes', tags: ['Orientation', 'Emploi', 'Formation'] }
+            ]
+        },
+        tech: {
+            name: { fr: 'Tech & Digital', es: 'Tech & Digital' },
+            companies: [
+                { name: 'WebDev Solutions', info: 'Développement web et applications mobiles', tags: ['Dev', 'Web', 'Mobile'] },
+                { name: 'AI Innovations', info: 'Intelligence artificielle et machine learning', tags: ['IA', 'Data', 'Innovation'] },
+                { name: 'CyberSec Pro', info: 'Cybersécurité et protection des données', tags: ['Sécurité', 'Réseau'] },
+                { name: 'Cloud Systems', info: 'Solutions cloud et infrastructure', tags: ['Cloud', 'Infra'] },
+                { name: 'UX Design Studio', info: 'Design d\'expérience utilisateur', tags: ['UX', 'Design'] }
+            ]
+        },
+        resto: {
+            name: { fr: 'Restauration', es: 'Restauración' },
+            companies: [
+                { name: 'Le Gourmet', info: 'Restaurant gastronomique français', tags: ['Chef', 'Gastro'] },
+                { name: 'Pizza Express', info: 'Pizzeria rapide et livraison', tags: ['Rapide', 'Livraison'] },
+                { name: 'Café Central', info: 'Café-brasserie du centre-ville', tags: ['Café', 'Brasserie'] },
+                { name: 'Traiteur Deluxe', info: 'Service traiteur événementiel', tags: ['Traiteur', 'Événement'] },
+                { name: 'Boulangerie Artisan', info: 'Boulangerie traditionnelle', tags: ['Pain', 'Artisan'] },
+                { name: 'Restaurant Scolaire', info: 'Restauration collective', tags: ['Collectif', 'Scolaire'] },
+                { name: 'Food Truck Gourmet', info: 'Cuisine mobile haut de gamme', tags: ['Mobile', 'Street Food'] },
+                { name: 'Hôtel Restaurant', info: 'Restaurant d\'hôtel 4 étoiles', tags: ['Hôtel', 'Luxe'] }
+            ]
+        },
+        sante: {
+            name: { fr: 'Santé & Social', es: 'Salud & Social' },
+            companies: [
+                { name: 'Clinique Saint-Martin', info: 'Établissement de soins privé', tags: ['Clinique', 'Soins'] },
+                { name: 'EHPAD Les Jardins', info: 'Maison de retraite médicalisée', tags: ['EHPAD', 'Seniors'] },
+                { name: 'Centre Social Municipal', info: 'Services sociaux de proximité', tags: ['Social', 'Aide'] },
+                { name: 'Pharmacie Centrale', info: 'Officine pharmaceutique', tags: ['Pharmacie', 'Conseil'] },
+                { name: 'Aide à Domicile Plus', info: 'Services d\'aide à la personne', tags: ['Domicile', 'Aide'] },
+                { name: 'Cabinet Infirmier', info: 'Soins infirmiers libéraux', tags: ['Infirmier', 'Soins'] }
+            ]
+        },
+        commerce: {
+            name: { fr: 'Commerce', es: 'Comercio' },
+            companies: [
+                { name: 'Galeries Lafayette', info: 'Grand magasin mode et luxe', tags: ['Mode', 'Luxe'] },
+                { name: 'SuperMarché Bio', info: 'Alimentation biologique', tags: ['Bio', 'Alimentaire'] },
+                { name: 'Électro Discount', info: 'Électroménager et high-tech', tags: ['Électro', 'High-tech'] },
+                { name: 'Boutique Tendance', info: 'Prêt-à-porter jeune', tags: ['Mode', 'Jeune'] },
+                { name: 'Librairie du Centre', info: 'Librairie généraliste', tags: ['Livre', 'Culture'] },
+                { name: 'Magasin de Sport', info: 'Articles de sport et loisirs', tags: ['Sport', 'Loisir'] },
+                { name: 'Bijouterie Précieuse', info: 'Bijoux et montres', tags: ['Bijou', 'Montre'] },
+                { name: 'Jardinerie Verte', info: 'Plantes et jardinage', tags: ['Jardin', 'Plante'] },
+                { name: 'Bazar du Coin', info: 'Bazar et articles divers', tags: ['Bazar', 'Divers'] },
+                { name: 'Opticien Vision', info: 'Lunettes et lentilles', tags: ['Optique', 'Lunette'] },
+                { name: 'Parfumerie Élégance', info: 'Parfums et cosmétiques', tags: ['Parfum', 'Cosmétique'] },
+                { name: 'Magasin de Jouets', info: 'Jouets et jeux pour enfants', tags: ['Jouet', 'Enfant'] }
+            ]
+        },
+        artisan: {
+            name: { fr: 'Artisanat & BTP', es: 'Artesanía & BTP' },
+            companies: [
+                { name: 'Menuiserie Dubois', info: 'Menuiserie traditionnelle et moderne', tags: ['Bois', 'Meuble'] },
+                { name: 'Électricité Pro', info: 'Installation électrique résidentielle', tags: ['Électricité', 'Installation'] },
+                { name: 'Plomberie Express', info: 'Plomberie et chauffage', tags: ['Plomberie', 'Chauffage'] },
+                { name: 'Maçonnerie Solide', info: 'Gros œuvre et rénovation', tags: ['Maçonnerie', 'Rénovation'] },
+                { name: 'Peinture Déco', info: 'Peinture et décoration intérieure', tags: ['Peinture', 'Décoration'] },
+                { name: 'Couverture Toit', info: 'Couverture et charpente', tags: ['Couverture', 'Charpente'] },
+                { name: 'Carrelage Design', info: 'Pose de carrelage et faïence', tags: ['Carrelage', 'Faïence'] }
+            ]
+        },
+        service: {
+            name: { fr: 'Services', es: 'Servicios' },
+            companies: [
+                { name: 'Banque Populaire', info: 'Services bancaires et financiers', tags: ['Banque', 'Finance'] },
+                { name: 'Assurance Vie', info: 'Assurances tous risques', tags: ['Assurance', 'Protection'] },
+                { name: 'Cabinet Comptable', info: 'Expertise comptable et fiscale', tags: ['Comptabilité', 'Fiscal'] },
+                { name: 'Agence Immobilière', info: 'Vente et location immobilière', tags: ['Immobilier', 'Vente'] },
+                { name: 'Nettoyage Pro', info: 'Nettoyage industriel et bureaux', tags: ['Nettoyage', 'Entretien'] },
+                { name: 'Sécurité Garde', info: 'Gardiennage et surveillance', tags: ['Sécurité', 'Surveillance'] },
+                { name: 'Avocat Conseil', info: 'Cabinet d\'avocats généralistes', tags: ['Droit', 'Conseil'] },
+                { name: 'Agence Marketing', info: 'Communication et publicité', tags: ['Marketing', 'Communication'] },
+                { name: 'Formation Pro', info: 'Organisme de formation professionnelle', tags: ['Formation', 'Apprentissage'] }
+            ]
+        },
+        tourisme: {
+            name: { fr: 'Tourisme & Hôtellerie', es: 'Turismo & Hostelería' },
+            companies: [
+                { name: 'Hôtel 4 Étoiles', info: 'Hôtellerie de luxe centre-ville', tags: ['Hôtel', 'Luxe'] },
+                { name: 'Camping Les Pins', info: 'Camping familial 3 étoiles', tags: ['Camping', 'Famille'] },
+                { name: 'Agence Voyage', info: 'Organisation de voyages sur mesure', tags: ['Voyage', 'Organisation'] },
+                { name: 'Office Tourisme', info: 'Promotion du territoire local', tags: ['Tourisme', 'Information'] },
+                { name: 'Guide Montagne', info: 'Accompagnement randonnée et escalade', tags: ['Guide', 'Montagne'] },
+                { name: 'Parc Attractions', info: 'Parc de loisirs familial', tags: ['Loisir', 'Famille'] }
+            ]
+        },
+        transport: {
+            name: { fr: 'Transport & Logistique', es: 'Transporte & Logística' },
+            companies: [
+                { name: 'Transport Rapide', info: 'Transport routier de marchandises', tags: ['Transport', 'Routier'] },
+                { name: 'Logistique Stock', info: 'Entreposage et distribution', tags: ['Logistique', 'Stock'] },
+                { name: 'Taxi Local', info: 'Transport de personnes local', tags: ['Taxi', 'Transport'] },
+                { name: 'Livraison Express', info: 'Livraison rapide colis', tags: ['Livraison', 'Colis'] }
+            ]
+        }
+    };
+
+    // Fonctions de navigation
+    function showPage(pageNum) {
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        
+        document.getElementById(`page${pageNum}`).classList.add('active');
+        
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelectorAll('.nav-btn')[pageNum - 1].classList.add('active');
+        
+        currentPage = pageNum;
+        
+        // Scroll en haut de la page
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Fonctions de langue
+    function setLanguage(lang) {
+        currentLanguage = lang;
+        
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[onclick="setLanguage('${lang}')"]`).classList.add('active');
+        
+        document.querySelectorAll('[data-fr]').forEach(element => {
+            if (element.hasAttribute(`data-${lang}`)) {
+                if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || element.type === 'tel')) {
+                    element.placeholder = element.getAttribute(`data-${lang}`);
+                } else if (element.classList.contains('question-text') || element.classList.contains('card-mission') || element.classList.contains('card-title') || element.classList.contains('badge-name')) {
+                    element.textContent = element.getAttribute(`data-${lang}`);
+                } else if (element.tagName === 'SPAN' || element.tagName === 'DIV' || element.tagName === 'H1' || element.tagName === 'H2' || element.tagName === 'H3' || element.tagName === 'H4' || element.tagName === 'P' || element.tagName === 'LABEL') {
+                    element.textContent = element.getAttribute(`data-${lang}`);
+                }
+            }
+        });
+        
+        // Mettre à jour le rang actuel
+        updatePointsDisplay();
+    }
+
+    // Fonctions de personnalisation
+    function updateIdentity() {
+        playerData.firstName = document.getElementById('firstName').value;
+        playerData.lastName = document.getElementById('lastName').value;
+    }
+
+    // Fonctions de gestion des fichiers
+    function triggerMainCVUpload() {
+        document.getElementById('cvFileInputMain').click();
+    }
+
+    function handleMainCVUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            playerData.cvFile = file;
+            document.getElementById('cvFileNameMain').textContent = file.name;
+            document.getElementById('cvUploadContentMain').style.display = 'none';
+            document.getElementById('cvPreviewMain').style.display = 'flex';
+            document.getElementById('cvUploadAreaMain').classList.add('has-cv');
+        }
+    }
+
+    function removeMainCV(event) {
+        event.stopPropagation();
+        playerData.cvFile = null;
+        document.getElementById('cvUploadContentMain').style.display = 'block';
+        document.getElementById('cvPreviewMain').style.display = 'none';
+        document.getElementById('cvUploadAreaMain').classList.remove('has-cv');
+        document.getElementById('cvFileInputMain').value = '';
+    }
+
+    // Fonctions de téléchargement
+    function downloadLogo() {
+        alert(currentLanguage === 'fr' ? 'Fonction logo à implémenter' : 'Función logo por implementar');
+    }
+
+    function downloadForumName() {
+        const forumName = 'Forum Mission Locale Pays Basque';
+        const blob = new Blob([forumName], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'nom-forum.txt';
+        link.click();
+    }
+
+    // Fonctions du jeu
+    function registerPlayer() {
+        const firstName = playerData.firstName || (currentLanguage === 'fr' ? 'Joueur' : 'Jugador');
+        const lastName = playerData.lastName || (currentLanguage === 'fr' ? 'Anonyme' : 'Anónimo');
+        
+        document.getElementById('playerName').textContent = `${firstName} ${lastName}`;
+        document.getElementById('playerInfo').style.display = 'block';
+        
+        setTimeout(() => {
+            document.getElementById('playerInfo').style.animation = 'playerAppear 0.6s ease-out';
+        }, 100);
+    }
+
+    function showStandInfo(sector) {
+        const sectorData = sectorsData[sector];
+        if (!sectorData) return;
+        
+        document.getElementById('modalTitle').textContent = sectorData.name[currentLanguage];
+        
+        const companiesGrid = document.getElementById('companiesGrid');
+        companiesGrid.innerHTML = '';
+        
+        sectorData.companies.forEach((company, index) => {
+            const companyCard = document.createElement('div');
+            companyCard.className = 'company-card';
+            companyCard.innerHTML = `
+                <button class="delete-btn" onclick="deleteCompany('${sector}', ${index})" title="${currentLanguage === 'fr' ? 'Supprimer' : 'Eliminar'}">×</button>
+                <div class="company-name">${company.name}</div>
+                <div class="company-info">${company.info}</div>
+                <div class="company-tags">
+                    ${company.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+                <div class="company-actions">
+                    <button class="action-icon" onclick="contactCompany('${company.name}')" title="${currentLanguage === 'fr' ? 'Contacter' : 'Contactar'}">📞</button>
+                    <button class="action-icon" onclick="visitWebsite('${company.name}')" title="${currentLanguage === 'fr' ? 'Site web' : 'Sitio web'}">🌐</button>
+                    <button class="action-icon" onclick="saveCompany('${company.name}')" title="${currentLanguage === 'fr' ? 'Sauvegarder' : 'Guardar'}">💾</button>
+                </div>
+            `;
+            companiesGrid.appendChild(companyCard);
+        });
+        
+        document.getElementById('companyModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('companyModal').style.display = 'none';
+    }
+
+    function showCustomSectorModal() {
+        document.getElementById('customSectorModal').style.display = 'block';
+    }
+
+    function closeCustomSectorModal() {
+        document.getElementById('customSectorModal').style.display = 'none';
+    }
+
+    function createCustomSector() {
+        const name = document.getElementById('customSectorName').value.trim();
+        const icon = document.getElementById('customSectorIcon').value.trim() || '🏢';
+        const tags = document.getElementById('customSectorTags').value.trim();
+        
+        if (!name) {
+            alert(currentLanguage === 'fr' ? 
+                'Veuillez saisir un nom pour le secteur' : 
+                'Por favor ingrese un nombre para el sector');
+            return;
+        }
+        
+        const newSector = {
+            id: 'custom_' + Date.now(),
+            name: name,
+            icon: icon,
+            tags: tags ? tags.split(',').map(tag => tag.trim()) : ['Nouveau'],
+            companies: []
+        };
+        
+        customSectors.push(newSector);
+        
+        document.getElementById('customSectorName').value = '';
+        document.getElementById('customSectorIcon').value = '';
+        document.getElementById('customSectorTags').value = '';
+        
+        alert(currentLanguage === 'fr' ? 
+            `Secteur "${name}" créé avec succès !` : 
+            `¡Sector "${name}" creado con éxito!`);
+    }
+
+    function addCustomCompany() {
+        const name = document.getElementById('companyName').value.trim();
+        const activity = document.getElementById('companyActivity').value.trim();
+        const email = document.getElementById('companyEmail').value.trim();
+        const phone = document.getElementById('companyPhone').value.trim();
+        
+        if (!name || !activity) {
+            alert(currentLanguage === 'fr' ? 
+                'Veuillez remplir au minimum le nom et l\'activité de l\'entreprise' : 
+                'Por favor complete al menos el nombre y la actividad');
+            return;
+        }
+        
+        const newCompany = {
+            id: 'company_' + Date.now(),
+            name: name,
+            activity: activity,
+            email: email,
+            phone: phone,
+            tags: [activity.split(' ')[0], 'Nouveau']
+        };
+        
+        customCompanies.push(newCompany);
+        
+        const companiesGrid = document.getElementById('customCompaniesGrid');
+        const companyCard = document.createElement('div');
+        companyCard.className = 'company-card';
+        companyCard.style.background = 'linear-gradient(135deg, rgba(149,193,31,0.1), rgba(243,146,0,0.1))';
+        companyCard.style.borderColor = '#95c11f';
+        companyCard.innerHTML = `
+            <button class="delete-btn" onclick="deleteCustomCompany('${newCompany.id}')" title="${currentLanguage === 'fr' ? 'Supprimer' : 'Eliminar'}">×</button>
+            <div class="company-name">${newCompany.name}</div>
+            <div class="company-info">${newCompany.activity}</div>
+            <div class="company-tags">
+                ${newCompany.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+            <div style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.8); border-radius: 12px; font-size: 0.9rem;">
+                ${email ? `<div style="margin-bottom: 8px;"><strong>📧:</strong> <a href="mailto:${email}" style="color: #2897d5; word-break: break-all;">${email}</a></div>` : ''}
+                ${phone ? `<div><strong>📞:</strong> <a href="tel:${phone}" style="color: #2897d5;">${phone}</a></div>` : ''}
+            </div>
+            <div class="company-actions">
+                ${email ? `<button class="action-icon" onclick="window.open('mailto:${email}')" title="${currentLanguage === 'fr' ? '
+document.getElementById('companyName').value = '';
+        document.getElementById('companyActivity').value = '';
+        document.getElementById('companyEmail').value = '';
+        document.getElementById('companyPhone').value = '';
+        
+        alert(currentLanguage === 'fr' ? 
+            `Entreprise "${name}" ajoutée avec succès !` : 
+            `¡Empresa "${name}" agregada con éxito!`);
+    }
+
+    function deleteCustomCompany(companyId) {
+        if (confirm(currentLanguage === 'fr' ? 
+            'Supprimer cette entreprise ?' : 
+            '¿Eliminar esta empresa?')) {
+            
+            customCompanies = customCompanies.filter(company => company.id !== companyId);
+            
+            const companyCard = document.querySelector(`[onclick*="${companyId}"]`);
+            if (companyCard) {
+                companyCard.closest('.company-card').remove();
+            }
+        }
+    }
+
+    function addCompany() {
+        const companyName = prompt(currentLanguage === 'fr' ? 'Nom de l\'entreprise :' : 'Nombre de la empresa:');
+        if (companyName) {
+            const companyInfo = prompt(currentLanguage === 'fr' ? 'Description de l\'entreprise :' : 'Descripción:');
+            const companyTags = prompt(currentLanguage === 'fr' ? 'Tags (séparés par des virgules) :' : 'Tags (separados por comas):');
+            
+            const newCompany = {
+                name: companyName,
+                info: companyInfo || 'Nouvelle entreprise',
+                tags: companyTags ? companyTags.split(',').map(tag => tag.trim()) : ['Nouveau']
+            };
+            
+            const companiesGrid = document.getElementById('companiesGrid');
+            const companyCard = document.createElement('div');
+            companyCard.className = 'company-card';
+            companyCard.innerHTML = `
+                <div class="company-name">${newCompany.name}</div>
+                <div class="company-info">${newCompany.info}</div>
+                <div class="company-tags">
+                    ${newCompany.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+                <div class="company-actions">
+                    <button class="action-icon" onclick="contactCompany('${newCompany.name}')" title="${currentLanguage === 'fr' ? 'Contacter' : 'Contactar'}">📞</button>
+                    <button class="action-icon" onclick="visitWebsite('${newCompany.name}')" title="${currentLanguage === 'fr' ? 'Site web' : 'Sitio web'}">🌐</button>
+                    <button class="action-icon" onclick="saveCompany('${newCompany.name}')" title="${currentLanguage === 'fr' ? 'Sauvegarder' : 'Guardar'}">💾</button>
+                </div>
+            `;
+            companiesGrid.appendChild(companyCard);
+        }
+    }
+
+    function deleteCompany(sector, index) {
+        if (confirm(currentLanguage === 'fr' ? 'Supprimer cette entreprise ?' : '¿Eliminar esta empresa?')) {
+            sectorsData[sector].companies.splice(index, 1);
+            showStandInfo(sector);
+        }
+    }
+
+    function contactCompany(companyName) {
+        alert(currentLanguage === 'fr' ? 
+            `Contact avec ${companyName} enregistré !` :
+            `¡Contacto con ${companyName} registrado!`);
+    }
+
+    function visitWebsite(companyName) {
+        alert(currentLanguage === 'fr' ? 
+            `Visite du site web de ${companyName}` :
+            `Visita del sitio web de ${companyName}`);
+    }
+
+    function saveCompany(companyName) {
+        if (!gameData.visitedCompanies.includes(companyName)) {
+            gameData.visitedCompanies.push(companyName);
+            updateCompaniesCount();
+        }
+        alert(currentLanguage === 'fr' ? 
+            `${companyName} ajouté aux favoris !` :
+            `¡${companyName} agregado a favoritos!`);
+    }
+
+    // Fonctions des défis
+    function completeChallenge(card, level) {
+        if (!gameData.completedChallenges.includes(level)) {
+            gameData.completedChallenges.push(level);
+            card.classList.add('completed');
+            
+            const points = challengePoints[level];
+            gameData.points += points;
+            updatePointsDisplay();
+            
+            showPointsAnimation(points);
+            
+            setTimeout(() => {
+                alert(currentLanguage === 'fr' ? 
+                    `Défi ${level} accompli ! +${points} points ! Badge débloqué !` :
+                    `¡Desafío ${level} completado! ¡+${points} puntos! ¡Insignia desbloqueada!`);
+            }, 300);
+        }
+    }
+
+    function updatePointsDisplay() {
+        document.getElementById('totalPoints').textContent = gameData.points;
+        
+        let currentRankData = pointsRewards[0];
+        let nextRankPoints = 500;
+        let currentRankPoints = 0;
+        
+        const sortedRewards = Object.entries(pointsRewards).sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+        
+        for (const [points, rankData] of sortedRewards) {
+            const pointsNum = parseInt(points);
+            if (gameData.points >= pointsNum) {
+                currentRankData = rankData;
+                currentRankPoints = pointsNum;
+            }
+        }
+        
+        for (const [points, rankData] of sortedRewards) {
+            const pointsNum = parseInt(points);
+            if (gameData.points < pointsNum) {
+                nextRankPoints = pointsNum;
+                break;
+            }
+        }
+        
+        const rankElement = document.getElementById('currentRank');
+        if (rankElement) {
+            rankElement.innerHTML = `${currentRankData.icon} ${currentRankData.name[currentLanguage]}`;
+            rankElement.style.background = `linear-gradient(135deg, ${currentRankData.color}, rgba(255,255,255,0.2))`;
+        }
+        
+        const progressBar = document.getElementById('progressBar');
+        const nextRankInfo = document.getElementById('nextRankInfo');
+        
+        if (progressBar && nextRankInfo) {
+            if (gameData.points >= 2000) {
+                progressBar.style.width = '100%';
+                nextRankInfo.innerHTML = currentLanguage === 'fr' ? 
+                    '👑 Rang maximum atteint ! Félicitations !' :
+                    '👑 ¡Rango máximo alcanzado! ¡Felicitaciones!';
+            } else {
+                const progress = ((gameData.points - currentRankPoints) / (nextRankPoints - currentRankPoints)) * 100;
+                progressBar.style.width = Math.min(progress, 100) + '%';
+                
+                const nextRankData = sortedRewards.find(([points]) => parseInt(points) === nextRankPoints)?.[1];
+                if (nextRankData) {
+                    nextRankInfo.innerHTML = currentLanguage === 'fr' ? 
+                        `Prochain rang : ${nextRankData.icon} ${nextRankData.name.fr} (${nextRankPoints} pts)` :
+                        `Próximo rango: ${nextRankData.icon} ${nextRankData.name.es} (${nextRankPoints} pts)`;
+                }
+            }
+        }
+    }
+
+    function showPointsAnimation(points) {
+        const pointsElement = document.createElement('div');
+        pointsElement.textContent = `+${points} pts!`;
+        pointsElement.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, #f39200, #95c11f);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 2rem;
+            font-weight: 800;
+            z-index: 3000;
+            border: 4px solid white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            animation: pointsPopup 2s ease-out forwards;
+        `;
+        
+        document.body.appendChild(pointsElement);
+        
+        setTimeout(() => {
+            if (pointsElement.parentNode) {
+                pointsElement.parentNode.removeChild(pointsElement);
+            }
+        }, 2000);
+    }
+
+    // Fonctions de suivi
+    function toggleCheck(checkbox) {
+        checkbox.classList.toggle('checked');
+    }
+
+    function updateCompaniesCount() {
+        const companyInputs = document.querySelectorAll('.company-row .company-input[placeholder*="entreprise"]');
+        let count = 0;
+        const companies = [];
+        
+        companyInputs.forEach(input => {
+            const companyName = input.value.trim();
+            if (companyName) {
+                count++;
+                companies.push(companyName);
+            }
+        });
+        
+        gameData.visitedCompanies = companies;
+        
+        document.getElementById('companiesVisitedCount').textContent = count;
+        
+        const companiesList = document.getElementById('companiesList');
+        const companiesListContent = document.getElementById('companiesListContent');
+        
+        if (count > 0) {
+            companiesList.style.display = 'block';
+            companiesListContent.innerHTML = companies.map(company => `
+                <div class="company-item">
+                    <div class="company-item-icon">🏢</div>
+                    <div class="company-item-name">${company}</div>
+                </div>
+            `).join('');
+        } else {
+            companiesList.style.display = 'none';
+        }
+    }
+
+    // Fonctions des questions
+    function selectQuestion(questionItem) {
+        document.querySelectorAll('.question-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+        
+        questionItem.classList.add('selected');
+        
+        setTimeout(() => {
+            alert(currentLanguage === 'fr' ? 
+                'Question sélectionnée ! Tu peux maintenant la poser aux entreprises.' :
+                '¡Pregunta seleccionada! Ahora puedes hacerla a las empresas.');
+        }, 200);
+    }
+
+    function addPersonalQuestion() {
+        const question = prompt(currentLanguage === 'fr' ? 
+            'Écris ta question personnelle :' :
+            'Escribe tu pregunta personal:');
+        
+        if (question) {
+            const questionsContainer = document.querySelector('.questions-container');
+            const questionItem = document.createElement('div');
+            questionItem.className = 'question-item';
+            questionItem.onclick = () => selectQuestion(questionItem);
+            questionItem.innerHTML = `
+                <div class="question-icon">✏️</div>
+                <div class="question-text">${question}</div>
+            `;
+            
+            const button = document.querySelector('.personal-questions');
+            questionsContainer.insertBefore(questionItem, button);
+        }
+    }
+
+    // Fonctions de validation
+    function unlockBadge(badge, level) {
+        if (!gameData.badges.includes(level)) {
+            gameData.badges.push(level);
+            badge.classList.add('unlocked');
+            
+            setTimeout(() => {
+                alert(currentLanguage === 'fr' ? 
+                    `Badge ${level} débloqué ! Félicitations !` :
+                    `¡Insignia ${level} desbloqueada! ¡Felicitaciones!`);
+            }, 300);
+        }
+    }
+
+    function updateMobility() {
+        const steps = parseFloat(document.getElementById('steps').value) || 0;
+        const bike = parseFloat(document.getElementById('bike').value) || 0;
+        const publicTransport = document.getElementById('publicTransport').checked;
+        const carpool = document.getElementById('carpool').checked;
+        
+        gameData.mobility = { steps, bike, publicTransport, carpool };
+        
+        // Calcul du score éco
+        let ecoScore = 0;
+        ecoScore += Math.floor(steps / 100) * 2; // 2 points par 100 pas
+        ecoScore += bike * 20; // 20 points par km de vélo
+        if (publicTransport) ecoScore += 50;
+        if (carpool) ecoScore += 30;
+        
+        document.getElementById('ecoScore').textContent = ecoScore;
+        
+        // Débloquer le badge éco si score > 100
+        if (ecoScore >= 100) {
+            const ecoBadge = document.querySelector('.ml-badge-bonus');
+            if (!ecoBadge.classList.contains('unlocked')) {
+                unlockBadge(ecoBadge, 6);
+                if (!gameData.completedChallenges.includes(6)) {
+                    gameData.completedChallenges.push(6);
+                    gameData.points += challengePoints[6];
+                    updatePointsDisplay();
+                    showPointsAnimation(challengePoints[6]);
+                }
+            }
+        }
+    }
+
+    function generateQR() {
+        const qrCode = document.getElementById('qrCode');
+        qrCode.style.display = 'flex';
+        qrCode.innerHTML = `
+            <div style="font-size: 0.8rem; text-align: center;">
+                <div style="margin-bottom: 10px;">📱 QR Code généré !</div>
+                <div style="background: white; padding: 10px; border-radius: 8px; color: black;">
+                    ${playerData.firstName} ${playerData.lastName}<br>
+                    ${currentLanguage === 'fr' ? 'Badges' : 'Insignias'}: ${gameData.badges.length}/6<br>
+                    ${currentLanguage === 'fr' ? 'Score Éco' : 'Puntuación Eco'}: ${document.getElementById('ecoScore').textContent}
+                </div>
+            </div>
+        `;
+    }
+
+    function downloadReportPDF() {
+        // Vérifier si jsPDF est disponible
+        if (typeof window.jspdf === 'undefined') {
+            alert(currentLanguage === 'fr' ? 
+                'Bibliothèque PDF non chargée. Téléchargement en mode texte...' :
+                'Biblioteca PDF no cargada. Descarga en modo texto...');
+            downloadReportText();
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Déterminer le rang actuel
+        let currentRank = pointsRewards[0].name[currentLanguage];
+        const sortedRewards = Object.entries(pointsRewards).sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+        for (const [points, rankData] of sortedRewards) {
+            if (gameData.points >= parseInt(points)) {
+                currentRank = rankData.name[currentLanguage];
+            }
+        }
+
+        // Titre
+        doc.setFontSize(20);
+        doc.setFont(undefined, 'bold');
+        doc.text(currentLanguage === 'fr' ? 'RAPPORT MISSION EMPLOI' : 'INFORME MISION EMPLEO', 105, 20, { align: 'center' });
+
+        // Ligne de séparation
+        doc.setLineWidth(0.5);
+        doc.line(20, 25, 190, 25);
+
+        // Informations participant
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text(currentLanguage === 'fr' ? 'Participant:' : 'Participante:', 20, 35);
+        doc.setFont(undefined, 'normal');
+        doc.text(`${playerData.firstName} ${playerData.lastName}`, 60, 35);
+
+        doc.setFont(undefined, 'bold');
+        doc.text('Forum:', 20, 42);
+        doc.setFont(undefined, 'normal');
+        doc.text('Forum Mission Locale Pays Basque', 60, 42);
+
+        // Score total
+        doc.setFontSize(16);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(243, 146, 0);
+        doc.text(currentLanguage === 'fr' ? 'SCORE TOTAL:' : 'PUNTUACION TOTAL:', 20, 55);
+        doc.setFontSize(24);
+        doc.text(`${gameData.points} ${currentLanguage === 'fr' ? 'POINTS' : 'PUNTOS'}`, 105, 55, { align: 'center' });
+
+        doc.setFontSize(14);
+        doc.setTextColor(149, 193, 31);
+        doc.text(currentLanguage === 'fr' ? `Rang atteint: ${currentRank}` : `Rango alcanzado: ${currentRank}`, 105, 65, { align: 'center' });
+
+        // Ligne de séparation
+        doc.setTextColor(0, 0, 0);
+        doc.line(20, 70, 190, 70);
+
+        // Badges obtenus
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text(currentLanguage === 'fr' ? `BADGES OBTENUS: ${gameData.badges.length}/6` : `INSIGNIAS OBTENIDAS: ${gameData.badges.length}/6`, 20, 80);
+
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        let yPos = 88;
+        const badges = [
+            { id: 1, name: { fr: 'Premier Contact', es: 'Primer Contacto' }, pts: 100 },
+            { id: 2, name: { fr: 'Communicateur', es: 'Comunicador' }, pts: 150 },
+            { id: 3, name: { fr: 'Candidat Pro', es: 'Candidato Pro' }, pts: 200 },
+            { id: 4, name: { fr: 'Networker', es: 'Networker' }, pts: 300 },
+            { id: 5, name: { fr: 'Job Hunter', es: 'Job Hunter' }, pts: 500 },
+            { id: 6, name: { fr: 'Éco-Warrior', es: 'Eco-Warrior' }, pts: 250 }
+        ];
+
+        badges.forEach(badge => {
+            const obtained = gameData.badges.includes(badge.id);
+            doc.text(`${obtained ? '✓' : '✗'} ${badge.name[currentLanguage]} (+${badge.pts} pts)`, 25, yPos);
+            yPos += 7;
+        });
+
+        // Ligne de séparation
+        doc.line(20, yPos + 3, 190, yPos + 3);
+        yPos += 10;
+
+        // Entreprises visitées
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text(currentLanguage === 'fr' ? `ENTREPRISES VISITÉES: ${gameData.visitedCompanies.length}` : `EMPRESAS VISITADAS: ${gameData.visitedCompanies.length}`, 20, yPos);
+        yPos += 10;
+
+        if (gameData.visitedCompanies.length > 0) {
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'normal');
+            gameData.visitedCompanies.forEach((company, index) => {
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                doc.text(`${index + 1}. ${company}`, 25, yPos);
+                yPos += 7;
+            });
+        }
+
+        // Ligne de séparation
+        if (yPos > 260) {
+            doc.addPage();
+            yPos = 20;
+        }
+        doc.line(20, yPos + 3, 190, yPos + 3);
+        yPos += 10;
+
+        // Mobilité durable
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text(currentLanguage === 'fr' ? 'MOBILITÉ DURABLE:' : 'MOVILIDAD SOSTENIBLE:', 20, yPos);
+        yPos += 10;
+
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        doc.text(`${currentLanguage === 'fr' ? 'Nombre de pas' : 'Número de pasos'}: ${gameData.mobility.steps}`, 25, yPos);
+        yPos += 7;
+        doc.text(`${currentLanguage === 'fr' ? 'Vélo' : 'Bicicleta'}: ${gameData.mobility.bike} km`, 25, yPos);
+        yPos += 7;
+        doc.text(`${currentLanguage === 'fr' ? 'Transport public' : 'Transporte público'}: ${gameData.mobility.publicTransport ? (currentLanguage === 'fr' ? 'Oui' : 'Sí') : 'Non'}`, 25, yPos);
+        yPos += 7;
+        doc.text(`${currentLanguage === 'fr' ? 'Covoiturage' : 'Carpooling'}: ${gameData.mobility.carpool ? (currentLanguage === 'fr' ? 'Oui' : 'Sí') : 'Non'}`, 25, yPos);
+        yPos += 7;
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(149, 193, 31);
+        doc.text(`${currentLanguage === 'fr' ? 'Score Éco' : 'Puntuación Eco'}: ${document.getElementById('ecoScore').textContent} ${currentLanguage === 'fr' ? 'points' : 'puntos'}`, 25, yPos);
+
+        // Date
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'italic');
+        doc.text(`Date: ${new Date().toLocaleDateString(currentLanguage === 'fr' ? 'fr-FR' : 'es-ES')}`, 105, 285, { align: 'center' });
+
+        // Sauvegarder le PDF
+        doc.save(`rapport-mission-emploi-${playerData.firstName || 'participant'}.pdf`);
+    }
+
+    function downloadReportText() {
+        let currentRank = pointsRewards[0].name[currentLanguage];
+        const sortedRewards = Object.entries(pointsRewards).sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+        for (const [points, rankData] of sortedRewards) {
+            if (gameData.points >= parseInt(points)) {
+                currentRank = rankData.name[currentLanguage];
+            }
+        }
+        
+        const report = const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `rapport-mission-emploi-${playerData.firstName || 'participant'}.txt`;
+        link.click();
+    }
+
+    function shareResults() {
+        let currentRank = pointsRewards[0].name[currentLanguage];
+        const sortedRewards = Object.entries(pointsRewards).sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+        for (const [points, rankData] of sortedRewards) {
+            if (gameData.points >= parseInt(points)) {
+                currentRank = rankData.name[currentLanguage];
+            }
+        }
+        
+        const text = currentLanguage === 'fr' ?
+            `J'ai participé au Forum Mission Locale Pays Basque ! 🏆 ${gameData.points} points - Rang: ${currentRank} ! 🎯 ${gameData.badges.length}/6 badges obtenus ! ${gameData.visitedCompanies.length} entreprises visitées ! Score éco: ${document.getElementById('ecoScore').textContent} points 🌱` :
+            `¡Participé en el Foro Misión Local País Vasco! 🏆 ${gameData.points} puntos - Rango: ${currentRank}! 🎯 ${gameData.badges.length}/6 insignias obtenidas! ¡${gameData.visitedCompanies.length} empresas visitadas! Puntuación eco: ${document.getElementById('ecoScore').textContent} puntos 🌱`;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: currentLanguage === 'fr' ? 'Mission Emploi - Mes résultats' : 'Misión Empleo - Mis resultados',
+                text: text
+            }).catch(() => {
+                copyToClipboard(text);
+            });
+        } else {
+            copyToClipboard(text);
+        }
+    }
+
+    function copyToClipboard(text) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(currentLanguage === 'fr' ? 
+                    'Résultats copiés dans le presse-papiers !' :
+                    '¡Resultados copiados al portapapeles!');
+            });
+        } else {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert(currentLanguage === 'fr' ? 
+                    'Résultats copiés dans le presse-papiers !' :
+                    '¡Resultados copiados al portapapeles!');
+            } catch (err) {
+                alert(currentLanguage === 'fr' ? 
+                    'Erreur lors de la copie' :
+                    'Error al copiar');
+            }
+            document.body.removeChild(textArea);
+        }
+    }
+
+    // Fermer les modals en cliquant à l'extérieur
+    window.onclick = function(event) {
+        const companyModal = document.getElementById('companyModal');
+        const customSectorModal = document.getElementById('customSectorModal');
+        
+        if (event.target === companyModal) {
+            closeModal();
+        }
+        if (event.target === customSectorModal) {
+            closeCustomSectorModal();
+        }
+    }
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+        setLanguage('fr');
+        showPage(1);
+        updateMob`
+        // Empêcher le zoom sur double-tap (iOS)
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+
+    // Optimisation du scroll pour mobile
+    document.addEventListener('touchmove', function(e) {
+        if (e.target.closest('.modal-content')) {
+            e.stopPropagation();
+        }
+    }, { passive: true });
+
+    // Sauvegarder automatiquement les données dans le localStorage
+    function saveGameData() {
+        try {
+            const dataToSave = {
+                playerData: playerData,
+                gameData: gameData,
+                customSectors: customSectors,
+                customCompanies: customCompanies
+            };
+            // Ne pas sauvegarder le fichier CV (trop volumineux)
+            const saveData = { ...dataToSave };
+            saveData.playerData = { ...playerData, cvFile: null };
+            
+            // Pas de localStorage dans les artifacts Claude, on simule juste
+            console.log('Données à sauvegarder:', saveData);
+        } catch (error) {
+            console.error('Erreur lors de la sauvegarde:', error);
+        }
+    }
+
+    // Charger les données au démarrage
+    function loadGameData() {
+        try {
+            // Simulation de chargement
+            console.log('Tentative de chargement des données...');
+        } catch (error) {
+            console.error('Erreur lors du chargement:', error);
+        }
+    }
+
+    // Sauvegarder périodiquement
+    setInterval(saveGameData, 30000); // Toutes les 30 secondes
+
+    // Sauvegarder avant de quitter la page
+    window.addEventListener('beforeunload', function() {
+        saveGameData();
+    });
+
+    // Charger les données au démarrage
+    loadGameData();
+
+    // Gestion de l'orientation pour mobile
+    window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+            window.scrollTo(0, 1);
+        }, 100);
+    });
+
+    // Amélioration de la performance du scroll
+    let ticking = false;
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                // Logique de scroll si nécessaire
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // Gestion des erreurs d'image
+    document.addEventListener('error', function(e) {
+        if (e.target.tagName === 'IMG') {
+            console.error('Erreur de chargement d\'image:', e.target.src);
+        }
+    }, true);
+
+    // Détecter si l'utilisateur est sur mobile
+    function isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // Ajuster l'interface selon le type d'appareil
+    if (isMobile()) {
+        document.body.classList.add('mobile-device');
+        console.log('Interface mobile détectée');
+    }
+
+    // Amélioration du retour haptique (vibration) sur mobile
+    function vibrate(duration = 10) {
+        if (navigator.vibrate) {
+            navigator.vibrate(duration);
+        }
+    }
+
+    // Ajouter vibration aux interactions importantes
+    document.addEventListener('DOMContentLoaded', function() {
+        const interactiveElements = document.querySelectorAll('.nav-btn, .action-btn, .challenge-card, .badge-sticker, .sector-stand');
+        interactiveElements.forEach(element => {
+            element.addEventListener('touchstart', function() {
+                vibrate(10);
+            }, { passive: true });
+        });
+    });
+
+    // Gestion améliorée des inputs pour éviter le zoom iOS
+    const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="number"]');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            // Empêcher le zoom automatique sur iOS
+            if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+                this.style.fontSize = '16px';
+            }
+        });
+    });
+
+    // Service Worker pour le mode hors ligne (optionnel)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            // Décommenter pour activer le service worker
+            // navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            //     console.log('ServiceWorker enregistré:', registration.scope);
+            // }).catch(function(err) {
+            //     console.log('ServiceWorker échec:', err);
+            // });
+        });
+    }
+
+    // Détection de la connexion réseau
+    window.addEventListener('online', function() {
+        console.log('Connexion rétablie');
+        // Possibilité de synchroniser les données
+    });
+
+    window.addEventListener('offline', function() {
+        console.log('Connexion perdue');
+        alert(currentLanguage === 'fr' ? 
+            'Mode hors ligne activé. Vos données seront sauvegardées localement.' :
+            'Modo sin conexión activado. Tus datos se guardarán localmente.');
+    });
+
+    // Fonction pour imprimer le rapport
+    function printReport() {
+        window.print();
+    }
+
+    // Raccourcis clavier pour navigation (pour tests desktop)
+    document.addEventListener('keydown', function(e) {
+        if (e.key >= '1' && e.key <= '5') {
+            showPage(parseInt(e.key));
+        }
+    });
+
+    // Animation de chargement au démarrage
+    window.addEventListener('load', function() {
+        document.body.style.opacity = '0';
+        setTimeout(function() {
+            document.body.style.transition = 'opacity 0.3s ease';
+            document.body.style.opacity = '1';
+        }, 100);
+    });
+
+    // Gestion des notifications (si supportées)
+    function requestNotificationPermission() {
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission().then(function(permission) {
+                if (permission === 'granted') {
+                    console.log('Notifications autorisées');
+                }
+            });
+        }
+    }
+
+    function showNotification(title, body) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, {
+                body: body,
+                icon: '🎯',
+                badge: '🏆'
+            });
+        }
+    }
+
+    // Fonction pour partager via les apps natives (WhatsApp, etc.)
+    function shareToApp(app) {
+        const text = encodeURIComponent(
+            currentLanguage === 'fr' ?
+            `Forum Mission Locale - ${gameData.points} points!` :
+            `Foro Misión Local - ${gameData.points} puntos!`
+        );
+        
+        const urls = {
+            whatsapp: `https://wa.me/?text=${text}`,
+            twitter: `https://twitter.com/intent/tweet?text=${text}`,
+            facebook: `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`
+        };
+        
+        if (urls[app]) {
+            window.open(urls[app], '_blank');
+        }
+    }
+
+    // Logger pour le debug
+    function log(message, type = 'info') {
+        const timestamp = new Date().toLocaleTimeString();
+        console.log(`[${timestamp}] [${type.toUpperCase()}] ${message}`);
+    }
+
+    // Test de performance
+    function measurePerformance() {
+        if (window.performance) {
+            const perfData = window.performance.timing;
+            const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+            log(`Temps de chargement: ${pageLoadTime}ms`, 'performance');
+        }
+    }
+
+    // Appeler au chargement complet
+    window.addEventListener('load', measurePerformance);
+
+    // Fonction d'export des données en JSON
+    function exportDataJSON() {
+        const exportData = {
+            playerData: {
+                firstName: playerData.firstName,
+                lastName: playerData.lastName
+            },
+            gameData: gameData,
+            customSectors: customSectors,
+            customCompanies: customCompanies,
+            exportDate: new Date().toISOString()
+        };
+        
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `mission-emploi-data-${Date.now()}.json`;
+        link.click();
+    }
+
+    // Fonction d'import de données JSON
+    function importDataJSON() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const importedData = JSON.parse(event.target.result);
+                        
+                        if (importedData.playerData) {
+                            playerData.firstName = importedData.playerData.firstName || '';
+                            playerData.lastName = importedData.playerData.lastName || '';
+                            document.getElementById('firstName').value = playerData.firstName;
+                            document.getElementById('lastName').value = playerData.lastName;
+                        }
+                        
+                        if (importedData.gameData) {
+                            gameData = importedData.gameData;
+                            updatePointsDisplay();
+                            updateCompaniesCount();
+                        }
+                        
+                        if (importedData.customSectors) {
+                            customSectors = importedData.customSectors;
+                        }
+                        
+                        if (importedData.customCompanies) {
+                            customCompanies = importedData.customCompanies;
+                        }
+                        
+                        alert(currentLanguage === 'fr' ? 
+                            'Données importées avec succès !' :
+                            '¡Datos importados con éxito!');
+                        
+                    } catch (error) {
+                        alert(currentLanguage === 'fr' ? 
+                            'Erreur lors de l\'import des données' :
+                            'Error al importar los datos');
+                        console.error('Erreur d\'import:', error);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        };
+        input.click();
+    }
+
+    // Initialisation finale
+    log('Application Mission Emploi initialisée', 'success');
+    console.log('%c🎯 Escape Game Pro - Mission Forum 🏆', 'color: #f39200; font-size: 20px; font-weight: bold;');
+    console.log('%cVersion responsive optimisée pour mobile', 'color: #95c11f; font-size: 14px;');
+</script>
