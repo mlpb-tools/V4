@@ -246,27 +246,46 @@
         console.log('🎯 Initialisation des événements...');
 
         // Secteurs
-        const sectorMap = {
-            'tech-sector': 'tech',
-            'resto-sector': 'resto',
-            'sante-sector': 'sante',
-            'commerce-sector': 'commerce',
-            'artisan-sector': 'artisan',
-            'service-sector': 'service',
-            'tourisme-sector': 'tourisme',
-            'transport-sector': 'transport'
-        };
+        // Secteurs - AVEC DEBUG
+const sectorMap = {
+    'tech-sector': 'tech',
+    'resto-sector': 'resto',
+    'sante-sector': 'sante',
+    'commerce-sector': 'commerce',
+    'artisan-sector': 'artisan',
+    'service-sector': 'service',
+    'tourisme-sector': 'tourisme',
+    'transport-sector': 'transport'
+};
 
-        document.querySelectorAll('.sector-stand').forEach(sector => {
-            sector.addEventListener('click', function(e) {
-                e.stopPropagation();
-                console.log('🖱️ Clic sur secteur');
-                
-                for (const [className, sectorId] of Object.entries(sectorMap)) {
-                    if (this.classList.contains(className)) {
-                        showStandInfo(sectorId);
-                        return;
-                    }
+const sectors = document.querySelectorAll('.sector-stand');
+console.log('🔍 Nombre de secteurs trouvés:', sectors.length);
+
+sectors.forEach((sector, index) => {
+    console.log(`📍 Secteur ${index}:`, sector.className);
+    
+    sector.style.cursor = 'pointer'; // Force le curseur
+    
+    sector.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        console.log('🖱️ CLIC DÉTECTÉ sur:', this.className);
+        
+        for (const [className, sectorId] of Object.entries(sectorMap)) {
+            if (this.classList.contains(className)) {
+                console.log('✅ Ouverture secteur:', sectorId);
+                showStandInfo(sectorId);
+                return;
+            }
+        }
+        
+        if (this.classList.contains('custom-sector')) {
+            console.log('✅ Secteur personnalisé');
+            alert('Fonction secteur personnalisé à venir');
+        }
+    }, true); // ✅ Utilise capture phase
+});
                 }
                 
                 if (this.classList.contains('custom-sector')) {
