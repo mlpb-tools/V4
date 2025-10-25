@@ -6,7 +6,348 @@
     <title>Escape Game Pro – Mission Forum</title>
     <link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;600;700;800&display=swap" rel="stylesheet">
     <!-- Bibliothèque jsPDF pour générer des PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+        
+    <script>
+// ==================== INITIALISATION ====================
+(function() {
+    'use strict';
+    
+    console.log('🚀 Démarrage du script...');
+
+    // Variables globales
+    const state = {
+        currentLanguage: 'fr',
+        currentPage: 1,
+        playerData: {
+            firstName: '',
+            lastName: '',
+            cvFile: null
+        },
+        gameData: {
+            badges: [],
+            completedChallenges: [],
+            visitedCompanies: [],
+            points: 0,
+            mobility: {
+                steps: 0,
+                bike: 0,
+                publicTransport: false,
+                carpool: false
+            }
+        }
+    };
+
+    const challengePoints = {
+        1: 100, 2: 150, 3: 200, 4: 300, 5: 500, 6: 250
+    };
+
+    const pointsRewards = {
+        0: { name: 'Débutant Motivé', icon: '🌟', color: '#2897d5' },
+        500: { name: 'Candidat Actif', icon: '🚀', color: '#95c11f' },
+        1000: { name: 'Pro du Networking', icon: '🤝', color: '#f39200' },
+        1500: { name: 'Expert Mission', icon: '🏆', color: '#d60b52' },
+        2000: { name: 'Légende du Forum', icon: '👑', color: '#a3195b' }
+    };
+
+    const sectorsData = {
+        tech: {
+            name: { fr: 'Tech & Digital', es: 'Tech & Digital' },
+            companies: [
+                { name: 'WebDev Solutions', info: 'Développement web et applications mobiles', tags: ['Dev', 'Web', 'Mobile'] },
+                { name: 'AI Innovations', info: 'Intelligence artificielle et machine learning', tags: ['IA', 'Data', 'Innovation'] },
+                { name: 'CyberSec Pro', info: 'Cybersécurité et protection des données', tags: ['Sécurité', 'Réseau', 'Protection'] },
+                { name: 'Cloud Systems', info: 'Solutions cloud et infrastructure', tags: ['Cloud', 'Infra', 'Système'] },
+                { name: 'UX Design Studio', info: 'Design d\'expérience utilisateur', tags: ['UX', 'Design', 'Interface'] }
+            ]
+        },
+        resto: {
+            name: { fr: 'Restauration', es: 'Restauración' },
+            companies: [
+                { name: 'Le Gourmet', info: 'Restaurant gastronomique français', tags: ['Chef', 'Gastro', 'Service'] },
+                { name: 'Pizza Express', info: 'Pizzeria rapide et livraison', tags: ['Rapide', 'Livraison', 'Italien'] },
+                { name: 'Café Central', info: 'Café-brasserie du centre-ville', tags: ['Café', 'Brasserie', 'Accueil'] },
+                { name: 'Traiteur Deluxe', info: 'Service traiteur événementiel', tags: ['Traiteur', 'Événement', 'Buffet'] }
+            ]
+        },
+        sante: {
+            name: { fr: 'Santé & Social', es: 'Salud & Social' },
+            companies: [
+                { name: 'Clinique Saint-Martin', info: 'Établissement de soins privé', tags: ['Clinique', 'Soins', 'Médical'] },
+                { name: 'EHPAD Les Jardins', info: 'Maison de retraite médicalisée', tags: ['EHPAD', 'Seniors', 'Accompagnement'] }
+            ]
+        },
+        commerce: {
+            name: { fr: 'Commerce', es: 'Comercio' },
+            companies: [
+                { name: 'Galeries Lafayette', info: 'Grand magasin mode et luxe', tags: ['Mode', 'Luxe', 'Conseil'] },
+                { name: 'SuperMarché Bio', info: 'Alimentation biologique', tags: ['Bio', 'Alimentaire', 'Écologie'] }
+            ]
+        },
+        artisan: {
+            name: { fr: 'Artisanat & BTP', es: 'Artesanía & BTP' },
+            companies: [
+                { name: 'Menuiserie Dubois', info: 'Menuiserie traditionnelle et moderne', tags: ['Bois', 'Meuble', 'Artisan'] },
+                { name: 'Électricité Pro', info: 'Installation électrique résidentielle', tags: ['Électricité', 'Installation', 'Résidentiel'] }
+            ]
+        },
+        service: {
+            name: { fr: 'Services', es: 'Servicios' },
+            companies: [
+                { name: 'Banque Populaire', info: 'Services bancaires et financiers', tags: ['Banque', 'Finance', 'Conseil'] },
+                { name: 'Assurance Vie', info: 'Assurances tous risques', tags: ['Assurance', 'Protection', 'Conseil'] }
+            ]
+        },
+        tourisme: {
+            name: { fr: 'Tourisme & Hôtellerie', es: 'Turismo & Hostelería' },
+            companies: [
+                { name: 'Hôtel 4 Étoiles', info: 'Hôtellerie de luxe centre-ville', tags: ['Hôtel', 'Luxe', 'Accueil'] },
+                { name: 'Camping Les Pins', info: 'Camping familial 3 étoiles', tags: ['Camping', 'Famille', 'Nature'] }
+            ]
+        },
+        transport: {
+            name: { fr: 'Transport & Logistique', es: 'Transporte & Logística' },
+            companies: [
+                { name: 'Transport Rapide', info: 'Transport routier de marchandises', tags: ['Transport', 'Routier', 'Marchandise'] },
+                { name: 'Logistique Stock', info: 'Entreposage et distribution', tags: ['Logistique', 'Stock', 'Distribution'] }
+            ]
+        }
+    };
+
+    // ==================== FONCTIONS ====================
+    
+    function showStandInfo(sectorId) {
+        console.log('✅ showStandInfo appelé pour:', sectorId);
+        
+        const sector = sectorsData[sectorId];
+        if (!sector) {
+            alert('Secteur non trouvé: ' + sectorId);
+            return;
+        }
+
+        const modal = document.getElementById('companyModal');
+        const title = document.getElementById('modalTitle');
+        const grid = document.getElementById('companiesGrid');
+
+        title.textContent = sector.name[state.currentLanguage];
+        grid.innerHTML = '';
+
+        sector.companies.forEach((company, idx) => {
+            const card = document.createElement('div');
+            card.className = 'company-card';
+            card.innerHTML = `
+                <div class="company-name">${company.name}</div>
+                <div class="company-info">${company.info}</div>
+                <div class="company-tags">
+                    ${company.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        modal.style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('companyModal').style.display = 'none';
+    }
+
+    function showPage(pageNum) {
+        console.log('📄 Changement vers page', pageNum);
+        
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        
+        const page = document.getElementById('page' + pageNum);
+        const navBtn = document.querySelectorAll('.nav-btn')[pageNum - 1];
+        
+        if (page) page.classList.add('active');
+        if (navBtn) navBtn.classList.add('active');
+        
+        state.currentPage = pageNum;
+    }
+
+    function registerPlayer() {
+        const name = state.playerData.firstName || 'Joueur';
+        const info = document.getElementById('playerInfo');
+        const nameEl = document.getElementById('playerName');
+        
+        if (nameEl) nameEl.textContent = name;
+        if (info) info.style.display = 'block';
+    }
+
+    function updateIdentity() {
+        state.playerData.firstName = document.getElementById('firstName')?.value || '';
+        state.playerData.lastName = document.getElementById('lastName')?.value || '';
+    }
+
+    function updateCompaniesCounter() {
+        const inputs = document.querySelectorAll('.company-name-input');
+        let count = 0;
+        state.gameData.visitedCompanies = [];
+        
+        inputs.forEach(input => {
+            if (input.value.trim()) {
+                count++;
+                state.gameData.visitedCompanies.push(input.value.trim());
+            }
+        });
+        
+        const counter = document.getElementById('companiesVisitedCounter');
+        if (counter) counter.textContent = count;
+    }
+
+    function toggleCheck(checkbox) {
+        checkbox.classList.toggle('checked');
+    }
+
+    function completeChallenge(card, level) {
+        if (state.gameData.completedChallenges.includes(level)) return;
+        
+        state.gameData.completedChallenges.push(level);
+        card.classList.add('completed');
+        state.gameData.points += challengePoints[level];
+        
+        alert(`Défi ${level} accompli ! +${challengePoints[level]} points !`);
+    }
+
+    function selectQuestion(item) {
+        document.querySelectorAll('.question-item').forEach(q => q.classList.remove('selected'));
+        item.classList.add('selected');
+    }
+
+    function unlockBadge(badge, level) {
+        if (state.gameData.badges.includes(level)) return;
+        
+        state.gameData.badges.push(level);
+        badge.classList.add('unlocked');
+        alert(`Badge ${level} débloqué !`);
+    }
+
+    function updateMobility() {
+        const steps = parseFloat(document.getElementById('steps')?.value) || 0;
+        const bike = parseFloat(document.getElementById('bike')?.value) || 0;
+        const publicTransport = document.getElementById('publicTransport')?.checked || false;
+        const carpool = document.getElementById('carpool')?.checked || false;
+        
+        state.gameData.mobility = { steps, bike, publicTransport, carpool };
+        
+        let score = Math.floor(steps / 100) + (bike * 20);
+        if (publicTransport) score += 50;
+        if (carpool) score += 30;
+        
+        const scoreEl = document.getElementById('ecoScore');
+        if (scoreEl) scoreEl.textContent = score;
+    }
+
+    // ==================== INITIALISATION ====================
+    
+    function init() {
+        console.log('🎯 Initialisation des événements...');
+
+        // Secteurs
+        const sectorMap = {
+            'tech-sector': 'tech',
+            'resto-sector': 'resto',
+            'sante-sector': 'sante',
+            'commerce-sector': 'commerce',
+            'artisan-sector': 'artisan',
+            'service-sector': 'service',
+            'tourisme-sector': 'tourisme',
+            'transport-sector': 'transport'
+        };
+
+        document.querySelectorAll('.sector-stand').forEach(sector => {
+            sector.addEventListener('click', function(e) {
+                e.stopPropagation();
+                console.log('🖱️ Clic sur secteur');
+                
+                for (const [className, sectorId] of Object.entries(sectorMap)) {
+                    if (this.classList.contains(className)) {
+                        showStandInfo(sectorId);
+                        return;
+                    }
+                }
+                
+                if (this.classList.contains('custom-sector')) {
+                    alert('Fonction secteur personnalisé à venir');
+                }
+            });
+        });
+
+        // Navigation
+        document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+            btn.addEventListener('click', () => showPage(i + 1));
+        });
+
+        // Modals
+        document.getElementById('companyModal')?.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.querySelector('.close')?.addEventListener('click', closeModal);
+
+        // Identité
+        document.getElementById('firstName')?.addEventListener('input', updateIdentity);
+        document.getElementById('lastName')?.addEventListener('input', updateIdentity);
+
+        // Entrée
+        document.querySelector('.entrance-sign')?.addEventListener('click', registerPlayer);
+
+        // Inputs entreprises
+        document.querySelectorAll('.company-name-input').forEach(input => {
+            input.addEventListener('input', updateCompaniesCounter);
+        });
+
+        // Checkboxes
+        document.querySelectorAll('.custom-checkbox').forEach(cb => {
+            cb.addEventListener('click', function() {
+                toggleCheck(this);
+            });
+        });
+
+        // Défis
+        document.querySelectorAll('.challenge-card').forEach((card, i) => {
+            card.addEventListener('click', function() {
+                completeChallenge(this, i + 1);
+            });
+        });
+
+        // Questions
+        document.querySelectorAll('.question-item').forEach(item => {
+            item.addEventListener('click', function() {
+                selectQuestion(this);
+            });
+        });
+
+        // Badges
+        document.querySelectorAll('.badge-sticker').forEach((badge, i) => {
+            badge.addEventListener('click', function() {
+                unlockBadge(this, i + 1);
+            });
+        });
+
+        // Mobilité
+        ['steps', 'bike', 'publicTransport', 'carpool'].forEach(id => {
+            document.getElementById(id)?.addEventListener('change', updateMobility);
+        });
+
+        console.log('✅ Événements attachés !');
+        console.log('📊 Nombre de secteurs:', document.querySelectorAll('.sector-stand').length);
+        
+        showPage(1);
+        updateMobility();
+    }
+
+    // Démarrage
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+})();
+</script>    
     <style>
         * {
             box-sizing: border-box;
