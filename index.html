@@ -4334,16 +4334,114 @@ Date: ${new Date().toLocaleDateString()}
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Page chargée, initialisation...');
         
-        // Test de disponibilité des fonctions
-        console.log('showStandInfo disponible:', typeof window.showStandInfo);
-        console.log('sectorsData disponible:', typeof sectorsData);
-        
-        setLanguage('fr');
-        showPage(1);
-        updateMobility();
-        updatePointsDisplay();
-        updateCompaniesCounter();
-        
-        console.log('Initialisation terminée');
+    // Test de disponibilité des fonctions
+    console.log('showStandInfo disponible:', typeof window.showStandInfo);
+    console.log('sectorsData disponible:', typeof sectorsData);
+    
+    setLanguage('fr');
+    showPage(1);
+    updateMobility();
+    updatePointsDisplay();
+    updateCompaniesCounter();
+    
+    // ========== AJOUTEZ CE BLOC ICI ==========
+    
+    // Attacher les événements de clic aux secteurs
+    console.log('Ajout des événements de clic...');
+    
+    document.querySelectorAll('.sector-stand').forEach(function(sector) {
+        sector.addEventListener('click', function() {
+            console.log('Secteur cliqué!', this.className);
+            
+            // Identifier le secteur cliqué
+            let sectorId = '';
+            if (this.classList.contains('tech-sector')) sectorId = 'tech';
+            else if (this.classList.contains('resto-sector')) sectorId = 'resto';
+            else if (this.classList.contains('sante-sector')) sectorId = 'sante';
+            else if (this.classList.contains('commerce-sector')) sectorId = 'commerce';
+            else if (this.classList.contains('artisan-sector')) sectorId = 'artisan';
+            else if (this.classList.contains('service-sector')) sectorId = 'service';
+            else if (this.classList.contains('tourisme-sector')) sectorId = 'tourisme';
+            else if (this.classList.contains('transport-sector')) sectorId = 'transport';
+            else if (this.classList.contains('custom-sector')) {
+                showCustomSectorModal();
+                return;
+            }
+            
+            if (sectorId) {
+                console.log('Ouverture du secteur:', sectorId);
+                showStandInfo(sectorId);
+            }
+        });
     });
+    
+    // Attacher les événements aux boutons de navigation
+    document.querySelectorAll('.nav-btn').forEach(function(btn, index) {
+        btn.addEventListener('click', function() {
+            showPage(index + 1);
+        });
+    });
+    
+    // Attacher événement au dé
+    const dice = document.querySelector('.game-dice');
+    if (dice) {
+        dice.addEventListener('click', rollDice);
+    }
+    
+    // Attacher événement à l'entrée du forum
+    const entrance = document.querySelector('.entrance-sign');
+    if (entrance) {
+        entrance.addEventListener('click', registerPlayer);
+    }
+    
+    // Attacher événement au QG
+    const hq = document.querySelector('.hq-building');
+    if (hq) {
+        hq.addEventListener('click', function() {
+            alert(currentLanguage === 'fr' ? 
+                '🏠 Quartier Général de la Mission Locale - Point de départ et validation des badges' : 
+                '🏠 Cuartel General de la Misión Local - Punto de partida y validación de insignias');
+        });
+    }
+    
+    // Attacher événement à la zone de repos
+    const restZone = document.querySelector('.rest-zone');
+    if (restZone) {
+        restZone.addEventListener('click', showRestInfo);
+    }
+    
+    // Attacher événements aux flèches du parcours
+    document.querySelectorAll('.path-arrow').forEach(function(arrow) {
+        arrow.addEventListener('click', showPathInfo);
+    });
+    
+    // Attacher événements aux cartes de défi
+    document.querySelectorAll('.challenge-card').forEach(function(card, index) {
+        card.addEventListener('click', function() {
+            const level = index + 1;
+            completeChallenge(this, level);
+        });
+    });
+    
+    // Attacher événements aux items de questions
+    document.querySelectorAll('.question-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            selectQuestion(this);
+        });
+    });
+    
+    // Attacher événements aux badges
+    document.querySelectorAll('.badge-sticker').forEach(function(badge, index) {
+        badge.addEventListener('click', function() {
+            const level = index + 1;
+            unlockBadge(this, level);
+        });
+    });
+    
+    console.log('Événements attachés avec succès!');
+    
+    // ========== FIN DU BLOC À AJOUTER ==========
+    
+    console.log('Initialisation terminée');
+});
 </script>
