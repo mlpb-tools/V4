@@ -1,1393 +1,837 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forum Mission Locale Pays Basque</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        min-height: 100vh;
-        padding: 20px;
+  <meta charset="UTF-8" />
+  <title>LS4YOU – Mon Bilan Life Skills & Ressources</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Approx polices – Politica / Muli / Akrobat peuvent être ajoutées dans ton CSS global */
+    @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Montserrat:wght@600;700&display=swap");
+
+    :root {
+      --orange: #f39200;
+      --vert: #95c11f;
+      --bleu: #2897d5;
+      --rose: #d60b52;
+      --violet: #a3195b;
+      --rouge: #9f3d3f;
+      --noir: #171718;
+      --bg: #f8f8fb;
+    }
+
+    body {
+      font-family: "Muli", "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(243,146,0,0.08) 0, transparent 40%),
+        radial-gradient(circle at 100% 0, rgba(40,151,213,0.09) 0, transparent 45%),
+        radial-gradient(circle at 0 100%, rgba(149,193,31,0.09) 0, transparent 45%),
+        #f5f5f8;
+      color: var(--noir);
+    }
+
+    h1, h2, h3 {
+      font-family: "Politica", "Montserrat", system-ui, sans-serif;
+    }
+
+    .card {
+      border-radius: 20px;
+      background: #ffffff;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .chip {
+      border-radius: 999px;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      background: #f1f5f9;
+    }
+
+    .scale-dot {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      border: 2px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      font-family: "Akrobat", "Montserrat", system-ui, sans-serif;
+      font-size: 0.8rem;
+      background: #fff;
+      gap: 2px;
+    }
+
+    .scale-dot span {
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .scale-dot:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.18);
+      border-color: var(--bleu);
+    }
+
+    .scale-dot.selected {
+      background: linear-gradient(135deg, var(--bleu), var(--violet));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 8px 20px rgba(40,151,213,0.45);
+    }
+
+    .domain-pill {
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .progress-bar {
+      height: 0.9rem;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+      position: relative;
     }
 
-    .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        position: relative;
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--orange), var(--bleu), var(--rose));
+      width: 0%;
+      transition: width 0.4s ease;
     }
 
-    /* Header Banner */
-    .header-banner {
-        background: linear-gradient(135deg, #f39200, #d60b52);
-        border: 5px solid #171718;
-        border-radius: 25px;
-        padding: 20px 30px;
-        margin-bottom: 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 20px;
-        box-shadow: 8px 8px 0px #95c11f;
+    .progress-bar::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(
+        120deg,
+        rgba(255,255,255,0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255,255,255,0.15) 50%,
+        rgba(255,255,255,0.15) 75%,
+        transparent 75%,
+        transparent
+      );
+      background-size: 24px 24px;
+      mix-blend-mode: soft-light;
+      pointer-events: none;
     }
 
-    .logo-section {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        flex: 1;
+    .step-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      transition: all 0.2s ease;
+      border: 1px solid #cbd5e1;
     }
 
-    .mlpb-logo {
-        height: 50px;
-        cursor: pointer;
-        transition: transform 0.3s ease;
+    .step-dot.active {
+      background: var(--bleu);
+      border-color: var(--bleu);
+      transform: scale(1.25);
+      box-shadow: 0 0 0 4px rgba(40,151,213,0.2);
     }
 
-    .mlpb-logo:hover {
-        transform: scale(1.05);
+    .tag-weak {
+      background: #fef2f2;
+      color: #b91c1c;
     }
 
-    .forum-logo {
-        font-size: 2.5rem;
-        cursor: pointer;
-        transition: transform 0.3s ease;
+    .tag-ok {
+      background: #fffbeb;
+      color: #92400e;
     }
 
-    .forum-logo:hover {
-        transform: rotate(360deg);
+    .tag-strong {
+      background: #ecfdf5;
+      color: #166534;
     }
 
-    .forum-title {
-        color: white;
-        font-weight: 800;
-        font-size: clamp(1rem, 2.5vw, 1.5rem);
-        cursor: pointer;
-        transition: transform 0.3s ease;
-    }
-
-    .forum-title:hover {
-        transform: scale(1.05);
-    }
-
-    .download-section {
-        display: flex;
-        gap: 15px;
-    }
-
-    .download-btn {
-        background: white;
-        color: #f39200;
-        border: 3px solid #171718;
-        padding: 12px 20px;
-        border-radius: 15px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .download-btn:hover {
-        transform: scale(1.05);
-        background: #171718;
-        color: white;
-    }
-
-    /* Language Selector */
-    .language-selector {
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        display: flex;
-        gap: 10px;
-        z-index: 1000;
-        background: white;
-        padding: 10px;
-        border-radius: 15px;
-        border: 3px solid #171718;
-        box-shadow: 4px 4px 0px #f39200;
-    }
-
-    .lang-btn {
-        background: white;
-        border: 2px solid #95c11f;
-        padding: 8px 15px;
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .lang-btn.active {
-        background: #95c11f;
-        color: white;
-    }
-
-    .lang-btn:hover {
-        transform: scale(1.05);
-    }
-
-    /* Identity Block */
-    .identity-block {
-        background: linear-gradient(135deg, rgba(149,193,31,0.1), rgba(40,151,213,0.1));
-        border: 4px solid #95c11f;
-        border-radius: 25px;
-        padding: 25px;
-        margin-bottom: 30px;
-        box-shadow: 6px 6px 0px rgba(0,0,0,0.1);
-    }
-
-    .identity-block h3 {
-        color: #171718;
-        margin-bottom: 20px;
-        font-size: clamp(1.2rem, 3vw, 1.5rem);
-        text-align: center;
-    }
-
-    .identity-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-    }
-
-    .name-section {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .name-input {
-        padding: 15px;
-        border: 3px solid #95c11f;
-        border-radius: 15px;
-        font-size: 1rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .name-input:focus {
-        outline: none;
-        border-color: #2897d5;
-        transform: scale(1.02);
-    }
-
-    /* Pages */
-    .page {
-        display: none;
-        animation: fadeIn 0.5s ease;
-    }
-
-    .page.active {
-        display: block;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .page-header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .page-title {
-        color: #171718;
-        font-size: clamp(1.8rem, 4vw, 2.5rem);
-        font-weight: 900;
-        margin-bottom: 10px;
-    }
-
-    .page-subtitle {
-        color: #666;
-        font-size: clamp(1rem, 2vw, 1.2rem);
-    }
-
-    /* Forum Map */
-    .forum-map {
-        background: white;
-        border: 5px solid #171718;
-        border-radius: 30px;
-        padding: 40px 20px;
-        position: relative;
-        box-shadow: 12px 12px 0px #f39200;
-        margin-bottom: 40px;
-    }
-
-    .sectors-circle {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        padding: 20px;
-    }
-
-    .sector-stand {
-        background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
-        border: 4px solid;
-        border-radius: 20px;
-        padding: 20px 15px;
-        text-align: center;
-        transition: all 0.3s ease;
-        min-height: 160px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .sector-stand:hover {
-        transform: translateY(-8px) scale(1.05);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        z-index: 10;
-    }
-
-    .tech-sector { border-color: #2897d5; }
-    .resto-sector { border-color: #f39200; }
-    .sante-sector { border-color: #d60b52; }
-    .commerce-sector { border-color: #95c11f; }
-    .artisan-sector { border-color: #9f3d3f; }
-    .service-sector { border-color: #a3195b; }
-    .tourisme-sector { border-color: #2897d5; }
-    .transport-sector { border-color: #f39200; }
-    .custom-sector { border-color: #95c11f; border-style: dashed; }
-
-    .sector-icon {
-        font-size: 3rem;
-        margin-bottom: 15px;
-    }
-
-    .sector-info h4 {
-        font-size: clamp(0.9rem, 2vw, 1.1rem);
-        margin-bottom: 10px;
-        color: #171718;
-    }
-
-    .company-count {
-        font-size: 0.9rem;
-        color: #666;
-        margin-bottom: 10px;
-    }
-
-    .sector-tags {
-        display: flex;
-        gap: 5px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .tag {
-        background: rgba(149,193,31,0.2);
-        padding: 4px 10px;
-        border-radius: 10px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #171718;
-    }
-
-    /* Modal */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 2000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.7);
-        animation: fadeIn 0.3s ease;
-    }
-
-    .modal-content {
-        background: white;
-        margin: 5% auto;
-        padding: 0;
-        border: 5px solid #171718;
-        border-radius: 25px;
-        width: 90%;
-        max-width: 900px;
-        max-height: 80vh;
-        overflow-y: auto;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-
-    .modal-header {
-        background: linear-gradient(135deg, #f39200, #d60b52);
-        padding: 25px 30px;
-        border-radius: 20px 20px 0 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .modal-title {
-        color: white;
-        font-size: clamp(1.5rem, 3vw, 2rem);
-        font-weight: 800;
-    }
-
-    .close {
-        color: white;
-        font-size: 2.5rem;
-        font-weight: bold;
-        cursor: pointer;
-        background: none;
-        border: none;
-        transition: transform 0.3s ease;
-    }
-
-    .close:hover {
-        transform: scale(1.2) rotate(90deg);
-    }
-
-    .modal-body {
-        padding: 30px;
-    }
-
-    .companies-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-    }
-
-    .company-card {
-        background: linear-gradient(135deg, rgba(149,193,31,0.1), rgba(40,151,213,0.1));
-        border: 3px solid #95c11f;
-        border-radius: 20px;
-        padding: 20px;
-        transition: all 0.3s ease;
-    }
-
-    .company-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
-
-    .company-name {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #171718;
-        margin-bottom: 10px;
-    }
-
-    .company-info {
-        color: #666;
-        margin-bottom: 15px;
-        line-height: 1.5;
-    }
-
-    /* Navigation */
-    .nav-buttons {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 15px;
-        background: white;
-        padding: 15px 25px;
-        border-radius: 50px;
-        border: 4px solid #171718;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        z-index: 1000;
-    }
-
-    .nav-btn {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        border: 3px solid #95c11f;
-        background: white;
-        color: #171718;
-        font-weight: 800;
-        font-size: 1.5rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .nav-btn:hover {
-        transform: scale(1.1);
-        background: #95c11f;
-        color: white;
-    }
-
-    .nav-btn.active {
-        background: #f39200;
-        color: white;
-        border-color: #f39200;
-        transform: scale(1.15);
-    }
-
-    /* Rules */
-    .rules-container {
-        background: white;
-        border: 5px solid #171718;
-        border-radius: 25px;
-        padding: 40px 30px;
-        box-shadow: 8px 8px 0px #95c11f;
-    }
-
-    .challenge-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-    }
-
-    .challenge-card {
-        background: linear-gradient(135deg, rgba(40,151,213,0.1), rgba(149,193,31,0.1));
-        border: 4px solid #2897d5;
-        border-radius: 20px;
-        padding: 25px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .challenge-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
-
-    .challenge-card.completed {
-        background: linear-gradient(135deg, rgba(149,193,31,0.3), rgba(149,193,31,0.1));
-        border-color: #95c11f;
-    }
-
-    .card-header {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-
-    .card-level {
-        background: #2897d5;
-        color: white;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        font-weight: 800;
-    }
-
-    .card-title {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #171718;
-    }
-
-    .card-mission {
-        color: #666;
-        line-height: 1.6;
-        margin-bottom: 15px;
-    }
-
-    .card-reward {
-        background: rgba(149,193,31,0.2);
-        padding: 10px 15px;
-        border-radius: 10px;
-        font-weight: 600;
-        color: #171718;
-    }
-
-    /* Tracking Table */
-    .tracking-table {
-        background: white;
-        border: 5px solid #171718;
-        border-radius: 25px;
-        padding: 30px;
-        box-shadow: 8px 8px 0px #f39200;
-    }
-
-    .companies-counter {
-        background: linear-gradient(135deg, #2897d5, #95c11f);
-        border: 4px solid #171718;
-        border-radius: 20px;
-        padding: 30px;
-        text-align: center;
-        margin-bottom: 30px;
-        color: white;
-    }
-
-    .companies-counter h3 {
-        font-size: clamp(1.2rem, 3vw, 1.5rem);
-        margin-bottom: 15px;
-    }
-
-    .counter-display {
-        font-size: clamp(3rem, 8vw, 5rem);
-        font-weight: 900;
-        margin: 10px 0;
-    }
-
-    .company-row {
-        display: grid;
-        grid-template-columns: 2fr repeat(4, 1fr) 2fr;
-        gap: 15px;
-        align-items: center;
-        padding: 15px;
-        margin-bottom: 10px;
-        background: rgba(149,193,31,0.05);
-        border-radius: 15px;
-    }
-
-    .company-input {
-        padding: 12px;
-        border: 3px solid #95c11f;
-        border-radius: 10px;
-        font-weight: 600;
-        width: 100%;
-    }
-
-    .company-input:focus {
-        outline: none;
-        border-color: #2897d5;
-    }
-
-    .checkbox-container {
-        display: flex;
-        justify-content: center;
-    }
-
-    .custom-checkbox {
-        width: 35px;
-        height: 35px;
-        border: 3px solid #95c11f;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .custom-checkbox:hover {
-        transform: scale(1.1);
-        border-color: #f39200;
-    }
-
-    .custom-checkbox.checked {
-        background: #95c11f;
-    }
-
-    .custom-checkbox.checked::after {
-        content: '✓';
-        color: white;
-        font-weight: 800;
-        font-size: 1.5rem;
-    }
-
-    /* Questions */
-    .questions-container {
-        background: white;
-        border: 5px solid #171718;
-        border-radius: 25px;
-        padding: 40px 30px;
-        box-shadow: 8px 8px 0px #2897d5;
-    }
-
-    .question-item {
-        background: linear-gradient(135deg, rgba(243,146,0,0.1), rgba(149,193,31,0.1));
-        border: 3px solid #f39200;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 15px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .question-item:hover {
-        transform: translateX(10px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    .question-item.selected {
-        background: linear-gradient(135deg, rgba(243,146,0,0.3), rgba(149,193,31,0.3));
-        border-color: #95c11f;
-    }
-
-    .question-icon {
-        font-size: 2rem;
-    }
-
-    /* Validation */
-    .validation-container {
-        background: white;
-        border: 5px solid #171718;
-        border-radius: 25px;
-        padding: 40px 30px;
-        box-shadow: 8px 8px 0px #d60b52;
-    }
-
-    .badges-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 25px;
-        margin-bottom: 30px;
-    }
-
-    .badge-sticker {
-        background: rgba(200,200,200,0.3);
-        border: 4px solid #ccc;
-        border-radius: 20px;
-        padding: 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        min-height: 150px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .badge-sticker:hover {
-        transform: scale(1.05);
-    }
-
-    .badge-sticker.unlocked {
-        background: linear-gradient(135deg, rgba(149,193,31,0.3), rgba(40,151,213,0.3));
-        border-color: #95c11f;
-    }
-
-    .badge-icon {
-        font-size: 3rem;
-        margin-bottom: 10px;
-    }
-
-    .badge-name {
-        font-weight: 700;
-        color: #171718;
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 20px;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-top: 30px;
-    }
-
-    .action-btn {
-        background: linear-gradient(45deg, #2897d5, #95c11f);
-        color: white;
-        border: 3px solid #171718;
-        padding: 15px 30px;
-        border-radius: 15px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 1rem;
-    }
-
-    .action-btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    }
-
-    /* Responsive */
     @media (max-width: 768px) {
-        .header-banner {
-            flex-direction: column;
-        }
-
-        .language-selector {
-            top: auto;
-            bottom: 120px;
-            right: 10px;
-            flex-direction: column;
-        }
-
-        .company-row {
-            grid-template-columns: 1fr;
-        }
-
-        .nav-buttons {
-            bottom: 15px;
-            gap: 8px;
-            padding: 10px;
-        }
-
-        .nav-btn {
-            width: 50px;
-            height: 50px;
-            font-size: 1.2rem;
-        }
+      .question-layout {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
-</style>
+
+    .badge {
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.06);
+      background: #ffffff;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.06);
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header-banner">
-            <div class="logo-section">
-                <img src="https://static.wixstatic.com/media/dd5dab_47743b1c86024865ba19e623a3db327f~mv2.avif/v1/fill/w_224,h_60,al_c,q_80,enc_avif,quality_auto/dd5dab_47743b1c86024865ba19e623a3db327f~mv2.avif" 
-                     alt="Mission Locale Pays Basque" 
-                     class="mlpb-logo"
-                     id="mlpbLogo">
-                <div class="forum-logo" id="forumLogo">🎯</div>
-                <h1 class="forum-title" id="forumTitle">Forum Mission Locale Pays Basque</h1>
-            </div>
-            <div class="download-section">
-                <button class="download-btn" id="downloadLogoBtn">📥 Logo</button>
-                <button class="download-btn" id="downloadNameBtn">📥 Nom</button>
-            </div>
-        </div>
-    <!-- Language Selector -->
-    <div class="language-selector">
-        <button class="lang-btn active" data-lang="fr">🇫🇷 FR</button>
-        <button class="lang-btn" data-lang="es">🇪🇸 ES</button>
-    </div>
+<body class="min-h-screen">
 
-    <!-- Identity Block -->
-    <div class="identity-block">
-        <h3>👤 Mon Identité</h3>
-        <div class="identity-grid">
-            <div class="name-section">
-                <input type="text" id="firstName" class="name-input" placeholder="Prénom">
-                <input type="text" id="lastName" class="name-input" placeholder="Nom">
-            </div>
-        </div>
-    </div>
-
-    <!-- Page 1 - Forum Map -->
-    <div class="page active" id="page1">
-        <div class="page-header">
-            <h1 class="page-title">Plan du forum</h1>
-            <p class="page-subtitle">Clique sur chaque secteur pour découvrir les entreprises</p>
-        </div>
-        
-        <div class="forum-map">
-            <div class="sectors-circle">
-                <!-- Tech & Digital -->
-                <div class="sector-stand tech-sector" data-sector="tech">
-                    <div class="sector-icon">💻</div>
-                    <div class="sector-info">
-                        <h4>TECH & DIGITAL</h4>
-                        <div class="company-count">5 entreprises</div>
-                        <div class="sector-tags">
-                            <span class="tag">Dev</span>
-                            <span class="tag">Web</span>
-                            <span class="tag">IA</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Restauration -->
-                <div class="sector-stand resto-sector" data-sector="resto">
-                    <div class="sector-icon">🍽️</div>
-                    <div class="sector-info">
-                        <h4>RESTAURATION</h4>
-                        <div class="company-count">4 entreprises</div>
-                        <div class="sector-tags">
-                            <span class="tag">Chef</span>
-                            <span class="tag">Service</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Santé & Social -->
-                <div class="sector-stand sante-sector" data-sector="sante">
-                    <div class="sector-icon">🏥</div>
-                    <div class="sector-info">
-                        <h4>SANTÉ & SOCIAL</h4>
-                        <div class="company-count">2 entreprises</div>
-                        <div class="sector-tags">
-                            <span class="tag">Soin</span>
-                            <span class="tag">Aide</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Commerce -->
-                <div class="sector-stand commerce-sector" data-sector="commerce">
-                    <div class="sector-icon">🛍️</div>
-                    <div class="sector-info">
-                        <h4>COMMERCE</h4>
-                        <div class="company-count">2 entreprises</div>
-                        <div class="sector-tags">
-                            <span class="tag">Vente</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Artisanat & BTP -->
-                <div class="sector-stand artisan-sector" data-sector="artisan">
-                    <div class="sector-icon">🔨</div>
-                    <div class="sector-info">
-                        <h4>ARTISANAT & BTP</h4>
-                        <div class="company-count">2 entreprises</div>
-                        <div class="sector-tags">
-                            <span class="tag">Bois</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Services -->
-                <div class="sector-stand service-sector" data-sector="service">
-                    <div class="sector-icon">🏢</div>
-                    <div class="sector-info">
-                        <h4>SERVICES</h4>
-                        <div class="company-count">2 entreprises</div>
-                        <div class="sector-tags">
-                            <span class="tag">Admin</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tourisme & Hôtellerie -->
-                <div class="sector-stand tourisme-sector" data-sector="tourisme">
-                    <div class="sector-icon">🏨</div>
-                    <div class="sector-info">
-                        <h4>TOURISME & HÔTELLERIE</h4>
-                        <div class="company-count">2 entreprises</div>
-                        <div class="sector-tags">
-                            <span class="tag">Hôtel</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Transport & Logistique -->
-                <div class="sector-stand transport-sector" data-sector="transport">
-                    <div class="sector-icon">🚛</div>
-                    <div class="sector-info">
-                        <h4>TRANSPORT & LOGISTIQUE</h4>
-                        <div class="company-count">2 entreprises</div>
-                        <div class="sector-tags">
-                            <span class="tag">Conduite</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Custom Sector -->
-                <div class="sector-stand custom-sector">
-                    <div class="sector-icon">➕</div>
-                    <div class="sector-info">
-                        <h4>AJOUTER SECTEUR</h4>
-                        <div class="company-count">Créer nouveau</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Page 2 - Rules -->
-    <div class="page" id="page2">
-        <div class="page-header">
-            <h1 class="page-title">Comment réussir ta mission ?</h1>
-            <p class="page-subtitle">5 niveaux de défis pour devenir un pro !</p>
-        </div>
-        
-        <div class="rules-container">
-            <div class="challenge-cards">
-                <div class="challenge-card" data-level="1">
-                    <div class="card-header">
-                        <div class="card-level">1</div>
-                        <div class="card-title">Premier Contact</div>
-                    </div>
-                    <div class="card-mission">Dire bonjour et se présenter à un employeur.</div>
-                    <div class="card-reward">🎯 Badge Premier Contact <strong>+100 pts</strong></div>
-                </div>
-                
-                <div class="challenge-card" data-level="2">
-                    <div class="card-header">
-                        <div class="card-level">2</div>
-                        <div class="card-title">Communicateur</div>
-                    </div>
-                    <div class="card-mission">Poser une question sur le métier.</div>
-                    <div class="card-reward">🗣️ Badge Communicateur <strong>+150 pts</strong></div>
-                </div>
-                
-                <div class="challenge-card" data-level="3">
-                    <div class="card-header">
-                        <div class="card-level">3</div>
-                        <div class="card-title
-                            ">Candidat Pro</div>
-                        </div>
-                        <div class="card-mission">Déposer son CV ou laisser ses coordonnées.</div>
-                        <div class="card-reward">📋 Badge Candidat Pro <strong>+200 pts</strong></div>
-                    </div>
-                    
-                    <div class="challenge-card" data-level="4">
-                        <div class="card-header">
-                            <div class="card-level">4</div>
-                            <div class="card-title">Networker</div>
-                        </div>
-                        <div class="card-mission">Obtenir une promesse de stage ou contact privilégié.</div>
-                        <div class="card-reward">🤝 Badge Networker <strong>+300 pts</strong></div>
-                    </div>
-                    
-                    <div class="challenge-card" data-level="5">
-                        <div class="card-header">
-                            <div class="card-level">5</div>
-                            <div class="card-title">Job Hunter</div>
-                        </div>
-                        <div class="card-mission">Être rappelé pour un entretien d'embauche.</div>
-                        <div class="card-reward">🏆 Badge Job Hunter <strong>+500 pts</strong></div>
-                    </div>
-                    
-                    <div class="challenge-card" data-level="6">
-                        <div class="card-header">
-                            <div class="card-level">🌱</div>
-                            <div class="card-title">Éco-Warrior</div>
-                        </div>
-                        <div class="card-mission">Venir en transport éco-responsable.</div>
-                        <div class="card-reward">🌱 Badge Éco-Warrior <strong>+250 pts</strong></div>
-                    </div>
-                </div>
-            </div>
+  <div class="max-w-5xl mx-auto px-4 py-6 md:py-10">
+    <!-- Header -->
+    <header class="mb-6 md:mb-10">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-sm border border-slate-100 mb-2">
+            <span class="text-[0.7rem] font-semibold uppercase tracking-wide text-slate-500">Mission Locale</span>
+            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+            <span class="text-[0.7rem] text-slate-500">LS4YOU – Life Skills</span>
+          </div>
+          <h1 class="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
+            🎮 Mon Bilan Life Skills & Ressources
+          </h1>
+          <p class="mt-2 text-sm md:text-base text-slate-600 max-w-2xl">
+            Tu réponds à quelques questions, à ton rythme.  
+            <span class="font-semibold">Pas de bonne ou de mauvaise réponse</span> : ça sert juste à voir sur quoi tu peux t’appuyer et ce qu’on peut renforcer ensemble.
+          </p>
+          <p class="mt-1 text-[0.75rem] text-slate-500">
+            Si une question ne te parle pas, tu peux la <span class="font-semibold">laisser vide</span>.
+          </p>
         </div>
 
-        <!-- Page 3 - Tracking -->
-        <div class="page" id="page3">
-            <div class="page-header">
-                <h1 class="page-title">Suivi de ton parcours</h1>
-                <p class="page-subtitle">Note tes interactions avec chaque entreprise</p>
-            </div>
+        <!-- Carte progression gamifiée -->
+        <div class="card px-4 py-3 flex flex-col gap-2 md:w-64">
+          <div class="flex items-center justify-between">
+            <span class="text-[0.7rem] font-semibold text-slate-500 uppercase tracking-wide">
+              Ton avancée
+            </span>
+            <span id="progress-counter" class="text-sm font-semibold text-slate-900">
+              0 / 50
+            </span>
+          </div>
+          <div class="progress-bar rounded-full overflow-hidden">
+            <div id="progress-fill" class="progress-fill"></div>
+          </div>
+          <div class="flex items-center justify-between text-[0.7rem] text-slate-500">
+            <span id="xp-label">XP : 0%</span>
+            <span id="level-label" class="font-semibold text-slate-700">Niveau 1 – Découverte</span>
+          </div>
+        </div>
+      </div>
+    </header>
 
-            <div class="companies-counter">
-                <h3>🏢 ENTREPRISES VISITÉES</h3>
-                <div class="counter-display" id="companiesCounter">0</div>
-                <p>entreprises rencontrées</p>
-            </div>
-            
-            <div class="tracking-table">
-                <div class="company-row" style="font-weight: 800; background: #f39200; color: white; border-radius: 15px; margin-bottom: 15px;">
-                    <div>Nom entreprise</div>
-                    <div>Présentation</div>
-                    <div>Question</div>
-                    <div>CV déposé</div>
-                    <div>Suivi</div>
-                    <div>Ressenti</div>
-                </div>
-                
-                <div class="company-row">
-                    <input type="text" class="company-input company-name-input" placeholder="Entreprise 1">
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <input type="text" class="company-input" placeholder="Notes...">
-                </div>
-                
-                <div class="company-row">
-                    <input type="text" class="company-input company-name-input" placeholder="Entreprise 2">
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <input type="text" class="company-input" placeholder="Notes...">
-                </div>
-                
-                <div class="company-row">
-                    <input type="text" class="company-input company-name-input" placeholder="Entreprise 3">
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <input type="text" class="company-input" placeholder="Notes...">
-                </div>
+    <!-- Main Card -->
+    <main class="card p-4 md:p-6">
+      <!-- Top info / steps -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4 md:mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-[var(--bleu)] text-white flex flex-col items-center justify-center text-xs font-bold shadow-md">
+            <span class="text-[0.65rem] uppercase tracking-wide">Monde</span>
+            <span id="domain-index" class="text-sm">1</span>
+          </div>
+          <div>
+            <p class="text-[0.7rem] font-semibold uppercase tracking-wide text-slate-500">
+              Thème en cours
+            </p>
+            <h2 id="domain-title" class="text-base md:text-lg font-semibold text-slate-900">
+              <!-- rempli en JS -->
+            </h2>
+          </div>
+        </div>
+        <div class="flex flex-col items-end gap-1">
+          <div class="flex items-center gap-2" id="step-dots">
+            <!-- rempli en JS -->
+          </div>
+          <span class="text-[0.7rem] text-slate-500">11 mondes à explorer</span>
+        </div>
+      </div>
 
-                <div class="company-row">
-                    <input type="text" class="company-input company-name-input" placeholder="Entreprise 4">
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <input type="text" class="company-input" placeholder="Notes...">
-                </div>
+      <!-- Description domaine -->
+      <div class="mb-4 border border-dashed border-slate-200 rounded-2xl px-3.5 py-3 bg-slate-50">
+        <p id="domain-description" class="text-sm text-slate-700">
+          <!-- rempli en JS -->
+        </p>
+      </div>
 
-                <div class="company-row">
-                    <input type="text" class="company-input company-name-input" placeholder="Entreprise 5">
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <div class="checkbox-container"><div class="custom-checkbox"></div></div>
-                    <input type="text" class="company-input" placeholder="Notes...">
-                </div>
-            </div>
+      <!-- Questions -->
+      <div id="questions-container" class="space-y-3 md:space-y-4 mb-6">
+        <!-- rempli en JS -->
+      </div>
+
+      <!-- Légende échelle -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
+        <div class="flex flex-wrap items-center gap-2 text-[0.7rem] text-slate-500">
+          <span class="badge"><span>😶</span> <span>Jamais / presque jamais</span></span>
+          <span class="badge"><span>🙂</span> <span>Parfois</span></span>
+          <span class="badge"><span>💪</span> <span>Souvent</span></span>
+          <span class="badge"><span>🌟</span> <span>Très souvent</span></span>
+        </div>
+        <div class="flex flex-wrap gap-1 text-[0.7rem] justify-end">
+          <span class="chip">Tu réponds comme tu le sens</span>
+          <span class="chip">Tu peux demander à ton/ta conseiller·e de reformuler</span>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <button id="prev-btn"
+                class="w-full md:w-auto inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed">
+          ← Monde précédent
+        </button>
+        <div class="text-[0.7rem] text-slate-500 text-center md:text-left">
+          Tu peux revenir en arrière à tout moment. Rien n’est enregistré en dehors de cette page.
+        </div>
+        <button id="next-btn"
+                class="w-full md:w-auto inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-xl bg-[var(--orange)] text-sm font-semibold text-white hover:brightness-110">
+          Monde suivant →
+        </button>
+      </div>
+
+      <!-- Bouton résultats -->
+      <div class="mt-6 border-t border-slate-100 pt-4 flex justify-end">
+        <button id="results-btn"
+                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--bleu)] text-sm font-semibold text-white hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled>
+          Voir mon bilan 📊
+        </button>
+      </div>
+    </main>
+
+    <!-- Résultats -->
+    <section id="results-section" class="mt-8 hidden">
+      <div class="card p-4 md:p-6 mb-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+          <div>
+            <h2 class="text-lg md:text-xl font-bold text-slate-900 mb-1">
+              Ton bilan par grand thème
+            </h2>
+            <p class="text-sm text-slate-600">
+              Ce bilan est un <span class="font-semibold">support de discussion</span> entre toi et ton/ta conseiller·e.
+              Il aide à construire un plan d’actions réaliste (emploi, formation, santé, budget, etc.).
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span id="badge-progress" class="badge">
+              🏅 <span>Badge : Découverte</span>
+            </span>
+          </div>
         </div>
 
-        <!-- Page 4 - Questions -->
-        <div class="page" id="page4">
-            <div class="page-header">
-                <h1 class="page-title">Besoin d'aide pour démarrer ?</h1>
-                <p class="page-subtitle">Questions types pour briser la glace</p>
-            </div>
-            
-            <div class="questions-container">
-                <div class="question-item">
-                    <div class="question-icon">🎯</div>
-                    <div>Quelles sont les qualités que vous recherchez le plus ?</div>
-                </div>
-                
-                <div class="question-item">
-                    <div class="question-icon">💼</div>
-                    <div>Quels métiers recrutent le plus dans votre entreprise ?</div>
-                </div>
-                
-                <div class="question-item">
-                    <div class="question-icon">🎓</div>
-                    <div>Proposez-vous des stages ou des immersions ?</div>
-                </div>
-                
-                <div class="question-item">
-                    <div class="question-icon">📚</div>
-                    <div>Faut-il un diplôme ou une expérience ?</div>
-                </div>
-                
-                <div class="question-item">
-                    <div class="question-icon">🌟</div>
-                    <div>Peut-on postuler même si on n'a jamais travaillé ?</div>
-                </div>
-                
-                <div class="question-item">
-                    <div class="question-icon">⏰</div>
-                    <div>Comment se déroule une journée type ?</div>
-                </div>
-            </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm border-t border-b border-slate-100">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="text-left px-3 py-2 font-semibold text-slate-600">Thème</th>
+                <th class="text-left px-3 py-2 font-semibold text-slate-600">Score (1–4)</th>
+                <th class="text-left px-3 py-2 font-semibold text-slate-600">Ce que ça veut dire</th>
+              </tr>
+            </thead>
+            <tbody id="results-table-body" class="divide-y divide-slate-100">
+              <!-- rempli en JS -->
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        <!-- Page 5 - Validation -->
-        <div class="page" id="page5">
-            <div class="page-header">
-                <h1 class="page-title">Mission accomplie !</h1>
-                <p class="page-subtitle">Collecte tes badges</p>
-            </div>
-            
-            <div class="validation-container">
-                <div style="background: linear-gradient(135deg, #f39200, #d60b52); color: white; padding: 25px; border-radius: 25px; text-align: center; margin-bottom: 30px; border: 5px solid #171718;">
-                    <h2 style="margin: 0 0 15px 0; font-size: 2rem; font-weight: 800;">🏆 SCORE TOTAL 🏆</h2>
-                    <div style="font-size: 3rem; font-weight: 900; margin: 15px 0;" id="totalPoints">0</div>
-                    <div style="font-size: 1.2rem;">POINTS</div>
-                </div>
-                
-                <div class="badges-grid">
-                    <div class="badge-sticker" data-badge="1">
-                        <div class="badge-icon">🎯</div>
-                        <div class="badge-name">Premier Contact</div>
-                    </div>
-                    
-                    <div class="badge-sticker" data-badge="2">
-                        <div class="badge-icon">🗣️</div>
-                        <div class="badge-name">Communicateur</div>
-                    </div>
-                    
-                    <div class="badge-sticker" data-badge="3">
-                        <div class="badge-icon">📋</div>
-                        <div class="badge-name">Candidat Pro</div>
-                    </div>
-                    
-                    <div class="badge-sticker" data-badge="4">
-                        <div class="badge-icon">🤝</div>
-                        <div class="badge-name">Networker</div>
-                    </div>
-                    
-                    <div class="badge-sticker" data-badge="5">
-                        <div class="badge-icon">🏆</div>
-                        <div class="badge-name">Job Hunter</div>
-                    </div>
-                    
-                    <div class="badge-sticker" data-badge="6">
-                        <div class="badge-icon">🌱</div>
-                        <div class="badge-name">Éco-Warrior</div>
-                    </div>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="action-btn" id="generateQRBtn">📱 Générer QR Code</button>
-                    <button class="action-btn" id="downloadPDFBtn">📄 Télécharger Bilan</button>
-                    <button class="action-btn" id="shareBtn">📤 Partager</button>
-                </div>
-            </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="card p-4">
+          <h3 class="text-sm font-semibold text-slate-900 mb-2">Pour toi – Ce que tu peux retenir</h3>
+          <ul id="youth-summary" class="list-disc list-inside text-xs text-slate-700 space-y-1">
+            <!-- rempli en JS -->
+          </ul>
         </div>
-
-        <!-- Navigation Buttons -->
-        <div class="nav-buttons">
-            <div class="nav-btn active" data-page="1">1</div>
-            <div class="nav-btn" data-page="2">2</div>
-            <div class="nav-btn" data-page="3">3</div>
-            <div class="nav-btn" data-page="4">4</div>
-            <div class="nav-btn" data-page="5">5</div>
+        <div class="card p-4">
+          <h3 class="text-sm font-semibold text-slate-900 mb-2">Pour le/la conseiller·e – Repères CEP</h3>
+          <ul id="counsellor-summary" class="list-disc list-inside text-xs text-slate-700 space-y-1">
+            <!-- rempli en JS -->
+          </ul>
         </div>
+      </div>
+    </section>
 
-        <!-- Modal -->
-        <div id="companyModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title" id="modalTitle">Secteur</h2>
-                    <button class="close" id="closeModalBtn">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="companies-grid" id="companiesGrid"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
 
-    <script>
-        // ==================== CODE JAVASCRIPT ====================
-        console.log('🚀 Script chargé');
+  <script>
+    // --- 11 mondes / domaines avec questions simplifiées et neutres ---
 
-        // Données
-        const sectorsData = {
-            tech: {
-                name: 'Tech & Digital',
-                companies: [
-                    { name: 'WebDev Solutions', info: 'Développement web et applications mobiles', tags: ['Dev', 'Web', 'Mobile'] },
-                    { name: 'AI Innovations', info: 'Intelligence artificielle', tags: ['IA', 'Data'] },
-                    { name: 'CyberSec Pro', info: 'Cybersécurité', tags: ['Sécurité', 'Réseau'] },
-                    { name: 'Cloud Systems', info: 'Solutions cloud', tags: ['Cloud', 'Infra'] },
-                    { name: 'UX Design Studio', info: 'Design UX/UI', tags: ['Design', 'Interface'] }
-                ]
-            },
-            resto: {
-                name: 'Restauration',
-                companies: [
-                    { name: 'Le Gourmet', info: 'Restaurant gastronomique', tags: ['Chef', 'Gastro'] },
-                    { name: 'Pizza Express', info: 'Pizzeria rapide', tags: ['Rapide', 'Italien'] },
-                    { name: 'Café Central', info: 'Café-brasserie', tags: ['Café', 'Brasserie'] },
-                    { name: 'Traiteur Deluxe', info: 'Service traiteur', tags: ['Traiteur', 'Événement'] }
-                ]
-            },
-            sante: {
-                name: 'Santé & Social',
-                companies: [
-                    { name: 'Clinique Saint-Martin', info: 'Établissement de soins', tags: ['Clinique', 'Soins'] },
-                    { name: 'EHPAD Les Jardins', info: 'Maison de retraite', tags: ['EHPAD', 'Seniors'] }
-                ]
-            },
-            commerce: {
-                name: 'Commerce',
-                companies: [
-                    { name: 'Galeries Lafayette', info: 'Grand magasin', tags: ['Mode', 'Luxe'] },
-                    { name: 'SuperMarché Bio', info: 'Alimentation bio', tags: ['Bio', 'Alimentaire'] }
-                ]
-            },
-            artisan: {
-                name: 'Artisanat & BTP',
-                companies: [
-                    { name: 'Menuiserie Dubois', info: 'Menuiserie', tags: ['Bois', 'Meuble'] },
-                    { name: 'Électricité Pro', info: 'Installation électrique', tags: ['Électricité', 'Installation'] }
-                ]
-            },
-            service: {
-                name: 'Services',
-                companies: [
-                    { name: 'Banque Populaire', info: 'Services bancaires', tags: ['Banque', 'Finance'] },
-                    { name: 'Assurance Vie', info: 'Assurances', tags: ['Assurance', 'Protection'] }
-                ]
-            },
-            tourisme: {
-                name: 'Tourisme & Hôtellerie',
-                companies: [
-                    { name: 'Hôtel 4 Étoiles', info: 'Hôtellerie de luxe', tags: ['Hôtel', 'Luxe'] },
-                    { name: 'Camping Les Pins', info: 'Camping familial', tags: ['Camping', 'Famille'] }
-                ]
-            },
-            transport: {
-                name: 'Transport & Logistique',
-                companies: [
-                    { name: 'Transport Rapide', info: 'Transport routier', tags: ['Transport', 'Routier'] },
-                    { name: 'Logistique Stock', info: 'Entreposage', tags: ['Logistique', 'Stock'] }
-                ]
-            }
-        };
+    const domains = [
+      {
+        id: "emploi",
+        title: "Emploi – chercher et travailler",
+        color: "bg-[var(--bleu)]/10 text-[var(--bleu)]",
+        description:
+          "Ici, on parle de travail : chercher un job, un apprentissage, faire un stage, se présenter à un employeur.",
+        questions: [
+          "Je peux expliquer simplement ce que je sais faire.",
+          "Si je devais passer un entretien, je saurais à peu près quoi dire.",
+          "Je sais où trouver des annonces (job, stage, apprentissage).",
+          "Je peux suivre des consignes au travail ou en stage.",
+          "Je peux demander de l’aide si je ne comprends pas ce qu’on me demande."
+        ]
+      },
+      {
+        id: "formation",
+        title: "Formation – apprendre et tenir le rythme",
+        color: "bg-[var(--orange)]/10 text-[var(--orange)]",
+        description:
+          "Ici, on parle d’école, de formation, de cours, d’ateliers : se concentrer, tenir plusieurs semaines, gérer la pression.",
+        questions: [
+          "Je peux rester concentré·e un moment quand un sujet m’intéresse.",
+          "Je peux tenir un rythme de cours plusieurs jours de suite.",
+          "Je peux lever la main ou poser une question si je ne comprends pas.",
+          "Je peux gérer un peu le stress avant un contrôle ou une évaluation.",
+          "Si une formation me plaît, je peux m’y investir sérieusement."
+        ]
+      },
+      {
+        id: "orientation",
+        title: "Orientation – projet et idées pour la suite",
+        color: "bg-[var(--violet)]/10 text-[var(--violet)]",
+        description:
+          "Ici, on parle de ton avenir : idées de métiers, envies, choix, ce que tu aimerais tester.",
+        questions: [
+          "J’ai au moins une idée de métier ou de domaine qui m’attire.",
+          "Je sais dire ce que j’aime bien faire dans la vie de tous les jours.",
+          "Je vois quelques points forts chez moi (ce que je fais plutôt bien).",
+          "Je sais que j’ai le droit de tester, me tromper et changer d’avis.",
+          "Je vois quelques étapes possibles pour avancer (même si tout n’est pas clair)."
+        ]
+      },
+      {
+        id: "mobilite",
+        title: "Mobilité – se déplacer",
+        color: "bg-[var(--vert)]/10 text-[var(--vert)]",
+        description:
+          "Ici, on parle de déplacements : bus, train, voiture, covoiturage, marcher, se repérer.",
+        questions: [
+          "Je peux aller à mes rendez-vous importants (Mission Locale, médecin, etc.).",
+          "Je connais au moins une solution pour me déplacer plus loin de chez moi.",
+          "Je peux demander de l’aide pour organiser un trajet si je ne connais pas l’endroit.",
+          "Les questions de transport me bloquent parfois pour certains projets.",
+          "Je sais à qui en parler si j’ai un souci de transport ou de permis."
+        ]
+      },
+      {
+        id: "sante",
+        title: "Santé & bien-être",
+        color: "bg-[var(--rose)]/10 text-[var(--rose)]",
+        description:
+          "Ici, on parle de ton énergie, ton sommeil, tes émotions, ton stress, ton moral.",
+        questions: [
+          "Globalement, j’ai assez d’énergie pour ma journée.",
+          "Je remarque quand mon stress ou mes émotions montent trop.",
+          "Je connais au moins une chose qui m’aide à me calmer ou me poser.",
+          "Je connais au moins une personne ou un lieu où je peux parler si ça ne va pas.",
+          "Ma santé (physique ou mentale) rend parfois les choses plus difficiles pour moi."
+        ]
+      },
+      {
+        id: "logement",
+        title: "Logement & lieu de vie",
+        color: "bg-slate-100 text-slate-800",
+        description:
+          "Ici, on parle de là où tu vis : se sentir en sécurité, pouvoir se reposer, avoir un coin à toi.",
+        questions: [
+          "En ce moment, j’ai un endroit où je peux dormir en sécurité.",
+          "J’ai un minimum de calme pour me reposer.",
+          "Mon lieu de vie me permet plus ou moins d’aller en formation ou au travail.",
+          "Si ma situation de logement changeait ou devenait compliquée, je saurais à qui en parler."
+        ]
+      },
+      {
+        id: "citoyennete",
+        title: "Relations, droits & participation",
+        color: "bg-[var(--rouge)]/10 text-[var(--rouge)]",
+        description:
+          "Ici, on parle de tes relations avec les autres, de tes droits, de ta place dans les groupes et les projets.",
+        questions: [
+          "Je peux parler dans un petit groupe si je me sens en confiance.",
+          "Je connais au moins une personne adulte qui peut m’écouter sérieusement.",
+          "Je sais que j’ai des droits (santé, travail, école…) même si je ne les connais pas tous.",
+          "Je pourrais m’impliquer dans une activité utile (bénévolat, projet, service civique…) si ça me parle."
+        ]
+      },
+      {
+        id: "finances",
+        title: "Argent & budget",
+        color: "bg-amber-50 text-amber-900",
+        description:
+          "Ici, on parle d’argent : ce qui rentre, ce qui sort, ce que tu peux ou ne peux pas faire avec.",
+        questions: [
+          "Je sais à peu près combien d’argent j’ai chaque mois.",
+          "Je vois quand ma situation d’argent devient vraiment limite.",
+          "Je peux parler d’argent avec une personne de confiance (pro ou proche).",
+          "Je sais qu’il existe des aides possibles (logement, études, mobilité, etc.).",
+          "L’argent me bloque parfois pour certains projets (permis, logement, sorties, etc.)."
+        ]
+      },
+      {
+        id: "loisirs",
+        title: "Loisirs, sport & activités",
+        color: "bg-teal-50 text-teal-900",
+        description:
+          "Ici, on parle de ce qui te fait du bien : sport, musique, jeux, dessin, sorties, projets créatifs…",
+        questions: [
+          "J’ai au moins une activité qui me fait du bien (sport, jeu, musique, etc.).",
+          "Je prends un peu de temps pour moi dans la semaine.",
+          "Je découvre parfois de nouvelles activités ou de nouveaux lieux.",
+          "Je vois que certaines activités m’aident pour mon moral ou ma confiance.",
+          "Je vois un petit lien entre certains loisirs et mon futur (compétences, idées, rencontres…)."
+        ]
+      },
+      {
+        id: "numerique",
+        title: "Numérique & connexion",
+        color: "bg-cyan-50 text-cyan-900",
+        description:
+          "Ici, on parle de téléphone, internet, ordi : se connecter, faire des démarches, s’informer.",
+        questions: [
+          "J’ai accès régulièrement à un téléphone et à internet.",
+          "Je peux faire ou suivre des démarches en ligne avec un peu d’aide si besoin.",
+          "Je sais chercher des infos utiles (emploi, formation, santé…) sur internet.",
+          "Je fais un minimum attention à ce que je publie ou envoie en ligne.",
+          "Si je suis perdu·e dans une démarche en ligne, je sais à qui demander de l’aide."
+        ]
+      },
+      {
+        id: "mode_vie",
+        title: "Rythme & mode de vie",
+        color: "bg-lime-50 text-lime-900",
+        description:
+          "Ici, on parle de ton quotidien : horaires, sommeil, repas, déplacements, organisation.",
+        questions: [
+          "Globalement, mes horaires de sommeil me permettent de tenir la journée.",
+          "Je peux arriver à l’heure quand quelque chose est important pour moi.",
+          "Je note ou garde quelque part mes rendez-vous importants.",
+          "Je vois ce que je pourrais changer un peu dans mon quotidien pour me sentir mieux.",
+          "Je suis prêt·e à tester de petits changements (horaires, habitudes) pour avancer dans un projet."
+        ]
+      }
+    ];
 
-        const state = {
-            points: 0,
-            badges: [],
-            challenges: [],
-            visitedCompanies: []
-        };
+    const TOTAL_QUESTIONS = domains.reduce((sum, d) => sum + d.questions.length, 0);
 
-        const challengePoints = { 1: 100, 2: 150, 3: 200, 4: 300, 5: 500, 6: 250 };
+    let currentDomainIndex = 0;
+    const answers = {}; // { "emploi_0": 1..4, ... }
 
-        // Fonctions
-        function showModal(sectorId) {
-            console.log('✅ Ouverture modal pour:', sectorId);
-            
-            const sector = sectorsData[sectorId];
-            if (!sector) {
-                console.error('Secteur non trouvé:', sectorId);
-                return;
-            }
+    const domainIndexEl = document.getElementById("domain-index");
+    const domainTitleEl = document.getElementById("domain-title");
+    const domainDescEl = document.getElementById("domain-description");
+    const questionsContainer = document.getElementById("questions-container");
+    const stepDotsContainer = document.getElementById("step-dots");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const resultsBtn = document.getElementById("results-btn");
+    const progressFill = document.getElementById("progress-fill");
+    const progressCounter = document.getElementById("progress-counter");
+    const xpLabel = document.getElementById("xp-label");
+    const levelLabel = document.getElementById("level-label");
+    const resultsSection = document.getElementById("results-section");
+    const resultsTableBody = document.getElementById("results-table-body");
+    const youthSummaryEl = document.getElementById("youth-summary");
+    const counsellorSummaryEl = document.getElementById("counsellor-summary");
+    const badgeProgress = document.getElementById("badge-progress");
 
-            document.getElementById('modalTitle').textContent = sector.name;
-            const grid = document.getElementById('companiesGrid');
-            grid.innerHTML = '';
-
-            sector.companies.forEach(company => {
-                const card = document.createElement('div');
-                card.className = 'company-card';
-                card.innerHTML = `
-                    <div class="company-name">${company.name}</div>
-                    <div class="company-info">${company.info}</div>
-                    <div class="sector-tags">
-                        ${company.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            document.getElementById('companyModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('companyModal').style.display = 'none';
-        }
-
-        function showPage(pageNum) {
-            console.log('📄 Page', pageNum);
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            
-            const page = document.getElementById('page' + pageNum);
-            const btn = document.querySelector(`.nav-btn[data-page="${pageNum}"]`);
-            
-            if (page) page.classList.add('active');
-            if (btn) btn.classList.add('active');
-
-            if (pageNum === 3) updateCounter();
-        }
-
-        function updateCounter() {
-            const inputs = document.querySelectorAll('.company-name-input');
-            let count = 0;
-            inputs.forEach(input => {
-                if (input.value.trim()) count++;
-            });
-            document.getElementById('companiesCounter').textContent = count;
-        }
-
-        function toggleCheck(checkbox) {
-            checkbox.classList.toggle('checked');
-        }
-
-        function selectQuestion(item) {
-            document.querySelectorAll('.question-item').forEach(q => q.classList.remove('selected'));
-            item.classList.add('selected');
-        }
-
-        function completeChallenge(card, level) {
-            if (state.challenges.includes(level)) return;
-            
-            state.challenges.push(level);
-            card.classList.add('completed');
-            state.points += challengePoints[level];
-            
-            document.getElementById('totalPoints').textContent = state.points;
-            
-            alert(`✅ Défi ${level} accompli ! +${challengePoints[level]} points !`);
-        }
-
-        function unlockBadge(badge, level) {
-            if (state.badges.includes(level)) return;
-            
-            state.badges.push(level);
-            badge.classList.add('unlocked');
-            
-            alert(`🏆 Badge ${level} débloqué !`);
-        }
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎯 Initialisation...');
-
-            // Secteurs - AVEC LOGS
-            document.querySelectorAll('.sector-stand').forEach((sector, index) => {
-                console.log(`Secteur ${index}:`, sector.dataset.sector);
-                
-                sector.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    console.log('🖱️ CLIC sur secteur:', this.dataset.sector);
-                    
-                    if (this.dataset.sector) {
-                        showModal(this.dataset.sector);
-                    } else if (this.classList.contains('custom-sector')) {
-                        alert('Fonction à venir : Créer un secteur personnalisé');
-                    }
-                });
-            });
-
-            // Navigation
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    showPage(parseInt(this.dataset.page));
-                });
-            });
-
-            // Modal
-            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-            document.getElementById('companyModal').addEventListener('click', function(e) {
-                if (e.target === this) closeModal();
-            });
-
-            // Checkboxes
-            document.querySelectorAll('.custom-checkbox').forEach(cb => {
-                cb.addEventListener('click', function() {
-                    toggleCheck(this);
-                });
-            });
-
-            // Inputs tracking
-            document.querySelectorAll('.company-name-input').forEach(input => {
-                input.addEventListener('input', updateCounter);
-            });
-
-            // Questions
-            document.querySelectorAll('.question-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    selectQuestion(this);
-                });
-            });
-
-            // Défis
-            document.querySelectorAll('.challenge-card').forEach((card, index) => {
-                card.addEventListener('click', function() {
-                    completeChallenge(this, index + 1);
-                });
-            });
-
-            // Badges
-            document.querySelectorAll('.badge-sticker').forEach((badge, index) => {
-                badge.addEventListener('click', function() {
-                    unlockBadge(this, index + 1);
-                });
-            });
-
-            // Boutons
-            document.getElementById('generateQRBtn')?.addEventListener('click', function() {
-                alert('📱 Génération QR Code...');
-            });
-
-            document.getElementById('downloadPDFBtn')?.addEventListener('click', function() {
-                alert('📄 Téléchargement PDF...');
-            });
-
-            document.getElementById('shareBtn')?.addEventListener('click', function() {
-                alert('📤 Partage des résultats...');
-            });
-
-            console.log('✅ Tout est prêt !');
-            console.log('Nombre de secteurs:', document.querySelectorAll('.sector-stand').length);
+    function renderStepDots() {
+      stepDotsContainer.innerHTML = "";
+      domains.forEach((d, idx) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "step-dot" + (idx === currentDomainIndex ? " active" : "");
+        dot.title = d.title;
+        dot.addEventListener("click", () => {
+          currentDomainIndex = idx;
+          renderDomain();
         });
-    </script>
+        stepDotsContainer.appendChild(dot);
+      });
+    }
+
+    function renderDomain() {
+      const domain = domains[currentDomainIndex];
+      domainIndexEl.textContent = currentDomainIndex + 1;
+      domainTitleEl.textContent = domain.title;
+      domainDescEl.textContent = domain.description;
+
+      renderStepDots();
+
+      prevBtn.disabled = currentDomainIndex === 0;
+      nextBtn.textContent = currentDomainIndex === domains.length - 1
+        ? "Terminer les questions →"
+        : "Monde suivant →";
+
+      questionsContainer.innerHTML = "";
+      domain.questions.forEach((qText, i) => {
+        const qId = `${domain.id}_${i}`;
+        const selectedValue = answers[qId];
+
+        const wrapper = document.createElement("div");
+        wrapper.className =
+          "flex question-layout items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-white px-3.5 py-3";
+
+        const left = document.createElement("div");
+        left.className = "flex-1";
+        const label = document.createElement("p");
+        label.className = "text-sm text-slate-800";
+        label.textContent = qText;
+        left.appendChild(label);
+
+        const right = document.createElement("div");
+        right.className = "flex flex-col items-center gap-1";
+        const scale = document.createElement("div");
+        scale.className = "flex items-center gap-1.5";
+
+        const labels = {
+          1: "😶",
+          2: "🙂",
+          3: "💪",
+          4: "🌟"
+        };
+
+        for (let lvl = 1; lvl <= 4; lvl++) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "scale-dot" + (selectedValue === lvl ? " selected" : "");
+          btn.innerHTML = `<div>${labels[lvl]}</div><span>${lvl}</span>`;
+          btn.setAttribute("aria-label", `Niveau ${lvl} pour cette affirmation`);
+          btn.addEventListener("click", () => {
+            answers[qId] = lvl;
+            renderDomain();
+            updateProgress();
+          });
+          scale.appendChild(btn);
+        }
+
+        right.appendChild(scale);
+        wrapper.appendChild(left);
+        wrapper.appendChild(right);
+        questionsContainer.appendChild(wrapper);
+      });
+
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const answeredCount = Object.keys(answers).length;
+      const percent = (answeredCount / TOTAL_QUESTIONS) * 100;
+      progressFill.style.width = `${percent}%`;
+      progressCounter.textContent = `${answeredCount} / ${TOTAL_QUESTIONS}`;
+      xpLabel.textContent = `XP : ${Math.round(percent)}%`;
+
+      let levelText = "Niveau 1 – Découverte";
+      if (percent >= 25 && percent < 50) levelText = "Niveau 2 – En route";
+      else if (percent >= 50 && percent < 75) levelText = "Niveau 3 – Avancée";
+      else if (percent >= 75 && percent < 100) levelText = "Niveau 4 – Presque au bout";
+      else if (percent >= 100) levelText = "Niveau 5 – Bilan complet";
+
+      levelLabel.textContent = levelText;
+
+      // bouton résultats activé si au moins 60 % complété
+      resultsBtn.disabled = answeredCount < Math.round(TOTAL_QUESTIONS * 0.6);
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (currentDomainIndex > 0) {
+        currentDomainIndex--;
+        renderDomain();
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentDomainIndex < domains.length - 1) {
+        currentDomainIndex++;
+        renderDomain();
+      }
+    });
+
+    resultsBtn.addEventListener("click", () => {
+      buildResults();
+      resultsSection.classList.remove("hidden");
+      resultsSection.scrollIntoView({ behavior: "smooth" });
+    });
+
+    function computeDomainScore(domain) {
+      const scores = [];
+      domain.questions.forEach((qText, i) => {
+        const qId = `${domain.id}_${i}`;
+        const val = answers[qId];
+        if (typeof val === "number") scores.push(val);
+      });
+      if (!scores.length) return null;
+      const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+      return avg;
+    }
+
+    function levelTag(score) {
+      if (score === null) {
+        return { label: "Pas encore répondu", class: "chip" };
+      } else if (score < 2) {
+        return { label: "À sécuriser", class: "chip tag-weak" };
+      } else if (score < 3) {
+        return { label: "À renforcer", class: "chip tag-ok" };
+      } else {
+        return { label: "Appui possible", class: "chip tag-strong" };
+      }
+    }
+
+    // Lecture courte pour les jeunes (non-clivante)
+    const domainYouthText = {
+      emploi: {
+        low: "On peut t’aider à te sentir plus à l’aise pour parler de toi à un employeur.",
+        mid: "Tu as déjà des bases pour parler de travail, on peut consolider tout ça.",
+        high: "Tu as déjà de bons repères pour le monde du travail, on peut s’appuyer dessus."
+      },
+      formation: {
+        low: "On peut voir ensemble comment rendre une formation plus supportable pour toi.",
+        mid: "Tu peux suivre une formation si elle a du sens pour toi, on peut organiser ça.",
+        high: "Tu sembles capable de tenir une formation, on peut aller plus loin dans le projet."
+      },
+      orientation: {
+        low: "On peut prendre du temps pour explorer ce qui te plaît et ce qui ne te plaît pas.",
+        mid: "Tu as déjà quelques idées, on peut les tester et les préciser.",
+        high: "Tu as un cap assez clair, on peut travailler les étapes concrètes."
+      },
+      mobilite: {
+        low: "Les déplacements peuvent être un vrai frein, on peut chercher des solutions ensemble.",
+        mid: "Tu te débrouilles déjà un peu, on peut sécuriser certains trajets importants.",
+        high: "Tu gères plutôt bien tes déplacements, ça aide pour tes projets."
+      },
+      sante: {
+        low: "Ta santé ou ton moral peuvent peser sur ton quotidien, on peut chercher du soutien.",
+        mid: "Tu repères déjà des choses, on peut t’aider à trouver d’autres ressources.",
+        high: "Tu as déjà quelques stratégies pour te sentir mieux, on peut les renforcer."
+      },
+      logement: {
+        low: "Ta situation de logement peut être fragile, c’est important d’en parler.",
+        mid: "Ton logement tient à peu près, on peut voir comment le sécuriser.",
+        high: "Ton lieu de vie semble plutôt stable et peut soutenir tes projets."
+      },
+      citoyennete: {
+        low: "On peut t’aider à trouver des lieux où tu te sens entendu·e et respecté·e.",
+        mid: "Tu as déjà quelques repères, on peut t’ouvrir d’autres espaces d’expression.",
+        high: "Tu as de quoi t’exprimer et t’impliquer, ça peut être une force pour tes projets."
+      },
+      finances: {
+        low: "L’argent peut peser lourd, on peut regarder ensemble toutes les aides possibles.",
+        mid: "Tu vois à peu près ta situation, on peut t’aider à mieux la sécuriser.",
+        high: "Tu sembles déjà faire attention à ton budget, on peut construire des projets avec ça."
+      },
+      loisirs: {
+        low: "On peut t’aider à trouver des activités qui te font du bien.",
+        mid: "Tu as déjà quelques activités, on peut les soutenir ou en découvrir d’autres.",
+        high: "Tes activités peuvent être une vraie force pour ton équilibre et tes projets."
+      },
+      numerique: {
+        low: "On peut t’accompagner pour les démarches en ligne et l’utilisation des outils.",
+        mid: "Tu te débrouilles déjà un peu, on peut sécuriser certaines démarches.",
+        high: "Tu utilises déjà le numérique comme un outil, ça peut beaucoup aider."
+      },
+      mode_vie: {
+        low: "On peut chercher ensemble de petits changements pour que ton quotidien soit plus supportable.",
+        mid: "Tu tiens déjà ton quotidien, on peut voir comment le rendre plus confortable.",
+        high: "Ton rythme tient la route, on peut s’appuyer dessus pour tes projets."
+      }
+    };
+
+    function buildResults() {
+      resultsTableBody.innerHTML = "";
+      const youthLines = [];
+      const counsellorLines = [];
+
+      const scores = [];
+
+      domains.forEach((domain) => {
+        const score = computeDomainScore(domain);
+        scores.push(score);
+        const tag = levelTag(score);
+
+        const tr = document.createElement("tr");
+        let youthNote = "";
+        if (score !== null) {
+          if (score < 2) youthNote = domainYouthText[domain.id].low;
+          else if (score < 3) youthNote = domainYouthText[domain.id].mid;
+          else youthNote = domainYouthText[domain.id].high;
+        }
+
+        tr.innerHTML = `
+          <td class="px-3 py-2 align-top">
+            <div class="flex items-center gap-2">
+              <span class="domain-pill ${domain.color}">
+                ${domain.title.split("–")[0].trim()}
+              </span>
+            </div>
+          </td>
+          <td class="px-3 py-2 align-top">
+            ${
+              score === null
+                ? '<span class="text-xs italic text-slate-400">Pas encore répondu</span>'
+                : `<div class="flex items-center gap-2">
+                     <span class="text-sm font-semibold text-slate-900">${score.toFixed(1)} / 4</span>
+                     <span class="${tag.class}">${tag.label}</span>
+                   </div>`
+            }
+          </td>
+          <td class="px-3 py-2 align-top text-xs text-slate-700">
+            ${score === null ? "Tu pourras compléter ce thème plus tard si tu veux." : youthNote}
+          </td>
+        `;
+        resultsTableBody.appendChild(tr);
+
+        if (score !== null) {
+          if (score >= 3) {
+            youthLines.push(
+              `• <strong>${domain.title.split("–")[0].trim()}</strong> : un thème où tu as déjà des forces.`
+            );
+          } else if (score < 2) {
+            youthLines.push(
+              `• <strong>${domain.title.split("–")[0].trim()}</strong> : un thème où tu peux avoir besoin de soutien, sans que ce soit de ta faute.`
+            );
+          } else {
+            youthLines.push(
+              `• <strong>${domain.title.split("–")[0].trim()}</strong> : un thème où tu as déjà des bases, mais où on peut t’aider à aller plus loin.`
+            );
+          }
+
+          if (score < 2.5) {
+            counsellorLines.push(
+              `• <strong>${domain.title.split("–")[0].trim()}</strong> : thème à retravailler dans le CEP (score ${score.toFixed(
+                1
+              )}/4) et à relier aux ressources Life Skills / partenaires.`
+            );
+          }
+        }
+      });
+
+      youthSummaryEl.innerHTML = youthLines.length
+        ? youthLines.join("<br/>")
+        : '<li class="italic text-slate-500">Compléter quelques thèmes de plus pour avoir un retour personnalisé.</li>';
+
+      counsellorSummaryEl.innerHTML = counsellorLines.length
+        ? counsellorLines.join("<br/>")
+        : '<li class="italic text-slate-500">Aucun thème ne ressort comme prioritaire, mais un échange qualitatif reste important.</li>';
+
+      // Badge global en fonction des réponses
+      const answeredCount = Object.keys(answers).length;
+      const percent = (answeredCount / TOTAL_QUESTIONS) * 100;
+      let badgeText = "🏅 Badge : Découverte";
+      if (percent >= 25 && percent < 50) badgeText = "🎯 Badge : En route";
+      else if (percent >= 50 && percent < 75) badgeText = "🚀 Badge : En progression";
+      else if (percent >= 75 && percent < 100) badgeText = "🌟 Badge : Bilan presque complet";
+      else if (percent >= 100) badgeText = "🏆 Badge : Bilan complet";
+
+      badgeProgress.innerHTML = badgeText;
+    }
+
+    // Initialisation
+    renderStepDots();
+    renderDomain();
+  </script>
 </body>
 </html>
