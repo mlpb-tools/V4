@@ -1,1917 +1,1131 @@
-<!doctype html>
+<!DOCTYPE html> 
 <html lang="fr">
- <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Socle Méthodologique - Guide Complet</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&amp;family=Merriweather:wght@400;700&amp;display=swap" rel="stylesheet">
-  <script src="/_sdk/element_sdk.js"></script>
+  <title>Webinaire Mobilité - MLPB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
-    body {
-      box-sizing: border-box;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    html, body {
-      height: 100%;
-      width: 100%;
-    }
-    
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #ffffff;
-      color: #171718;
-      overflow-x: hidden;
-    }
-    
-    .main-wrapper {
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      background: #ffffff;
-    }
-    
-    /* Navigation */
-    .nav-bar {
-      position: sticky;
-      top: 0;
-      background: #171718;
-      backdrop-filter: blur(10px);
-      padding: 15px 20px;
-      z-index: 1000;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      border-bottom: 3px solid #f39200;
-    }
-    
-    .nav-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    
-    .nav-header {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    
-    .nav-logo {
-      height: 50px;
-      width: auto;
-      object-fit: contain;
-    }
-    
-    .nav-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: white;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .nav-buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    
-    .nav-btn {
-      padding: 10px 20px;
-      border: 2px solid transparent;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-family: 'Poppins', sans-serif;
-      letter-spacing: 0.5px;
-      border-radius: 8px;
-    }
-    
-    .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    
-    .nav-btn.active {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-color: white;
-      box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
-    }
-    
-    /* Container principal */
-    .process-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 50px 30px;
-    }
-    
-    /* Section cachée par défaut */
-    .axe-section {
-      display: none;
-    }
-    
-    .axe-section.active {
-      display: block;
-      animation: fadeIn 0.6s ease;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Header */
-    .header {
-      position: relative;
-      padding: 70px 50px;
-      margin-bottom: 50px;
-      background: linear-gradient(135deg, #171718 0%, #2d3748 100%);
-      overflow: hidden;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-    
-    .header-shapes {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 0;
-      overflow: hidden;
-    }
-    
-    .shape-circle {
-      position: absolute;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      top: -80px;
-      right: 10%;
-      opacity: 0.3;
-      animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-    }
-    
-    .socle .shape-circle { background: #95c11f; }
-    .axe1 .shape-circle { background: #f39200; }
-    .axe2 .shape-circle { background: #2897d5; }
-    .axe3 .shape-circle { background: #d60b52; }
-    .axe4 .shape-circle { background: #a3195b; }
-    
-    .shape-square {
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      bottom: -40px;
-      left: 8%;
-      transform: rotate(25deg);
-      opacity: 0.25;
-      animation: rotate 10s linear infinite;
-    }
-    
-    @keyframes rotate {
-      from { transform: rotate(25deg); }
-      to { transform: rotate(385deg); }
-    }
-    
-    .socle .shape-square { background: #2897d5; }
-    .axe1 .shape-square { background: #d60b52; }
-    .axe2 .shape-square { background: #a3195b; }
-    .axe3 .shape-square { background: #f39200; }
-    .axe4 .shape-square { background: #9f3d3f; }
-    
-    .shape-triangle {
-      position: absolute;
-      width: 0;
-      height: 0;
-      border-left: 70px solid transparent;
-      border-right: 70px solid transparent;
-      top: 50%;
-      right: 25%;
-      transform: translateY(-50%) rotate(-15deg);
-      opacity: 0.2;
-    }
-    
-    .socle .shape-triangle { border-bottom: 120px solid #2897d5; }
-    .axe1 .shape-triangle { border-bottom: 120px solid #95c11f; }
-    .axe2 .shape-triangle { border-bottom: 120px solid #f39200; }
-    .axe3 .shape-triangle { border-bottom: 120px solid #95c11f; }
-    .axe4 .shape-triangle { border-bottom: 120px solid #2897d5; }
-    
-    .header-content {
-      position: relative;
-      z-index: 1;
-    }
-    
-    .axe-label {
-      display: inline-block;
-      color: white;
-      padding: 10px 25px;
-      font-size: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 20px;
-      border-radius: 50px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    
-    .socle .axe-label { background: linear-gradient(135deg, #95c11f 0%, #7fa817 100%); }
-    .axe1 .axe-label { background: linear-gradient(135deg, #f39200 0%, #d97706 100%); }
-    .axe2 .axe-label { background: linear-gradient(135deg, #2897d5 0%, #1e7ab8 100%); }
-    .axe3 .axe-label { background: linear-gradient(135deg, #d60b52 0%, #b00944 100%); }
-    .axe4 .axe-label { background: linear-gradient(135deg, #a3195b 0%, #8a144d 100%); }
-    
-    .axe-title {
-      font-size: 52px;
-      font-weight: 800;
-      color: white;
-      text-transform: uppercase;
-      letter-spacing: -1px;
-      margin-bottom: 12px;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      line-height: 1.2;
-    }
-    
-    .axe-subtitle {
-      font-size: 20px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.9);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    /* Card commune */
-    .card-base {
-      background: white;
-      padding: 45px;
-      margin-bottom: 40px;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .card-base:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 50px rgba(0,0,0,0.2);
-    }
-    
-    /* Sections avec bordure colorée */
-    .bordered-section {
-      border-left: 6px solid;
-    }
-    
-    .socle .bordered-section { border-left-color: #95c11f; }
-    .axe1 .bordered-section { border-left-color: #f39200; }
-    .axe2 .bordered-section { border-left-color: #2897d5; }
-    .axe3 .bordered-section { border-left-color: #d60b52; }
-    .axe4 .bordered-section { border-left-color: #a3195b; }
-    
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #e2e8f0;
-    }
-    
-    .section-icon {
-      width: 60px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    
-    .socle .section-icon { background: linear-gradient(135deg, #95c11f 0%, #7fa817 100%); }
-    .axe1 .section-icon { background: linear-gradient(135deg, #f39200 0%, #d97706 100%); }
-    .axe2 .section-icon { background: linear-gradient(135deg, #2897d5 0%, #1e7ab8 100%); }
-    .axe3 .section-icon { background: linear-gradient(135deg, #d60b52 0%, #b00944 100%); }
-    .axe4 .section-icon { background: linear-gradient(135deg, #a3195b 0%, #8a144d 100%); }
-    
-    .section-title {
-      font-size: 32px;
-      font-weight: 700;
-      color: #1a202c;
-      text-transform: uppercase;
-      letter-spacing: -0.5px;
-    }
-    
-    /* Grilles */
-    .grid-layout {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-    }
-    
-    .grid-item {
-      background: #f7fafc;
-      padding: 30px;
-      border-radius: 12px;
-      border-left: 4px solid;
-      transition: all 0.3s ease;
-    }
-    
-    .socle .grid-item { border-left-color: #95c11f; }
-    .axe1 .grid-item { border-left-color: #f39200; }
-    .axe2 .grid-item { border-left-color: #2897d5; }
-    .axe3 .grid-item { border-left-color: #d60b52; }
-    .axe4 .grid-item { border-left-color: #a3195b; }
-    
-    .grid-item:hover {
-      transform: translateX(8px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    }
-    
-    .grid-item-title {
-      font-size: 19px;
-      font-weight: 700;
-      color: #1a202c;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-    }
-    
-    .grid-item-text {
-      font-size: 15px;
-      line-height: 1.7;
-      color: #4a5568;
-      font-weight: 400;
-    }
-    
-    /* Steps */
-    .steps-container {
-      display: grid;
-      gap: 30px;
-    }
-    
-    .step-card {
-      background: white;
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-      border-left: 8px solid;
-      transition: all 0.3s ease;
-    }
-    
-    .socle .step-card { border-left-color: #95c11f; }
-    .axe1 .step-card { border-left-color: #f39200; }
-    .axe2 .step-card { border-left-color: #2897d5; }
-    .axe3 .step-card { border-left-color: #d60b52; }
-    .axe4 .step-card { border-left-color: #9f3d3f; }
-    
-    .step-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
-    }
-    
-    .step-header {
-      display: flex;
-      align-items: center;
-      gap: 25px;
-      margin-bottom: 20px;
-    }
-    
-    .step-number {
-      width: 70px;
-      height: 70px;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      font-weight: 800;
-      flex-shrink: 0;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    }
-    
-    .socle .step-number { background: linear-gradient(135deg, #95c11f 0%, #7fa817 100%); }
-    .axe1 .step-number { background: linear-gradient(135deg, #f39200 0%, #d97706 100%); }
-    .axe2 .step-number { background: linear-gradient(135deg, #2897d5 0%, #1e7ab8 100%); }
-    .axe3 .step-number { background: linear-gradient(135deg, #d60b52 0%, #b00944 100%); }
-    .axe4 .step-number { background: linear-gradient(135deg, #9f3d3f 0%, #8a3436 100%); }
-    
-    .step-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: #1a202c;
-      text-transform: uppercase;
-      letter-spacing: -0.5px;
-    }
-    
-    .step-content {
-      font-size: 16px;
-      line-height: 1.8;
-      color: #4a5568;
-    }
-    
-    .step-list {
-      list-style: none;
-      margin-top: 15px;
-      display: grid;
-      gap: 12px;
-    }
-    
-    .step-list li {
-      padding-left: 30px;
-      position: relative;
-      font-size: 15px;
-      line-height: 1.7;
-      color: #4a5568;
-    }
-    
-    .step-list li::before {
-      content: '→';
-      position: absolute;
-      left: 0;
-      font-weight: 700;
-      font-size: 20px;
-    }
-    
-    .socle .step-list li::before { color: #95c11f; }
-    .axe1 .step-list li::before { color: #f39200; }
-    .axe2 .step-list li::before { color: #2897d5; }
-    .axe3 .step-list li::before { color: #d60b52; }
-    .axe4 .step-list li::before { color: #a3195b; }
-    
-    /* Section sombre (outils) */
-    .dark-section {
-      background: linear-gradient(135deg, #171718 0%, #2d3748 100%);
-      color: white;
-      padding: 50px;
-      margin-bottom: 40px;
-      border-radius: 16px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.3);
-    }
-    
-    .dark-section .section-title {
-      color: white;
-    }
-    
-    .dark-section .grid-item {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-left-color: rgba(255, 255, 255, 0.3);
-    }
-    
-    .dark-section .grid-item:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-    
-    .dark-section .grid-item-title {
-      color: white !important;
-    }
-    
-    .dark-section .grid-item-text {
-      color: white !important;
-    }
-    
-    .dark-section .grid-item-title,
-    .dark-section .grid-item-text {
-      color: white !important;
-    }
-    
-    .dark-section * {
-      color: white !important;
-    }
-    
-    /* Postures cards */
-    .posture-card {
-      text-align: center;
-      padding: 35px 25px;
-      background: #f7fafc;
-      border-radius: 12px;
-      transition: all 0.3s ease;
-    }
-    
-    .posture-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-    
-    .socle .posture-card:hover { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); }
-    .axe1 .posture-card:hover { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); }
-    .axe2 .posture-card:hover { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); }
-    .axe3 .posture-card:hover { background: linear-gradient(135deg, #2897d5 0%, #1e7ab8 100%); }
-    .axe4 .posture-card:hover { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
-    
-    .posture-emoji {
-      font-size: 52px;
-      margin-bottom: 18px;
-      display: block;
-    }
-    
-    .posture-title {
-      font-size: 19px;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      color: #1a202c;
-    }
-    
-    .posture-desc {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #4a5568;
-    }
-    
-    .posture-card:hover .posture-title,
-    .posture-card:hover .posture-desc {
-      color: white;
-    }
-    
-    /* Section vigilance */
-    .vigilance-section {
-      padding: 50px;
-      margin-bottom: 40px;
-      border-radius: 16px;
-      color: white;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.3);
-    }
-    
-    .socle .vigilance-section { background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%); }
-    .axe1 .vigilance-section { background: linear-gradient(135deg, #fc8181 0%, #f56565 100%); }
-    .axe2 .vigilance-section { background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%); }
-    .axe3 .vigilance-section { background: linear-gradient(135deg, #f39200 0%, #d97706 100%); }
-    .axe4 .vigilance-section { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
-    
-    .vigilance-section .section-title {
-      color: white;
-    }
-    
-    .vigilance-section .section-icon {
-      background: rgba(0, 0, 0, 0.3);
-    }
-    
-    .vigilance-item {
-      background: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(10px);
-      padding: 30px;
-      border-radius: 12px;
-      border-left: 4px solid rgba(255, 255, 255, 0.5);
-    }
-    
-    .vigilance-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      color: white;
-    }
-    
-    .vigilance-text {
-      font-size: 15px;
-      line-height: 1.7;
-      color: rgba(255, 255, 255, 0.95);
-    }
-    
-    /* Principes (pour Socle) */
-    .principe-card {
-      background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-      padding: 35px;
-      border-radius: 16px;
-      border-top: 5px solid;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-    }
-    
-    .socle .principe-card { border-top-color: #48bb78; }
-    
-    .principe-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 35px rgba(0,0,0,0.15);
-    }
-    
-    .principe-number {
-      display: inline-block;
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-      color: white;
-      font-size: 24px;
-      font-weight: 800;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
-    }
-    
-    .principe-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: #1a202c;
-      margin-bottom: 15px;
-      text-transform: uppercase;
-    }
-    
-    .principe-text {
-      font-size: 15px;
-      line-height: 1.8;
-      color: #4a5568;
-    }
-    
-    @media (max-width: 768px) {
-      .nav-content {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      
-      .nav-buttons {
-        flex-direction: column;
-      }
-      
-      .nav-btn {
-        width: 100%;
-      }
-      
-      .process-container {
-        padding: 30px 20px;
-      }
-      
-      .header {
-        padding: 50px 30px;
-      }
-      
-      .axe-title {
-        font-size: 36px;
-      }
-      
-      .card-base,
-      .dark-section,
-      .vigilance-section {
-        padding: 30px 25px;
-      }
-      
-      .step-card {
-        padding: 30px 20px;
-      }
-      
-      .grid-layout {
-        grid-template-columns: 1fr;
-      }
-      
-      .step-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --color-orange:#f39200;
+      --color-vert:#95c11f;
+      --color-bleu:#2897d5;
+      --color-rose:#d60b52;
+      --color-violet:#a3195b;
+      --color-noir:#171718;
+      --soft-grey:#f6f6f7;
+      --mid-grey:#666;
+    }
+
+    /* Modale BAGAGES */
+    .modal-bagages{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.9);justify-content:center;align-items:center;}
+    .modal-bagages.active{display:flex;}
+    .modal-content-bagages{max-width:90%;max-height:90vh;position:relative;}
+    .modal-content-bagages img{width:100%;height:auto;border-radius:10px;}
+    .close-modal{position:absolute;top:-40px;right:0;color:white;font-size:40px;font-weight:bold;cursor:pointer;transition:transform 0.3s;}
+    .close-modal:hover{transform:scale(1.2);}
+
+    body{font-family:'Montserrat',sans-serif;background:white;color:#171718;overflow:hidden;}
+    .presentation{width:100vw;height:100vh;position:relative;}
+    .slide{width:100%;height:100vh;display:none;padding:50px;position:relative;overflow-y:auto;}
+    .slide.active{display:flex;flex-direction:column;justify-content:center;align-items:center;}
+
+    .nav-btn{
+      position:fixed;top:50%;transform:translateY(-50%);
+      width:70px;height:70px;background:#171718;color:white;border:none;border-radius:50%;
+      font-size:32px;cursor:pointer;z-index:1000;transition:all 0.3s;font-weight:bold;
+    }
+    .nav-btn:hover{background:var(--color-orange);transform:translateY(-50%) scale(1.1);}
+    .nav-btn.prev{left:30px;} .nav-btn.next{right:30px;}
+
+    .slide-counter{
+      position:fixed;bottom:30px;left:30px;background:#171718;color:white;
+      padding:15px 30px;border-radius:30px;font-weight:700;font-size:18px;z-index:1000;
+    }
+    .progress-bar{position:fixed;top:0;left:0;height:5px;background:var(--color-orange);width:0%;z-index:1001;transition:width 0.3s;}
+
+    .card{background:white;border:5px solid #171718;padding:30px;border-radius:0;transition:all 0.3s;}
+    .card:hover{transform:translate(5px,-5px);box-shadow:-8px 8px 0 #171718;}
+
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:30px;max-width:1200px;width:100%;}
+    .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;max-width:1200px;width:100%;}
+
+    h1{font-size:56px;font-weight:900;text-transform:uppercase;letter-spacing:-2px;margin-bottom:20px;}
+    h3{font-size:24px;font-weight:700;margin-bottom:12px;}
+
+    a{color:inherit;text-decoration:none;}
+
+    /* ---------- AUTOPOSITIONNEMENT (nouvelle version) ---------- */
+    .auto-wrap{
+      background:#fff;border-radius:20px;padding:28px;max-width:1000px;width:100%;
+      max-height:70vh;overflow:auto;box-shadow:0 18px 55px rgba(0,0,0,0.18);
+    }
+    .auto-head{
+      background:linear-gradient(135deg,var(--color-bleu),var(--color-vert));
+      color:white;border-radius:16px;padding:18px 22px;margin-bottom:18px;
+    }
+    .auto-head h2{font-size:22px;margin:0 0 6px 0;}
+    .auto-head p{font-size:15px;line-height:1.5;opacity:0.95;}
+
+    .auto-section{
+      border:3px solid #171718;border-radius:16px;padding:18px 18px 14px 18px;margin-bottom:14px;
+      background:var(--soft-grey);
+    }
+    .auto-section-title{
+      display:flex;align-items:center;gap:10px;margin-bottom:10px;
+      font-weight:900;text-transform:uppercase;letter-spacing:-1px;
+    }
+    .auto-section-title .emoji{font-size:22px;}
+    .auto-question{background:white;border:2px solid #e7e7ea;border-radius:14px;padding:14px;margin:10px 0;}
+    .auto-question .q{font-weight:800;margin-bottom:10px;line-height:1.35;}
+    .choice-row{display:flex;gap:10px;flex-wrap:wrap;}
+    .choice{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;
+      border:2px solid #ddd;background:white;cursor:pointer;user-select:none;font-weight:700;
+      transition:transform .15s, border-color .15s, box-shadow .15s;
+    }
+    .choice:hover{transform:translate(2px,-2px);box-shadow:-4px 4px 0 #171718;border-color:#171718;}
+    .choice input{accent-color:var(--color-orange);}
+    .note{
+      margin-top:10px;
+      display:flex;flex-direction:column;gap:8px;
+    }
+    .note label{font-weight:800;color:#222;font-size:13px;}
+    .note textarea{
+      width:100%;min-height:70px;resize:vertical;
+      border-radius:12px;border:2px solid #ddd;padding:10px 12px;font-family:inherit;
+    }
+
+    .auto-final{
+      background:white;border:4px solid #171718;border-radius:16px;padding:18px;margin-top:12px;
+    }
+    .auto-final h3{margin:0 0 10px 0;font-size:20px;}
+    .need-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+    .need{
+      border-radius:14px;padding:14px;border:3px solid;display:flex;gap:10px;align-items:flex-start;
+      background:#fff;
+    }
+    .need .badge{font-size:18px;line-height:1;}
+    .need .txt{font-size:14px;line-height:1.45;}
+    .need.green{border-color:var(--color-vert);background:#e8f5e9;}
+    .need.orange{border-color:var(--color-orange);background:#fff3e0;}
+    .need.red{border-color:var(--color-rose);background:#ffebee;}
+
+    .auto-footer{
+      margin-top:14px;font-size:14px;color:white;text-align:center;font-weight:700;
+      background:rgba(255,255,255,0.18);padding:10px 14px;border-radius:14px;
+      max-width:1000px;
+    }
+
+    /* ---------- Infographie (iframe) ---------- */
+    .infographic-frame{
+      width:100%;
+      max-width:1200px;
+      height:78vh;
+      border:0;
+      border-radius:20px;
+      box-shadow:0 18px 55px rgba(0,0,0,0.18);
+      background:white;
     }
   </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
- </head>
- <body>
-  <div class="main-wrapper"><!-- Navigation -->
-   <nav class="nav-bar">
-    <div class="nav-content">
-     <div class="nav-header"><img src="https://static.wixstatic.com/media/dd5dab_47743b1c86024865ba19e623a3db327f~mv2.avif/v1/fill/w_224,h_60,al_c,q_80,enc_avif,quality_auto/dd5dab_47743b1c86024865ba19e623a3db327f~mv2.avif" alt="Logo" class="nav-logo" onerror="this.style.display='none';">
-      <h1 class="nav-title" id="main-title">SOCLE MÉTHODOLOGIQUE DE L'ACCOMPAGNEMENT</h1>
-     </div>
-     <div class="nav-buttons"><button class="nav-btn active" onclick="showSection('socle')">Socle</button> <button class="nav-btn" onclick="showSection('axe1')">Axe 1</button> <button class="nav-btn" onclick="showSection('axe2')">Axe 2</button> <button class="nav-btn" onclick="showSection('axe3')">Axe 3</button> <button class="nav-btn" onclick="showSection('axe4')">Axe 4</button>
-     </div>
+</head>
+
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+
+  <div class="presentation">
+
+    <!-- SLIDE 0 - PAGE D'ACCUEIL -->
+    <div class="slide active" style="background:#171718;color:white;text-align:center;justify-content:center;align-items:center;">
+      <div style="margin-bottom:60px;">
+        <img src="https://static.wixstatic.com/media/dd5dab_47743b1c86024865ba19e623a3db327f~mv2.avif/v1/fill/w_224,h_60,al_c,q_80,enc_avif,quality_auto/dd5dab_47743b1c86024865ba19e623a3db327f~mv2.avif" alt="Mission Locale Pays Basque" style="height:80px;">
+      </div>
+
+      <h1 style="font-size:72px;font-weight:900;color:white;margin-bottom:30px;letter-spacing:-2px;line-height:1.1;max-width:1100px;text-transform:uppercase;">
+        TROUVEZ VOTRE<br>
+        <span style="color:var(--color-orange);">AVENTURE INTERNATIONALE</span>
+      </h1>
+
+      <p style="font-size:28px;font-weight:400;color:#ccc;max-width:800px;">
+        Le guide des programmes de mobilité pour les 18-30 ans
+      </p>
     </div>
-   </nav><!-- SOCLE MÉTHODOLOGIQUE -->
-   <div id="socle" class="axe-section active socle">
-    <div class="process-container">
-     <header class="header">
-      <div class="header-shapes">
-       <div class="shape-circle"></div>
-       <div class="shape-square"></div>
-       <div class="shape-triangle"></div>
+
+    <!-- SLIDE 1 - OBJECTIFS (Page 2) -->
+    <div class="slide">
+      <!-- MODIF: titre cliquable vers votre-aventure-internationale.png -->
+      <a href="votre-aventure-internationale.png" target="_blank" title="Ouvrir l'image : votre-aventure-internationale.png">
+        <h1 style="color:var(--color-orange);text-align:center;">🎯 Objectifs du webinaire</h1>
+      </a>
+
+      <div class="grid-2">
+        <div class="card" style="border-left:8px solid var(--color-bleu);">
+          <div style="font-size:48px;margin-bottom:12px;">🌍</div>
+          <h3 style="color:var(--color-bleu);">Comprendre les options<br>de mobilité</h3>
+          <p>Découvrir les différents types de programmes disponibles</p>
+        </div>
+
+        <div class="card" style="border-left:8px solid var(--color-vert);">
+          <div style="font-size:48px;margin-bottom:12px;">📋</div>
+          <h3 style="color:var(--color-vert);">Découvrir les programmes<br>existants</h3>
+          <p>Explorer 45 offres concrètes dans 15+ pays</p>
+        </div>
+
+        <div class="card" style="border-left:8px solid var(--color-orange);">
+          <div style="font-size:48px;margin-bottom:12px;">🧭</div>
+          <h3 style="color:var(--color-orange);">Identifier ton profil<br>mobilité</h3>
+          <p>Trouver le programme qui te correspond</p>
+        </div>
+
+        <div class="card" style="border-left:8px solid var(--color-rose);">
+          <div style="font-size:48px;margin-bottom:12px;">✅</div>
+          <h3 style="color:var(--color-rose);">Repartir avec un<br>plan d'action</h3>
+          <p>Avoir des étapes concrètes pour démarrer</p>
+        </div>
       </div>
-      <div class="header-content">
-       <div class="axe-label">
-        GUIDE MÉTHODOLOGIQUE
-       </div>
-       <h2 class="axe-title" id="socle-title">SOCLE MÉTHODOLOGIQUE</h2>
-       <p class="axe-subtitle" id="main-subtitle">DE L'ACCOMPAGNEMENT DES JEUNES</p>
-      </div>
-     </header>
-     <section class="card-base bordered-section">
-      <div class="section-header">
-       <div class="section-icon">
-        🎯
-       </div>
-       <h3 class="section-title">Finalité de l'Accompagnement</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="grid-item">
-        <h4 class="grid-item-title">Orientation</h4>
-        <p class="grid-item-text">Permettre à chaque jeune de définir et d'atteindre son projet professionnel</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Autonomie</h4>
-        <p class="grid-item-text">Développer progressivement la capacité d'agir de manière indépendante</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Insertion Durable</h4>
-        <p class="grid-item-text">Favoriser l'insertion professionnelle et sociale pérenne</p>
-       </div>
-      </div>
-     </section>
-     <section class="card-base">
-      <div class="section-header">
-       <div class="section-icon">
-        ⭐
-       </div>
-       <h3 class="section-title">6 Principes Fondamentaux</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="principe-card">
-        <div class="principe-number">
-         1
-        </div>
-        <h4 class="principe-title">Personnalisation</h4>
-        <p class="principe-text">Adapter l'accompagnement au rythme, aux besoins et aux capacités de chaque jeune</p>
-       </div>
-       <div class="principe-card">
-        <div class="principe-number">
-         2
-        </div>
-        <h4 class="principe-title">Co-construction</h4>
-        <p class="principe-text">Faire du jeune l'acteur principal de son parcours, en valorisant sa parole et ses choix</p>
-       </div>
-       <div class="principe-card">
-        <div class="principe-number">
-         3
-        </div>
-        <h4 class="principe-title">Bienveillance</h4>
-        <p class="principe-text">Créer un cadre de confiance, sans jugement, propice au dialogue et à l'expression</p>
-       </div>
-       <div class="principe-card">
-        <div class="principe-number">
-         4
-        </div>
-        <h4 class="principe-title">Cohérence</h4>
-        <p class="principe-text">Harmoniser les pratiques et les outils pour garantir une équité territoriale</p>
-       </div>
-       <div class="principe-card">
-        <div class="principe-number">
-         5
-        </div>
-        <h4 class="principe-title">Progressivité</h4>
-        <p class="principe-text">Décomposer les objectifs en étapes atteignables pour éviter le découragement</p>
-       </div>
-       <div class="principe-card">
-        <div class="principe-number">
-         6
-        </div>
-        <h4 class="principe-title">Subsidiarité</h4>
-        <p class="principe-text">Privilégier l'autonomie quand possible, accompagner quand nécessaire</p>
-       </div>
-      </div>
-     </section>
-     <section class="dark-section">
-      <div class="section-header">
-       <div class="section-icon">
-        🔑
-       </div>
-       <h3 class="section-title">5 Postures Clés du Conseiller</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="grid-item">
-        <h4 class="grid-item-title">🎧 Écoute Active</h4>
-        <p class="grid-item-text">Comprendre avant de conseiller, reformuler pour valider la compréhension</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">💪 Empowerment</h4>
-        <p class="grid-item-text">Partir des ressources du jeune, valoriser ses réussites et capacités</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">🤲 Neutralité Bienveillante</h4>
-        <p class="grid-item-text">Éviter le jugement et l'étiquetage, respecter les choix et le rythme</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">🎯 Orientation Solution</h4>
-        <p class="grid-item-text">Se concentrer sur les possibilités plutôt que les obstacles</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">🔄 Adaptabilité</h4>
-        <p class="grid-item-text">Ajuster en continu selon l'évolution de la situation du jeune</p>
-       </div>
-      </div>
-     </section>
-     <section class="card-base bordered-section">
-      <div class="section-header">
-       <div class="section-icon">
-        📋
-       </div>
-       <h3 class="section-title">Structure de l'Accompagnement</h3>
-      </div>
-      <div class="steps-container">
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          1
-         </div>
-         <h4 class="step-title">Accueil &amp; Diagnostic Initial</h4>
-        </div>
-        <div class="step-content">
-         Première rencontre, recueil d'informations, identification des besoins et des priorités
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          2
-         </div>
-         <h4 class="step-title">Construction du Plan d'Action</h4>
-        </div>
-        <div class="step-content">
-         Co-élaboration des objectifs, choix des modalités (individuel/collectif), planification des étapes
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          3
-         </div>
-         <h4 class="step-title">Mise en Œuvre &amp; Mobilisation</h4>
-        </div>
-        <div class="step-content">
-         Activation des dispositifs, accompagnement vers les actions, suivi régulier et ajustements
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          4
-         </div>
-         <h4 class="step-title">Évaluation &amp; Capitalisation</h4>
-        </div>
-        <div class="step-content">
-         Bilans d'étape, valorisation des acquis, projection vers la suite du parcours
-        </div>
-       </div>
-      </div>
-     </section>
-     <section class="vigilance-section">
-      <div class="section-header">
-       <div class="section-icon">
-        ⚠️
-       </div>
-       <h3 class="section-title">Points de Vigilance Transversaux</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Éviter le Plaquage de Solutions</h4>
-        <p class="vigilance-text">Ne pas proposer systématiquement les mêmes dispositifs par défaut</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Garantir la Traçabilité</h4>
-        <p class="vigilance-text">Documenter sans stigmatiser, assurer la continuité entre conseillers</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Respecter le Consentement</h4>
-        <p class="vigilance-text">Le jeune doit comprendre et accepter explicitement les actions proposées</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Prévenir les Ruptures</h4>
-        <p class="vigilance-text">Maintenir le lien, anticiper les freins, relancer rapidement en cas d'absence</p>
-       </div>
-      </div>
-     </section>
     </div>
-   </div><!-- AXE 1 -->
-   <div id="axe1" class="axe-section axe1">
-    <div class="process-container">
-     <header class="header">
-      <div class="header-shapes">
-       <div class="shape-circle"></div>
-       <div class="shape-square"></div>
-       <div class="shape-triangle"></div>
-      </div>
-      <div class="header-content">
-       <div class="axe-label">
-        FICHE PROCESS
-       </div>
-       <h2 class="axe-title" id="axe1-title">Axe 1 – PERSONNALISATION DU PARCOURS</h2>
-       <p class="axe-subtitle">Fiche-process synthétique</p>
-      </div>
-     </header>
-     <section class="card-base bordered-section">
-      <div class="section-header">
-       <div class="section-icon">
-        🎯
-       </div>
-       <h3 class="section-title">Objectifs de l'Étape</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="grid-item">
-        <p class="grid-item-text">Adapter l'accompagnement au profil et au rythme de chaque jeune</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Éviter les parcours "types" et favoriser la flexibilité</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Renforcer le sentiment d'appropriation du parcours par le jeune</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Tenir compte des contraintes et ressources personnelles</p>
-       </div>
-      </div>
-     </section>
-     <section class="card-base">
-      <div class="section-header">
-       <div class="section-icon">
-        📝
-       </div>
-       <h3 class="section-title">Déroulé Opérationnel (Pas à Pas)</h3>
-      </div>
-      <div class="steps-container">
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          1
-         </div>
-         <h4 class="step-title">Recueillir les Informations Clés</h4>
+
+    <!-- SLIDE 2 - AUTO-POSITIONNEMENT (Page 3) -->
+    <div class="slide" style="background:linear-gradient(135deg,var(--color-orange),var(--color-rose));justify-content:center;">
+      <h1 style="color:white;text-align:center;font-size:52px;margin-bottom:18px;text-transform:uppercase;">🎯 Auto-positionnement</h1>
+      <p style="color:white;text-align:center;font-size:20px;margin-bottom:22px;max-width:980px;line-height:1.4;">
+        Évalue tes compétences et tes atouts<br>
+        <span style="font-size:16px;opacity:0.95;">
+          💡 Conseil : Sois honnête avec toi-même ! Il n'y a pas de bonnes ou mauvaises réponses. C'est pour t'aider à identifier ce qui va bien et ce sur quoi tu peux progresser.
+        </span>
+      </p>
+
+      <div class="auto-wrap">
+
+        <!-- 🗂️ Démarches administratives -->
+        <div class="auto-section">
+          <div class="auto-section-title"><span class="emoji">🗂️</span> Démarches administratives</div>
+
+          <div class="auto-question">
+            <div class="q">Est-ce que tu te sens capable de gérer des papiers administratifs tout·e seul·e ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="adm1"> Oui, ça va</label>
+              <label class="choice"><input type="radio" name="adm1"> Un peu, mais j'ai besoin d'aide</label>
+              <label class="choice"><input type="radio" name="adm1"> Non, ça me stresse beaucoup</label>
+            </div>
+          </div>
+
+          <div class="auto-question">
+            <div class="q">Est-ce que tu as tes papiers d'identité à jour (passeport, carte d'identité...) ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="adm2"> Oui, tout est prêt !</label>
+              <label class="choice"><input type="radio" name="adm2"> C'est en cours</label>
+              <label class="choice"><input type="radio" name="adm2"> Non, je n'ai rien commencé</label>
+            </div>
+          </div>
+
+          <div class="auto-question">
+            <div class="q">As-tu déjà fait des démarches qui prennent du temps (demande de papiers, inscriptions...) ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="adm3"> Oui, plusieurs fois</label>
+              <label class="choice"><input type="radio" name="adm3"> Une ou deux fois</label>
+              <label class="choice"><input type="radio" name="adm3"> Jamais</label>
+            </div>
+          </div>
+
+          <div class="note">
+            <label>💭 Notes personnelles (optionnel) :</label>
+            <textarea placeholder="Ex: J'ai besoin d'aide pour mon passeport..."></textarea>
+          </div>
         </div>
-        <div class="step-content">
-         Situation personnelle, freins, ressources, contraintes (mobilité, santé, famille).
+
+        <!-- 🫶 Confiance en toi -->
+        <div class="auto-section">
+          <div class="auto-section-title"><span class="emoji">🫶</span> Confiance en toi</div>
+
+          <div class="auto-question">
+            <div class="q">Est-ce que tu te sens capable de partir à l'étranger ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="conf1"> Oui, carrément !</label>
+              <label class="choice"><input type="radio" name="conf1"> Plutôt oui, même si j'ai quelques doutes</label>
+              <label class="choice"><input type="radio" name="conf1"> Pas trop, j'ai pas mal d'appréhensions</label>
+            </div>
+          </div>
+
+          <div class="auto-question">
+            <div class="q">Est-ce que tu as des peurs liées à ce projet ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="conf2"> Non, pas vraiment</label>
+              <label class="choice"><input type="radio" name="conf2"> Oui, un peu (peur d'être seul·e, de la langue...)</label>
+              <label class="choice"><input type="radio" name="conf2"> Oui, beaucoup de peurs</label>
+            </div>
+          </div>
+
+          <div class="auto-question">
+            <div class="q">Comment tu te sens en général face aux changements et aux défis ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="conf3"> J'aime les nouveaux défis !</label>
+              <label class="choice"><input type="radio" name="conf3"> Ça dépend, parfois ça me stresse</label>
+              <label class="choice"><input type="radio" name="conf3"> Les changements me font souvent peur</label>
+            </div>
+          </div>
+
+          <div class="note">
+            <label>💭 Quelles sont tes plus grandes peurs ou inquiétudes ? (optionnel)</label>
+            <textarea placeholder="Ex: J'ai peur de ne pas me faire d'amis, de rater mon projet..."></textarea>
+          </div>
         </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          2
-         </div>
-         <h4 class="step-title">Identifier le Niveau d'Autonomie</h4>
+
+        <!-- 🗣️ Tes langues -->
+        <div class="auto-section">
+          <div class="auto-section-title"><span class="emoji">🗣️</span> Tes langues</div>
+
+          <div class="auto-question">
+            <div class="q">Comment tu évalues ton niveau en anglais ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="lang1"> Débutant (A1-A2)</label>
+              <label class="choice"><input type="radio" name="lang1"> Intermédiaire (B1-B2)</label>
+              <label class="choice"><input type="radio" name="lang1"> Avancé (C1-C2)</label>
+              <label class="choice"><input type="radio" name="lang1"> Aucune notion</label>
+            </div>
+          </div>
+
+          <div class="auto-question">
+            <div class="q">Parles-tu d'autres langues ? Lesquelles et à quel niveau ?</div>
+            <div class="note">
+              <textarea placeholder="Ex: Espagnol niveau intermédiaire, Euskara débutant..."></textarea>
+            </div>
+          </div>
+
+          <div class="auto-question">
+            <div class="q">Est-ce que tu aimerais améliorer une langue avant de partir ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="lang2"> Oui, j'en ai besoin</label>
+              <label class="choice"><input type="radio" name="lang2"> Peut-être, ça pourrait aider</label>
+              <label class="choice"><input type="radio" name="lang2"> Non, ça va comme ça</label>
+            </div>
+          </div>
+
+          <div class="note">
+            <label>💭 Notes personnelles (optionnel) :</label>
+            <textarea placeholder="Ex: Je parle un peu espagnol mais j'aimerais progresser..."></textarea>
+          </div>
         </div>
-        <div class="step-content">
-         Autonome / Accompagné / Soutenu → ajuster l'intensité de l'accompagnement.
+
+        <!-- 🌍 Expérience voyages -->
+        <div class="auto-section">
+          <div class="auto-section-title"><span class="emoji">🌍</span> Ton expérience des voyages et de l'ouverture</div>
+
+          <div class="auto-question">
+            <div class="q">As-tu déjà voyagé loin de chez toi (autre ville, région, pays...) ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="voy1"> Oui, plusieurs fois</label>
+              <label class="choice"><input type="radio" name="voy1"> Oui, une ou deux fois</label>
+              <label class="choice"><input type="radio" name="voy1"> Non, jamais vraiment</label>
+            </div>
+          </div>
+
+          <div class="auto-question">
+            <div class="q">Comment tu te sens à l'idée de vivre dans un endroit totalement nouveau ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="voy2"> Super excité·e et curieux·se !</label>
+              <label class="choice"><input type="radio" name="voy2"> Excité·e mais un peu stressé·e aussi</label>
+              <label class="choice"><input type="radio" name="voy2"> Plutôt inquiet·ète</label>
+            </div>
+          </div>
+
+          <div class="note">
+            <label>💭 Notes personnelles (optionnel) :</label>
+            <textarea placeholder="Ex: J'ai voyagé en Espagne avec ma famille..."></textarea>
+          </div>
         </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          3
-         </div>
-         <h4 class="step-title">Co-construire le Plan</h4>
+
+        <!-- 📅 Organisation -->
+        <div class="auto-section">
+          <div class="auto-section-title"><span class="emoji">📅</span> Ton organisation</div>
+
+          <div class="auto-question">
+            <div class="q">Est-ce que tu arrives à bien organiser tes projets (devoirs, sorties, activités...) ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="org1"> Oui, je gère bien !</label>
+              <label class="choice"><input type="radio" name="org1"> Ça dépend, parfois oui parfois non</label>
+              <label class="choice"><input type="radio" name="org1"> Non, j'ai besoin qu'on m'aide</label>
+            </div>
+          </div>
+
+          <div class="note">
+            <label>💭 Notes personnelles (optionnel) :</label>
+            <textarea placeholder="Ex: Je sais faire des planning mais j'ai du mal à m'y tenir..."></textarea>
+          </div>
         </div>
-        <div class="step-content">
-         Fixer ensemble objectifs, étapes, rythme. Validation explicite du jeune.
+
+        <!-- 💰 Budget -->
+        <div class="auto-section">
+          <div class="auto-section-title"><span class="emoji">💰</span> Ton budget</div>
+
+          <div class="auto-question">
+            <div class="q">As-tu une idée de combien coûte un projet comme le tien ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="bud1"> Oui, j'ai fait des recherches</label>
+              <label class="choice"><input type="radio" name="bud1"> J'ai une vague idée</label>
+              <label class="choice"><input type="radio" name="bud1"> Non, aucune idée</label>
+            </div>
+          </div>
+
+          <div class="auto-question">
+            <div class="q">Sais-tu qu'il existe des aides financières pour les jeunes qui partent ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="bud2"> Oui, je connais</label>
+              <label class="choice"><input type="radio" name="bud2"> J'en ai entendu parler</label>
+              <label class="choice"><input type="radio" name="bud2"> Non, pas du tout</label>
+            </div>
+          </div>
+
+          <div class="note">
+            <label>💭 Notes personnelles (optionnel) :</label>
+            <textarea placeholder="Ex: J'ai des économies mais je ne sais pas si c'est suffisant..."></textarea>
+          </div>
         </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          4
-         </div>
-         <h4 class="step-title">Adapter en Continu</h4>
+
+        <!-- 🧑‍🤝‍🧑 Entourage -->
+        <div class="auto-section">
+          <div class="auto-section-title"><span class="emoji">🧑‍🤝‍🧑</span> Ton entourage</div>
+
+          <div class="auto-question">
+            <div class="q">Est-ce que ta famille et tes proches soutiennent ton projet ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="ent1"> Oui, totalement !</label>
+              <label class="choice"><input type="radio" name="ent1"> Plutôt oui, mais ils ont des inquiétudes</label>
+              <label class="choice"><input type="radio" name="ent1"> Non, ils ne sont pas d'accord</label>
+            </div>
+          </div>
+
+          <div class="auto-question">
+            <div class="q">Connais-tu quelqu'un là où tu veux aller (amis, famille, contacts...) ?</div>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="ent2"> Oui</label>
+              <label class="choice"><input type="radio" name="ent2"> Un peu</label>
+              <label class="choice"><input type="radio" name="ent2"> Non, personne</label>
+            </div>
+          </div>
+
+          <div class="note">
+            <label>💭 Notes personnelles (optionnel) :</label>
+            <textarea placeholder="Ex: Mes parents ont peur mais mes amis m'encouragent..."></textarea>
+          </div>
         </div>
-        <div class="step-content">
-         Bilans r��guliers, ajustements selon avancées, difficultés, évolution.
+
+        <!-- 5 - Besoin d'accompagnement -->
+        <div class="auto-final">
+          <h3>5 — De quoi as-tu besoin pour réussir ?</h3>
+          <p style="font-size:14px;line-height:1.55;color:#222;margin-bottom:12px;">
+            Maintenant que tu as réfléchi à tout ça, de quel type d'accompagnement penses-tu avoir besoin ?
+          </p>
+
+          <div class="need-grid">
+            <div class="need green">
+              <div class="badge">🟩</div>
+              <div class="txt">
+                <strong>Je peux y aller seul·e !</strong><br>
+                Je me sens prêt·e et je veux juste quelqu'un qui vérifie que je n'oublie rien.
+              </div>
+            </div>
+            <div class="need orange">
+              <div class="badge">🟧</div>
+              <div class="txt">
+                <strong>J'ai besoin qu'on m'accompagne</strong><br>
+                J'ai des questions et j'aimerais qu'on m'explique les étapes et qu'on m'aide à préparer mon projet.
+              </div>
+            </div>
+            <div class="need red">
+              <div class="badge">🟥</div>
+              <div class="txt">
+                <strong>J'ai besoin de beaucoup d'aide</strong><br>
+                Je me sens un peu perdu·e et j'ai besoin qu'on me guide pas à pas et qu'on me rassure.
+              </div>
+            </div>
+          </div>
+
+          <p style="margin-top:12px;font-weight:800;color:#171718;line-height:1.4;">
+            ✨ Bonne nouvelle ! Quel que soit ton niveau, on peut t'aider ! L'important c'est d'être honnête sur ce dont tu as besoin pour que ton projet se passe au mieux. 🌟
+          </p>
         </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          5
-         </div>
-         <h4 class="step-title">Documenter</h4>
-        </div>
-        <div class="step-content">
-         Tracer dans iMilo les particularités, ajustements, remarques utiles.
-        </div>
-       </div>
+
       </div>
-     </section>
-     <section class="dark-section">
-      <div class="section-header">
-       <div class="section-icon">
-        🛠️
-       </div>
-       <h3 class="section-title">Outils à Mobiliser</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="grid-item">
-        <h4 class="grid-item-title">Grille Diagnostic Personnalisé</h4>
-        <p class="grid-item-text">Recueil structuré des besoins, freins, ressources</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Échelle d'Autonomie</h4>
-        <p class="grid-item-text">Évaluation du niveau pour ajuster l'intensité</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Plan d'Action Individualisé</h4>
-        <p class="grid-item-text">Document co-construit avec objectifs et étapes</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">iMilo</h4>
-        <p class="grid-item-text">Traçabilité complète du parcours personnalisé</p>
-       </div>
-      </div>
-     </section>
-     <section class="card-base">
-      <div class="section-header">
-       <div class="section-icon">
-        🤝
-       </div>
-       <h3 class="section-title">Postures Professionnelles Attendues</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="posture-card"><span class="posture-emoji">👂</span>
-        <h4 class="posture-title">Écoute</h4>
-        <p class="posture-desc">Comprendre le jeune avant de proposer</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">🔄</span>
-        <h4 class="posture-title">Flexibilité</h4>
-        <p class="posture-desc">Sortir des schémas types, accepter l'imprévu</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">🎯</span>
-        <h4 class="posture-title">Centré sur le Jeune</h4>
-        <p class="posture-desc">Partir de ses besoins, pas des dispositifs</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">🤲</span>
-        <h4 class="posture-title">Respect</h4>
-        <p class="posture-desc">Valoriser les choix et le rythme du jeune</p>
-       </div>
-      </div>
-     </section>
-     <section class="vigilance-section">
-      <div class="section-header">
-       <div class="section-icon">
-        ���️
-       </div>
-       <h3 class="section-title">Points de Vigilance</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Parcours Standardisés</h4>
-        <p class="vigilance-text">Éviter de "plaquer" un modèle unique pour tous</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Oublier les Contraintes Personnelles</h4>
-        <p class="vigilance-text">Tenir compte de la mobilité, santé, contexte familial</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Manque de Souplesse</h4>
-        <p class="vigilance-text">Prévoir des ajustements, ne pas figer le plan</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Absence de Co-construction</h4>
-        <p class="vigilance-text">Le jeune doit valider et s'approprier son parcours</p>
-       </div>
-      </div>
-     </section>
+
+      <p class="auto-footer">💬 Partagez un point “facile” et un point “à renforcer” dans le chat Teams (si vous voulez).</p>
     </div>
-   </div><!-- AXE 2 -->
-   <div id="axe2" class="axe-section axe2">
-    <div class="process-container">
-     <header class="header">
-      <div class="header-shapes">
-       <div class="shape-circle"></div>
-       <div class="shape-square"></div>
-       <div class="shape-triangle"></div>
-      </div>
-      <div class="header-content">
-       <div class="axe-label">
-        FICHE PROCESS
-       </div>
-       <h2 class="axe-title" id="axe2-title">Axe 2 – DÉVELOPPEMENT DE L'AUTONOMIE</h2>
-       <p class="axe-subtitle">Fiche-process synth����tique</p>
-      </div>
-     </header>
-     <section class="card-base bordered-section">
-      <div class="section-header">
-       <div class="section-icon">
-        🎯
-       </div>
-       <h3 class="section-title">Objectifs de l'Étape</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="grid-item">
-        <p class="grid-item-text">Renforcer progressivement la capacité d'agir du jeune</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Favoriser l'auto-apprentissage et la prise d'initiative</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Réduire la dépendance à l'accompagnement au fil du temps</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Valoriser les compétences acquises et les succès</p>
-       </div>
-      </div>
-     </section>
-     <section class="card-base">
-      <div class="section-header">
-       <div class="section-icon">
-        📝
-       </div>
-       <h3 class="section-title">Déroulé Opérationnel (Pas à Pas)</h3>
-      </div>
-      <div class="steps-container">
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          1
-         </div>
-         <h4 class="step-title">Évaluer le Niveau d'Autonomie</h4>
-        </div>
-        <div class="step-content">
-         Grille : Autonome / Accompagné / Soutenu (selon domaines).
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          2
-         </div>
-         <h4 class="step-title">Définir des Objectifs Progressifs</h4>
-        </div>
-        <div class="step-content">
-         Passer progressivement de "faire avec" à "faire seul".
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          3
-         </div>
-         <h4 class="step-title">Proposer des Mises en Situation</h4>
-        </div>
-        <div class="step-content">
-         Exercices d'autonomie (recherche emploi, démarches admin, etc.).
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          4
-         </div>
-         <h4 class="step-title">Accompagner les Premières Fois</h4>
-        </div>
-        <div class="step-content">
-         Être présent sans faire à la place, puis se retirer progressivement.
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          5
-         </div>
-         <h4 class="step-title">Valoriser &amp; Capitaliser</h4>
-        </div>
-        <div class="step-content">
-         Reconnaître les succès, "ce que tu sais faire maintenant".
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          6
-         </div>
-         <h4 class="step-title">Ajuster le Rythme</h4>
-        </div>
-        <div class="step-content">
-         Ne pas aller trop vite, respecter les régressions temporaires.
-        </div>
-       </div>
-      </div>
-     </section>
-     <section class="dark-section">
-      <div class="section-header">
-       <div class="section-icon">
-        🛠️
-       </div>
-       <h3 class="section-title">Outils à Mobiliser</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="grid-item">
-        <h4 class="grid-item-title">Grille Autonomie</h4>
-        <p class="grid-item-text">Évaluation par domaine (emploi, logement, santé, etc.)</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Plan de Montée en Autonomie</h4>
-        <p class="grid-item-text">Étapes progressives avec objectifs intermédiaires</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Fiches Pratiques</h4>
-        <p class="grid-item-text">Mode d'emploi simplifié pour démarches courantes</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Auto-Évaluation</h4>
-        <p class="grid-item-text">Le jeune évalue lui-même ses progrès</p>
-       </div>
-      </div>
-     </section>
-     <section class="card-base">
-      <div class="section-header">
-       <div class="section-icon">
-        🤝
-       </div>
-       <h3 class="section-title">Postures Professionnelles Attendues</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="posture-card"><span class="posture-emoji">🎓</span>
-        <h4 class="posture-title">Pédagogue</h4>
-        <p class="posture-desc">Expliquer, montrer, laisser faire</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">💪</span>
-        <h4 class="posture-title">Valorisant</h4>
-        <p class="posture-desc">Reconnaître les efforts et les progrès</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">🤲</span>
-        <h4 class="posture-title">En Retrait Progressif</h4>
-        <p class="posture-desc">Passer de "faire avec" à "laisser faire"</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">���️</span>
-        <h4 class="posture-title">Patient</h4>
-        <p class="posture-desc">Accepter les régressions, adapter le rythme</p>
-       </div>
-      </div>
-     </section>
-     <section class="vigilance-section">
-      <div class="section-header">
-       <div class="section-icon">
-        ⚠️
-       </div>
-       <h3 class="section-title">Points de Vigilance</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Aller Trop Vite</h4>
-        <p class="vigilance-text">Respecter le rythme du jeune, éviter la mise en ��chec</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Faire à la Place</h4>
-        <p class="vigilance-text">Accompagner sans remplacer, laisser expérimenter</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Ne Pas Valoriser</h4>
-        <p class="vigilance-text">Reconnaître explicitement les réussites et compétences</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Oublier les Régressions</h4>
-        <p class="vigilance-text">C'est normal, ajuster sans culpabiliser</p>
-       </div>
-      </div>
-     </section>
+
+    <!-- SLIDE 3 - QU'EST-CE QUE LA MOBILITÉ (Page 4) -->
+    <div class="slide" style="justify-content:center;">
+      <h1 style="color:var(--color-bleu);text-align:center;">💡 Qu'est-ce que la mobilité<br>internationale ?</h1>
+
+      <!-- MODIF: intégration de l'infographie fournie via iframe srcdoc -->
+      <iframe class="infographic-frame" id="miFrame" title="Infographie - Mobilité internationale"></iframe>
+
+      <p style="margin-top:18px;font-size:14px;color:var(--mid-grey);max-width:1200px;text-align:center;">
+        Astuce : si l’infographie ne s’affiche pas (bloqueur), ouvrez-la dans un nouvel onglet via le bouton “Catalogue Mobilités”.
+      </p>
     </div>
-   </div><!-- AXE 3 -->
-   <div id="axe3" class="axe-section axe3">
-    <div class="process-container">
-     <header class="header">
-      <div class="header-shapes">
-       <div class="shape-circle"></div>
-       <div class="shape-square"></div>
-       <div class="shape-triangle"></div>
+
+    <!-- SLIDE 4 - PROGRAMMES COURTS -->
+    <div class="slide">
+      <h1 style="color:var(--color-orange);text-align:center;">👥 Programmes courts collectifs</h1>
+      <div class="grid-2">
+        <div class="card" style="border:4px solid var(--color-bleu);">
+          <div style="font-size:48px;text-align:center;">🗣️</div>
+          <h2 style="color:var(--color-bleu);text-align:center;font-size:22px;">Échange de Jeunes<br>Erasmus+</h2>
+          <p style="margin-top:16px;"><strong>👤</strong> 18-30 ans • <strong>⏱️</strong> 5-21 jours • <strong>👥</strong> 5-6 jeunes • <strong>💰</strong> ~50€</p>
+        </div>
+        <div class="card" style="border:4px solid var(--color-vert);">
+          <div style="font-size:48px;text-align:center;">🤝</div>
+          <h2 style="color:var(--color-vert);text-align:center;font-size:22px;">Équipes Volontaires<br>CES</h2>
+          <p style="margin-top:16px;"><strong>👤</strong> 18-30 ans • <strong>⏱️</strong> Jusqu'à 2 mois • <strong>👥</strong> 6-40 jeunes • <strong>💰</strong> ~50€</p>
+        </div>
       </div>
-      <div class="header-content">
-       <div class="axe-label">
-        FICHE PROCESS
-       </div>
-       <h2 class="axe-title" id="axe3-title">Axe 3 – COHÉRENCE DU DIAGNOSTIC</h2>
-       <p class="axe-subtitle">Fiche-process synthétique</p>
-      </div>
-     </header>
-     <section class="card-base bordered-section">
-      <div class="section-header">
-       <div class="section-icon">
-        🎯
-       </div>
-       <h3 class="section-title">Objectifs de l'Étape</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="grid-item">
-        <p class="grid-item-text">Harmoniser les diagnostics entre conseillers et territoires</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Simplifier les outils (moins de doublons)</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Rendre le jeune acteur du diagnostic</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Valoriser compétences et capacités d'agir</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Favoriser autonomie et engagement</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Faciliter le passage vers le collectif quand pertinent</p>
-       </div>
-      </div>
-     </section>
-     <section class="card-base">
-      <div class="section-header">
-       <div class="section-icon">
-        📝
-       </div>
-       <h3 class="section-title">Déroulé Opérationnel (Pas à Pas)</h3>
-      </div>
-      <div class="steps-container">
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          1
-         </div>
-         <h4 class="step-title">Consolider les Infos</h4>
-        </div>
-        <div class="step-content">
-         Compléter/clarifier ce qui manque (avec le jeune).
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          2
-         </div>
-         <h4 class="step-title">Réaliser le Diagnostic Partagé</h4>
-        </div>
-        <div class="step-content">
-         Structurer selon une grille commune (domaines clés).
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          3
-         </div>
-         <h4 class="step-title">Restituer au Jeune</h4>
-        </div>
-        <div class="step-content">
-         "Voilà ce que je comprends de ta situation", valider ensemble.
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          4
-         </div>
-         <h4 class="step-title">Prioriser</h4>
-        </div>
-        <div class="step-content">
-         Définir 1 à 3 priorités (urgence / court terme / moyen terme).
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          5
-         </div>
-         <h4 class="step-title">Formuler les Objectifs</h4>
-        </div>
-        <div class="step-content">
-         Objectifs concrets, compréhensibles, mesurables.
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          6
-         </div>
-         <h4 class="step-title">Choisir les Modalités</h4>
-        </div>
-        <div class="step-content">
-         Individuel / collectif / autonomie, selon besoin et niveau d'autonomie.
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          7
-         </div>
-         <h4 class="step-title">Tracer</h4>
-        </div>
-        <div class="step-content">
-         Renseigner dans iMilo, avec notes qualitatives utiles et non stigmatisantes.
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          8
-         </div>
-         <h4 class="step-title">Mettre à Jour</h4>
-        </div>
-        <div class="step-content">
-         Bilans réguliers, ajustements du diagnostic et du plan d'action.
-        </div>
-       </div>
-      </div>
-     </section>
-     <section class="dark-section">
-      <div class="section-header">
-       <div class="section-icon">
-        🛠️
-       </div>
-       <h3 class="section-title">Outils à Mobiliser</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="grid-item">
-        <h4 class="grid-item-title">Grille Diagnostic Commune</h4>
-        <p class="grid-item-text">Socle partagé structuré et harmonisé entre territoires</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">iMilo</h4>
-        <p class="grid-item-text">Diagnostic + plan d'action + suivi + commentaires structurés</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Supports de Restitution</h4>
-        <p class="grid-item-text">Fiche "mon plan d'action", simple et accessible pour le jeune</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Répertoire Interne</h4>
-        <p class="grid-item-text">Des relais/référents (thématiques, partenaires)</p>
-       </div>
-      </div>
-     </section>
-     <section class="card-base">
-      <div class="section-header">
-       <div class="section-icon">
-        🤝
-       </div>
-       <h3 class="section-title">Postures Professionnelles Attendues</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="posture-card"><span class="posture-emoji">📋</span>
-        <h4 class="posture-title">Rigueur</h4>
-        <p class="posture-desc">Cohérence, traçabilité, comparabilité</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">🤲</span>
-        <h4 class="posture-title">Neutralité / Respect</h4>
-        <p class="posture-desc">Diagnostic sans étiquetage</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">💪</span>
-        <h4 class="posture-title">Empowerment</h4>
-        <p class="posture-desc">Partir des ressources et compétences du jeune</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">���</span>
-        <h4 class="posture-title">Co-validation</h4>
-        <p class="posture-desc">Le jeune valide et comprend</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">🚶</span>
-        <h4 class="posture-title">Orientation Progressive</h4>
-        <p class="posture-desc">Autonomie accompagnée quand possible</p>
-       </div>
-      </div>
-     </section>
-     <section class="vigilance-section">
-      <div class="section-header">
-       <div class="section-icon">
-        ⚠️
-       </div>
-       <h3 class="section-title">Points de Vigilance</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Surcharge d'Outils / Doublons</h4>
-        <p class="vigilance-text">Viser la saisie unique et utile</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Diagnostic "Fait sur le Jeune"</h4>
-        <p class="vigilance-text">Toujours restituer et co-construire</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Oubli du Collectif</h4>
-        <p class="vigilance-text">Repérer quand l'action collective est plus efficace</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Diagnostic Figé</h4>
-        <p class="vigilance-text">Actualiser dès qu'un événement change la situation</p>
-       </div>
-      </div>
-     </section>
     </div>
-   </div><!-- AXE 4 -->
-   <div id="axe4" class="axe-section axe4">
-    <div class="process-container">
-     <header class="header">
-      <div class="header-shapes">
-       <div class="shape-circle"></div>
-       <div class="shape-square"></div>
-       <div class="shape-triangle"></div>
+
+    <!-- SLIDE 5 - PROGRAMMES LONGS + BAGAGES -->
+    <div class="slide">
+      <h1 style="color:var(--color-rose);text-align:center;">✈️ Programmes longs individuels</h1>
+      <div class="grid-3" style="margin-top:24px;">
+        <a href="https://youth.europa.eu/home_fr" target="_blank" class="card" style="border-left:6px solid var(--color-bleu);">
+          <h3 style="color:var(--color-bleu);">CES Court Terme</h3>
+          <p><strong>⏱️</strong> 10 jours - 2 mois<br><strong>🎯</strong> Suivi par tuteur<br><strong>✅</strong> Tester immersion</p>
+        </a>
+
+        <a href="https://youth.europa.eu/home_fr" target="_blank" class="card" style="border-left:6px solid var(--color-vert);">
+          <h3 style="color:var(--color-vert);">CES Long Terme</h3>
+          <p><strong>⏱️</strong> 2-12 mois<br><strong>🎯</strong> Plateforme linguistique<br><strong>✅</strong> Immersion longue</p>
+        </a>
+
+        <div class="card" style="border-left:10px solid var(--color-orange);cursor:pointer;"
+             onclick="openBagagesModal()"
+             onmouseover="this.style.transform='translate(5px, -5px)';this.style.boxShadow='-10px 10px 0 var(--color-orange)';"
+             onmouseout="this.style.transform='';this.style.boxShadow='';">
+          <div style="font-size:48px;margin-bottom:15px;">🎒</div>
+          <h3 style="color:var(--color-orange);font-size:22px;margin-bottom:12px;">Stages BAGAGES</h3>
+          <p style="font-size:15px;margin:12px 0;">Stage 3 ou 6 mois en Europe</p>
+          <div style="margin-top:15px;font-size:14px;">
+            <div><strong>⏱️</strong> 3 à 6 mois</div>
+            <div><strong>👤</strong> 18-30 ans NA</div>
+            <div><strong>🏢</strong> France Travail / ML</div>
+            <div><strong>💰</strong> Financement complet</div>
+          </div>
+          <div style="background:var(--color-orange);color:white;padding:12px;border-radius:8px;text-align:center;margin-top:20px;font-weight:700;font-size:14px;">
+            👁️ Cliquez pour l'infographie
+          </div>
+        </div>
       </div>
-      <div class="header-content">
-       <div class="axe-label">
-        FICHE PROCESS
-       </div>
-       <h2 class="axe-title" id="axe4-title">Axe 4 ��� MOBILISATION DE L'OFFRE</h2>
-       <p class="axe-subtitle">Fiche-process synthétique</p>
-      </div>
-     </header>
-     <section class="card-base bordered-section">
-      <div class="section-header">
-       <div class="section-icon">
-        ��
-       </div>
-       <h3 class="section-title">Objectifs de l'Étape</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="grid-item">
-        <p class="grid-item-text">Rendre l'offre lisible et cohérente pour le jeune</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Mobiliser les dispositifs pertinents (pas par défaut)</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Développer une offre collective territoriale</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Articuler individuel / collectif</p>
-       </div>
-       <div class="grid-item">
-        <p class="grid-item-text">Donner du sens aux actions proposées</p>
-       </div>
-      </div>
-     </section>
-     <section class="card-base">
-      <div class="section-header">
-       <div class="section-icon">
-        📝
-       </div>
-       <h3 class="section-title">Déroul�� Opérationnel (Pas à Pas)</h3>
-      </div>
-      <div class="steps-container">
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          1
-         </div>
-         <h4 class="step-title">Traduire le Diagnostic en Options</h4>
-        </div>
-        <div class="step-content">
-         2–3 options d'actions/dispositifs pertinents.
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          2
-         </div>
-         <h4 class="step-title">Expliquer Simplement</h4>
-        </div>
-        <div class="step-content">
-         Contenu, bénéfices, contraintes, durée, "à quoi ça sert".
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          3
-         </div>
-         <h4 class="step-title">Choisir avec le Jeune</h4>
-        </div>
-        <div class="step-content">
-         Accord explicite, prise en compte du rythme et des contraintes.
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          4
-         </div>
-         <h4 class="step-title">Planifier</h4>
-        </div>
-        <div class="step-content">
-         Inscription atelier/dispositif, dates, convocations, logistique.
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          5
-         </div>
-         <h4 class="step-title">Coordonner</h4>
-        </div>
-        <div class="step-content">
-         Mobiliser partenaires/référents, clarifier "qui fait quoi".
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          6
-         </div>
-         <h4 class="step-title">Assurer le Lien</h4>
-        </div>
-        <div class="step-content">
-         Rappels, relances, point rapide après chaque action.
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          7
-         </div>
-         <h4 class="step-title">Évaluer &amp; Ajuster</h4>
-        </div>
-        <div class="step-content">
-         Débrief, capitalisation ("ce que j'ai appris"), adaptation du plan.
-        </div>
-       </div>
-       <div class="step-card">
-        <div class="step-header">
-         <div class="step-number">
-          8
-         </div>
-         <h4 class="step-title">Tracer</h4>
-        </div>
-        <div class="step-content">
-         Tout inscrire dans iMilo (actions, absences, suites, résultats).
-        </div>
-       </div>
-      </div>
-     </section>
-     <section class="dark-section">
-      <div class="section-header">
-       <div class="section-icon">
-        🛠️
-       </div>
-       <h3 class="section-title">Outils à Mobiliser</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="grid-item">
-        <h4 class="grid-item-title">Catalogue Offre de Services</h4>
-        <p class="grid-item-text">Dispositifs, ateliers, partenaires, critères d'accès</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Planning Actions Collectives</h4>
-        <p class="grid-item-text">Territorialisé + modalités d'inscription</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">iMilo</h4>
-        <p class="grid-item-text">Inscriptions, orientations, traçabilité, suivi complet</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Fiches Relais Partenaires</h4>
-        <p class="grid-item-text">Contacts référents + modalités de coordination</p>
-       </div>
-       <div class="grid-item">
-        <h4 class="grid-item-title">Outils de Rappel</h4>
-        <p class="grid-item-text">SMS/mail/téléphone, supports de convocation</p>
-       </div>
-      </div>
-     </section>
-     <section class="card-base">
-      <div class="section-header">
-       <div class="section-icon">
-        🤝
-       </div>
-       <h3 class="section-title">Postures Professionnelles Attendues</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="posture-card"><span class="posture-emoji">💡</span>
-        <h4 class="posture-title">Clarté</h4>
-        <p class="posture-desc">Rendre l'offre compréhensible et non intimidante</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">🎯</span>
-        <h4 class="posture-title">Choix du Jeune</h4>
-        <p class="posture-desc">Consentement, motivation, appropriation</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">🎲</span>
-        <h4 class="posture-title">Orientation Pertinente</h4>
-        <p class="posture-desc">Qualité &gt; quantité d'actions</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">🚀</span>
-        <h4 class="posture-title">Proactivité</h4>
-        <p class="posture-desc">Proposer, lever les freins (mobilité, horaires, etc.)</p>
-       </div>
-       <div class="posture-card"><span class="posture-emoji">⭐</span>
-        <h4 class="posture-title">Valorisation</h4>
-        <p class="posture-desc">Reconnaître les efforts, sécuriser les transitions</p>
-       </div>
-      </div>
-     </section>
-     <section class="vigilance-section">
-      <div class="section-header">
-       <div class="section-icon">
-        ⚠️
-       </div>
-       <h3 class="section-title">Points de Vigilance</h3>
-      </div>
-      <div class="grid-layout">
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Sur-prescription</h4>
-        <p class="vigilance-text">Trop d'actions = décrochage. Prioriser</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Inadéquation Dispositif / Autonomie</h4>
-        <p class="vigilance-text">Ajuster le rythme au niveau d'autonomie</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Logistique</h4>
-        <p class="vigilance-text">Transport, horaires, contraintes familiales : anticiper</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Manque de Lisibilité</h4>
-        <p class="vigilance-text">Éviter les sigles, vérifier la compréhension</p>
-       </div>
-       <div class="vigilance-item">
-        <h4 class="vigilance-title">Ruptures de Lien</h4>
-        <p class="vigilance-text">Prévenir les absences par rappels + relances rapides</p>
-       </div>
-      </div>
-     </section>
     </div>
-   </div>
+
+    <!-- SLIDE 6 - PVT -->
+    <div class="slide" style="justify-content:center;">
+      <h1 style="color:var(--color-vert);text-align:center;margin-bottom:40px;text-transform:uppercase;">🌏 Programme Vacances-Travail (PVT)</h1>
+
+      <div style="max-width:1100px;margin:0 auto;">
+        <a href="PVT.pdf" target="_blank">
+          <img src="images/pvt.png" alt="Programme Vacances-Travail (PVT)" style="width:100%;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.2);cursor:pointer;">
+        </a>
+      </div>
+
+      <div style="background:linear-gradient(135deg,var(--color-bleu),var(--color-vert));padding:25px 40px;border-radius:16px;color:white;margin-top:40px;text-align:center;max-width:900px;">
+        <h2 style="color:white;font-size:26px;margin-bottom:10px;">✈️ Voyagez et travaillez à l'étranger pendant 1 à 2 ans</h2>
+        <p style="font-size:18px;margin-top:10px;">15+ pays disponibles • Canada, Australie, Nouvelle-Zélande, Japon, Argentine...</p>
+        <p style="font-size:16px;margin-top:15px;font-weight:600;">📄 Cliquez sur l'image pour voir le PDF complet</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 7 - CATALOGUE -->
+    <div class="slide" style="background:linear-gradient(135deg,var(--color-bleu),var(--color-vert));justify-content:center;align-items:center;text-align:center;cursor:pointer;" onclick="window.open('https://mlpb-tools.github.io/Catalogue-/', '_blank')">
+      <div style="font-size:64px;">📚</div>
+      <h1 style="color:white;font-size:48px;margin-top:10px;text-transform:uppercase;">Catalogue Mobilités</h1>
+      <div style="background:white;padding:32px;border-radius:20px;margin-top:24px;max-width:600px;">
+        <h2>45 offres concrètes</h2>
+        <p style="font-size:16px;margin-top:12px;">Filtrables par <strong>pays</strong>, <strong>durée</strong> et <strong>secteur</strong></p>
+        <p style="margin-top:10px;font-weight:600;color:var(--color-bleu);">Clique sur le bandeau pour ouvrir</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 8 - ACTIVITÉ CATALOGUE -->
+    <div class="slide" style="justify-content:center;">
+      <div style="background:var(--color-orange);color:white;padding:20px;border-radius:16px;text-align:center;margin-bottom:24px;">
+        <h1 style="color:white;font-size:36px;text-transform:uppercase;">🎯 Activité en sous-groupes</h1>
+      </div>
+      <div style="background:white;border:4px solid var(--color-orange);border-radius:20px;padding:40px;text-align:center;">
+        <div style="font-size:72px;margin-bottom:20px;">📋</div>
+        <h2>Consigne</h2>
+        <p style="font-size:20px;margin-top:16px;line-height:1.6;">
+          Choisis une offre dans le Catalogue et note :<br><br>
+          <strong>Le programme • Le pays • La durée • La mission</strong>
+        </p>
+      </div>
+    </div>
+
+    <!-- SLIDE 9 - FINANCEMENT -->
+    <div class="slide">
+      <h1 style="color:var(--color-vert);text-align:center;">💰 Financer sa mobilité</h1>
+      <div style="display:flex;flex-direction:column;gap:16px;margin-top:24px;">
+        <div class="card" style="background:linear-gradient(135deg,var(--color-bleu),var(--color-vert));color:white;">
+          <h3>🇪🇺 Bourses Erasmus+</h3>
+          <p>Bourse forfaitaire selon pays + frais de voyage</p>
+        </div>
+        <div class="card" style="border-left:6px solid var(--color-orange);">
+          <h3 style="color:var(--color-orange);">🏛️ Aides Mission Locale</h3>
+          <p>Accompagnement pour montage financier de ton projet</p>
+        </div>
+        <div class="card" style="border-left:6px solid var(--color-violet);">
+          <h3 style="color:var(--color-violet);">🗺️ Aides régionales</h3>
+          <p>Dispositifs spécifiques Nouvelle-Aquitaine</p>
+        </div>
+      </div>
+      <div style="background:var(--color-vert);color:white;padding:20px;border-radius:16px;text-align:center;margin-top:20px;">
+        <p style="font-weight:600;">💡 La plupart des programmes couvrent frais de voyage, logement et repas</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 10 - ACTIVITÉ BUDGET -->
+    <div class="slide" style="justify-content:center;">
+      <div style="background:var(--color-vert);color:white;padding:20px;border-radius:16px;text-align:center;margin-bottom:24px;">
+        <h1 style="color:white;font-size:36px;text-transform:uppercase;">🧮 Activité - Calculateur Budget</h1>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:96px;margin-bottom:24px;">💶</div>
+        <div style="background:white;border:4px solid var(--color-vert);border-radius:20px;padding:32px;max-width:700px;margin:0 auto;">
+          <h2>Consigne</h2>
+          <p style="font-size:18px;margin-top:16px;">
+            Utilise le <strong>Calculateur Budget</strong> pour estimer le coût de ton projet
+          </p>
+          <p style="margin-top:18px;">
+            👉 <a href="https://mlpb-tools.github.io/Calcul4U/" target="_blank" style="color:var(--color-vert);font-weight:700;">Ouvrir le calculateur</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11 - DÉMARCHES -->
+    <div class="slide">
+      <h1 style="color:var(--color-rose);text-align:center;">📋 Démarches administratives</h1>
+      <div class="grid-2" style="margin-top:24px;">
+        <div class="card" style="border-left:6px solid var(--color-bleu);">
+          <div style="font-size:36px;">🛂</div>
+          <h3>Passeport</h3>
+          <p>Vérifier validité (6 mois minimum)</p>
+        </div>
+        <div class="card" style="border-left:6px solid var(--color-vert);">
+          <div style="font-size:36px;">💳</div>
+          <h3>CEAM</h3>
+          <p>Carte Européenne Assurance Maladie</p>
+        </div>
+        <div class="card" style="border-left:6px solid var(--color-orange);">
+          <div style="font-size:36px;">🏠</div>
+          <h3>Logement</h3>
+          <p>Souvent pris en charge par programme</p>
+        </div>
+        <div class="card" style="border-left:6px solid var(--color-violet);">
+          <div style="font-size:36px;">🛡️</div>
+          <h3>Assurance</h3>
+          <p>Responsabilité civile nécessaire</p>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--color-rose),var(--color-violet));color:white;padding:20px;border-radius:16px;text-align:center;margin-top:20px;">
+        <p style="font-weight:600;">✅ Ton conseiller t'accompagne dans toutes ces démarches</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 12 - OUTILS -->
+    <div class="slide" style="background:linear-gradient(135deg,var(--color-orange),var(--color-rose));justify-content:center;">
+      <h1 style="color:white;text-align:center;font-size:48px;text-transform:uppercase;">🛠️ Outils à ta disposition</h1>
+      <div style="display:flex;flex-direction:column;gap:16px;margin-top:32px;">
+        <div style="background:white;padding:24px;border-radius:16px;text-align:center;">
+          <div style="font-size:40px;margin-bottom:8px;">✈️</div>
+          <h3>Webinaire Mobilité</h3>
+        </div>
+        <div style="background:white;padding:24px;border-radius:16px;text-align:center;">
+          <div style="font-size:40px;margin-bottom:8px;">📚</div>
+          <h3>Catalogue Mobilités</h3>
+        </div>
+        <div style="background:white;padding:24px;border-radius:16px;text-align:center;">
+          <div style="font-size:40px;margin-bottom:8px;">🧮</div>
+          <h3>Calculatrice Budget</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 13 - MODULE CANDIDATURE -->
+    <div class="slide">
+      <h1 style="color:var(--color-bleu);text-align:center;text-transform:uppercase;">✍️ Module Candidature</h1>
+      <p style="font-size:18px;text-align:center;margin:16px 0;">Une bonne candidature repose sur 3 axes essentiels</p>
+      <div class="grid-3" style="margin-top:32px;">
+        <div style="background:linear-gradient(135deg,var(--color-orange),var(--color-vert));color:white;padding:28px;border-radius:16px;text-align:center;">
+          <div style="font-size:40px;margin-bottom:12px;">💫</div>
+          <h3 style="color:white;">Motivation</h3>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--color-vert),var(--color-bleu));color:white;padding:28px;border-radius:16px;text-align:center;">
+          <div style="font-size:40px;margin-bottom:12px;">🎯</div>
+          <h3 style="color:white;">Compétences</h3>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--color-bleu),var(--color-violet));color:white;padding:28px;border-radius:16px;text-align:center;">
+          <div style="font-size:40px;margin-bottom:12px;">🔗</div>
+          <h3 style="color:white;">Cohérence</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 14 - 5 QUESTIONS -->
+    <div class="slide">
+      <h1 style="color:var(--color-violet);text-align:center;">❓ 5 questions clés<br>avant de postuler</h1>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:24px;">
+        <div style="background:var(--color-bleu);color:white;padding:16px 24px;border-radius:16px;"><p style="font-weight:600;">1️⃣ Pourquoi cette offre m'intéresse ?</p></div>
+        <div style="background:var(--color-vert);color:white;padding:16px 24px;border-radius:16px;"><p style="font-weight:600;">2️⃣ Pourquoi ce pays en particulier ?</p></div>
+        <div style="background:var(--color-orange);color:white;padding:16px 24px;border-radius:16px;"><p style="font-weight:600;">3️⃣ Qu'est-ce que j'apporte au projet ?</p></div>
+        <div style="background:var(--color-rose);color:white;padding:16px 24px;border-radius:16px;"><p style="font-weight:600;">4️⃣ Quelles compétences puis-je mobiliser ?</p></div>
+        <div style="background:var(--color-violet);color:white;padding:16px 24px;border-radius:16px;"><p style="font-weight:600;">5️⃣ Quelles sont mes attentes ?</p></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 15 - STRUCTURE CANDIDATURE -->
+    <div class="slide">
+      <h1 style="color:var(--color-orange);text-align:center;">📝 Structure d'une<br>mini-candidature</h1>
+      <div style="background:white;border:4px solid var(--color-orange);border-radius:20px;padding:32px;margin-top:24px;">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="border-left:4px solid var(--color-bleu);padding-left:16px;">
+            <p style="font-weight:700;color:var(--color-bleu);">2 lignes : Présentation</p>
+            <p style="font-size:14px;color:#666;margin-top:4px;">Qui es-tu ? Ton parcours actuel</p>
+          </div>
+          <div style="border-left:4px solid var(--color-vert);padding-left:16px;">
+            <p style="font-weight:700;color:var(--color-vert);">3 lignes : Motivation</p>
+            <p style="font-size:14px;color:#666;margin-top:4px;">Pourquoi cette offre ? Pourquoi ce pays ?</p>
+          </div>
+          <div style="border-left:4px solid var(--color-orange);padding-left:16px;">
+            <p style="font-weight:700;color:var(--color-orange);">3 lignes : Compétences</p>
+            <p style="font-size:14px;color:#666;margin-top:4px;">Ce que tu apportes, tes atouts concrets</p>
+          </div>
+          <div style="border-left:4px solid var(--color-rose);padding-left:16px;">
+            <p style="font-weight:700;color:var(--color-rose);">2 lignes : Conclusion</p>
+            <p style="font-size:14px;color:#666;margin-top:4px;">Disponibilités et remerciements</p>
+          </div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--color-orange),var(--color-rose));color:white;padding:18px;border-radius:16px;text-align:center;margin-top:20px;">
+        <p style="font-weight:600;">📏 Total : 10 lignes maximum pour être efficace</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 16 - EXEMPLE EMAIL -->
+    <div class="slide">
+      <h1 style="color:var(--color-bleu);text-align:center;">📧 Exemple d'email<br>de candidature</h1>
+      <div style="background:white;border:3px solid var(--color-bleu);border-radius:16px;padding:28px;margin-top:20px;font-family:monospace;font-size:13px;line-height:1.8;">
+        <p><strong>Objet :</strong> Candidature volontariat environnemental - Espagne</p>
+        <p style="margin-top:16px;">Bonjour,</p>
+        <p style="margin-top:12px;border-left:3px solid var(--color-bleu);padding-left:12px;">
+          <strong style="color:var(--color-bleu);">[Présentation]</strong> Je m'appelle [Nom], j'ai 22 ans et je suis en recherche d'emploi dans le secteur de l'environnement.
+        </p>
+        <p style="margin-top:12px;border-left:3px solid var(--color-vert);padding-left:12px;">
+          <strong style="color:var(--color-vert);">[Motivation]</strong> Votre projet de reforestation m'intéresse car je souhaite m'engager concrètement. L'Espagne représente une opportunité de découvrir de nouvelles techniques écologiques.
+        </p>
+        <p style="margin-top:12px;border-left:3px solid var(--color-orange);padding-left:12px;">
+          <strong style="color:var(--color-orange);">[Compétences]</strong> J'ai une formation en espaces verts et 6 mois d'expérience en pépinière. Je suis motivé et capable de travailler en équipe.
+        </p>
+        <p style="margin-top:12px;border-left:3px solid var(--color-rose);padding-left:12px;">
+          <strong style="color:var(--color-rose);">[Conclusion]</strong> Je suis disponible dès le mois prochain. Merci de votre attention.
+        </p>
+        <p style="margin-top:12px;">Cordialement,<br>[Nom]</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 17 - ACTIVITÉ RÉDACTION -->
+    <div class="slide" style="justify-content:center;">
+      <div style="background:var(--color-rose);color:white;padding:20px;border-radius:16px;text-align:center;margin-bottom:24px;">
+        <h1 style="color:white;font-size:36px;text-transform:uppercase;">✏️ Activité individuelle</h1>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:96px;margin-bottom:24px;">📝</div>
+        <div style="background:white;border:4px solid var(--color-rose);border-radius:20px;padding:40px;max-width:700px;margin:0 auto;">
+          <h2>Consigne</h2>
+          <p style="font-size:20px;margin-top:16px;">
+            Rédige <strong>10 lignes de candidature</strong> en t'appuyant sur une offre du Catalogue
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 18 - RETOURS GROUPES -->
+    <div class="slide" style="justify-content:center;">
+      <div style="background:var(--color-vert);color:white;padding:20px;border-radius:16px;text-align:center;margin-bottom:24px;">
+        <h1 style="color:white;font-size:36px;text-transform:uppercase;">💬 Retours en sous-groupes</h1>
+      </div>
+      <div style="background:white;border:4px solid var(--color-vert);border-radius:20px;padding:40px;text-align:center;">
+        <h2>Consigne</h2>
+        <p style="font-size:18px;margin-top:16px;line-height:1.7;">
+          Échangez vos candidatures et donnez à chacun :<br><br>
+          <strong style="color:var(--color-vert);">✅ 1 point fort</strong><br>
+          <strong style="color:var(--color-orange);">💡 1 amélioration possible</strong>
+        </p>
+      </div>
+      <div class="grid-3" style="margin-top:24px;">
+        <div style="background:var(--color-vert);color:white;padding:16px;border-radius:16px;text-align:center;"><p style="font-weight:600;">Bienveillance</p></div>
+        <div style="background:var(--color-bleu);color:white;padding:16px;border-radius:16px;text-align:center;"><p style="font-weight:600;">Constructif</p></div>
+        <div style="background:var(--color-orange);color:white;padding:16px;border-radius:16px;text-align:center;"><p style="font-weight:600;">Concret</p></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 19 - CRITÈRES -->
+    <div class="slide">
+      <h1 style="color:var(--color-violet);text-align:center;">✅ Critères d'une<br>bonne candidature</h1>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:24px;">
+        <div class="card" style="border-left:6px solid var(--color-bleu);"><h3 style="color:var(--color-bleu);">💖 Sincérité</h3><p>Reste authentique, parle de toi vraiment</p></div>
+        <div class="card" style="border-left:6px solid var(--color-vert);"><h3 style="color:var(--color-vert);">💎 Clarté</h3><p>Phrases courtes et précises, facile à lire</p></div>
+        <div class="card" style="border-left:6px solid var(--color-orange);"><h3 style="color:var(--color-orange);">🎯 Adaptation à l'offre</h3><p>Montre que tu connais le projet</p></div>
+        <div class="card" style="border-left:6px solid var(--color-rose);"><h3 style="color:var(--color-rose);">✍️ Orthographe</h3><p>Relis-toi ou fais relire</p></div>
+        <div class="card" style="border-left:6px solid var(--color-violet);"><h3 style="color:var(--color-violet);">🔗 Cohérence</h3><p>Lien logique entre toi et le projet</p></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 20 - PLAN D'ACTION -->
+    <div class="slide" style="background:linear-gradient(135deg,var(--color-bleu),var(--color-vert));justify-content:center;">
+      <h1 style="color:white;text-align:center;font-size:56px;margin-bottom:40px;text-transform:uppercase;">🗺️ TON PLAN D'ACTION</h1>
+
+      <div style="background:white;border-radius:20px;padding:50px;max-width:900px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:35px;">
+          <div>
+            <h3 style="color:var(--color-bleu);font-size:22px;margin-bottom:15px;">🌍 Ma destination préférée</h3>
+            <div style="border-bottom:3px solid var(--color-bleu);padding:16px 0;"></div>
+          </div>
+          <div>
+            <h3 style="color:var(--color-vert);font-size:22px;margin-bottom:15px;">📋 Le programme pour moi</h3>
+            <div style="border-bottom:3px solid var(--color-vert);padding:16px 0;"></div>
+          </div>
+          <div>
+            <h3 style="color:var(--color-orange);font-size:22px;margin-bottom:15px;">✅ Ma prochaine étape</h3>
+            <div style="border-bottom:3px solid var(--color-orange);padding:16px 0;"></div>
+          </div>
+          <div>
+            <h3 style="color:var(--color-rose);font-size:22px;margin-bottom:15px;">🤝 Besoin d'aide pour</h3>
+            <div style="border-bottom:3px solid var(--color-rose);padding:16px 0;"></div>
+          </div>
+        </div>
+      </div>
+
+      <p style="color:white;text-align:center;font-size:20px;margin-top:40px;font-weight:600;">💬 Qui veut partager sa prochaine étape ?</p>
+    </div>
+
+    <!-- SLIDE 21 - ÉVALUATION FINALE -->
+    <div class="slide" style="background:linear-gradient(135deg,var(--color-violet),var(--color-rose));justify-content:center;">
+      <h1 style="color:white;text-align:center;font-size:52px;margin-bottom:30px;text-transform:uppercase;">📊 ÉVALUATION FINALE</h1>
+      <p style="color:white;text-align:center;font-size:22px;margin-bottom:40px;">Après ce webinaire, où en es-tu ?</p>
+
+      <div style="background:white;border-radius:20px;padding:50px;max-width:950px;overflow-y:auto;max-height:70vh;">
+        <div style="background:linear-gradient(135deg,var(--color-orange),var(--color-rose));padding:35px;border-radius:16px;margin-bottom:35px;">
+          <h3 style="color:white;font-size:24px;margin-bottom:20px;text-align:center;">Q6 – Partir à l'étranger… ça te donne envie ?</h3>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:white;padding:20px;border-radius:12px;">
+            <span style="font-weight:700;font-size:18px;">0/10 Pas du tout</span>
+            <div style="display:flex;gap:8px;">
+              <div style="width:40px;height:40px;background:#ffebee;border:2px solid var(--color-rose);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;">0</div>
+              <div style="width:40px;height:40px;background:#fff3e0;border:2px solid var(--color-orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;">5</div>
+              <div style="width:40px;height:40px;background:#e8f5e9;border:2px solid var(--color-vert);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;">10</div>
+            </div>
+            <span style="font-weight:700;font-size:18px;">10/10 Carrément !</span>
+          </div>
+          <p style="color:white;text-align:center;margin-top:15px;font-size:16px;">💬 Écrivez votre note dans le chat Teams !</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:25px;">
+          <div>
+            <h3 style="color:var(--color-bleu);font-size:19px;margin-bottom:12px;">Q7 – Tu te sens plus capable de gérer un imprévu en mobilité ?</h3>
+            <div style="display:flex;gap:12px;">
+              <div style="background:#e8f5e9;padding:10px 18px;border-radius:8px;border:2px solid var(--color-vert);">👍 Oui</div>
+              <div style="background:#fff3e0;padding:10px 18px;border-radius:8px;border:2px solid var(--color-orange);">🙂 Un peu plus</div>
+              <div style="background:#ffebee;padding:10px 18px;border-radius:8px;border:2px solid var(--color-rose);">😕 Pas vraiment</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="color:var(--color-vert);font-size:19px;margin-bottom:12px;">Q8 – Rencontrer des gens d'autres pays, ça te paraît comment maintenant ?</h3>
+            <div style="display:flex;gap:12px;">
+              <div style="background:#e8f5e9;padding:10px 18px;border-radius:8px;border:2px solid var(--color-vert);">😄 Plus motivant</div>
+              <div style="background:#fff3e0;padding:10px 18px;border-radius:8px;border:2px solid var(--color-orange);">🤔 Toujours hésitant</div>
+              <div style="background:#ffebee;padding:10px 18px;border-radius:8px;border:2px solid var(--color-rose);">😬 Toujours stressant</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="color:var(--color-orange);font-size:19px;margin-bottom:12px;">Q9 – Tes idées pour l'étranger sont…</h3>
+            <div style="display:flex;gap:12px;">
+              <div style="background:#e8f5e9;padding:10px 18px;border-radius:8px;border:2px solid var(--color-vert);">🎯 Plus claires</div>
+              <div style="background:#fff3e0;padding:10px 18px;border-radius:8px;border:2px solid var(--color-orange);">💡 Un peu plus construites</div>
+              <div style="background:#ffebee;padding:10px 18px;border-radius:8px;border:2px solid var(--color-rose);">❓ Toujours floues</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="color:var(--color-violet);font-size:19px;margin-bottom:12px;">Q10 – Tu te sens prêt(e) pour une première étape (rdv/outil/atelier) ?</h3>
+            <div style="display:flex;gap:12px;">
+              <div style="background:#e8f5e9;padding:10px 18px;border-radius:8px;border:2px solid var(--color-vert);">🚀 Oui</div>
+              <div style="background:#fff3e0;padding:10px 18px;border-radius:8px;border:2px solid var(--color-orange);">🤔 Peut-être</div>
+              <div style="background:#ffebee;padding:10px 18px;border-radius:8px;border:2px solid var(--color-rose);">💤 Pas maintenant</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 22 - CONTACT -->
+    <div class="slide" style="background:linear-gradient(135deg,var(--color-orange),var(--color-rose));justify-content:center;align-items:center;text-align:center;">
+      <div style="font-size:72px;margin-bottom:30px;">🤝</div>
+      <h1 style="color:white;font-size:56px;margin-bottom:40px;text-transform:uppercase;">ON RESTE EN CONTACT !</h1>
+
+      <div style="background:white;padding:40px 60px;border-radius:20px;margin-bottom:40px;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+        <img src="https://static.wixstatic.com/media/dd5dab_47743b1c86024865ba19e623a3db327f~mv2.avif/v1/fill/w_224,h_60,al_c,q_80,enc_avif,quality_auto/dd5dab_47743b1c86024865ba19e623a3db327f~mv2.avif" alt="Mission Locale Pays Basque" style="height:80px;margin-bottom:20px;">
+        <h2 style="color:var(--color-noir);font-size:32px;margin-bottom:10px;">Mission Locale Pays Basque</h2>
+        <h3 style="color:var(--color-orange);font-size:24px;">Pôle Mobilité Internationale</h3>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);padding:30px 50px;border-radius:20px;margin-bottom:30px;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:20px;">
+          <div style="font-size:48px;">📱</div>
+          <div style="text-align:left;">
+            <p style="color:white;font-size:18px;font-weight:600;margin-bottom:5px;">Contacte-nous sur WhatsApp</p>
+            <p style="color:white;font-size:28px;font-weight:900;">06 37 33 37 57</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.2);color:white;padding:25px 40px;border-radius:16px;max-width:700px;">
+        <p style="font-size:22px;font-weight:700;">🚀 Prends rendez-vous avec ton conseiller pour démarrer ton projet !</p>
+      </div>
+    </div>
+
   </div>
+
+  <!-- NAVIGATION -->
+  <button class="nav-btn prev" onclick="changeSlide(-1)">←</button>
+  <button class="nav-btn next" onclick="changeSlide(1)">→</button>
+
+  <!-- Modale BAGAGES -->
+  <div class="modal-bagages" id="modalBagages" onclick="closeBagagesModal()">
+    <div class="modal-content-bagages" onclick="event.stopPropagation()">
+      <span class="close-modal" onclick="closeBagagesModal()">×</span>
+      <embed src="BAGAGES.pdf" type="application/pdf" style="width:100%;height:90vh;border-radius:10px;">
+    </div>
+  </div>
+
+  <div class="slide-counter">
+    <span id="currentSlide">1</span> / <span id="totalSlides">23</span>
+  </div>
+
   <script>
-    const defaultConfig = {
-      main_title: "SOCLE MÉTHODOLOGIQUE DE L'ACCOMPAGNEMENT",
-      main_subtitle: "DE L'ACCOMPAGNEMENT DES JEUNES",
-      socle_title: "SOCLE MÉTHODOLOGIQUE",
-      axe1_title: "Axe 1 – PERSONNALISATION DU PARCOURS",
-      axe2_title: "Axe 2 – DÉVELOPPEMENT DE L'AUTONOMIE",
-      axe3_title: "Axe 3 – COHÉRENCE DU DIAGNOSTIC",
-      axe4_title: "Axe 4 – MOBILISATION DE L'OFFRE",
-      background_color: "#ffffff",
-      surface_color: "#f7fafc",
-      text_color: "#171718",
-      primary_action_color: "#f39200",
-      secondary_action_color: "#2897d5",
-      font_family: "Poppins",
-      font_size: 16
-    };
+    let currentSlide = 1;
+    let totalSlides = 23;
 
-    function showSection(sectionId) {
-      const sections = document.querySelectorAll('.axe-section');
-      const buttons = document.querySelectorAll('.nav-btn');
-      
-      sections.forEach(section => section.classList.remove('active'));
-      buttons.forEach(button => button.classList.remove('active'));
-      
-      document.getElementById(sectionId).classList.add('active');
-      
-      const buttonMap = {
-        'socle': 0,
-        'axe1': 1,
-        'axe2': 2,
-        'axe3': 3,
-        'axe4': 4
-      };
-      
-      buttons[buttonMap[sectionId]].classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    function changeSlide(n) {
+      const slides = document.querySelectorAll('.slide');
+      slides[currentSlide - 1].classList.remove('active');
+
+      currentSlide += n;
+      if (currentSlide > totalSlides) currentSlide = 1;
+      if (currentSlide < 1) currentSlide = totalSlides;
+
+      slides[currentSlide - 1].classList.add('active');
+      document.getElementById('currentSlide').textContent = currentSlide;
+      updateProgressBar();
     }
 
-    async function onConfigChange(config) {
-      const customFont = config.font_family || defaultConfig.font_family;
-      const baseSize = config.font_size || defaultConfig.font_size;
-      const baseFontStack = 'sans-serif';
-      
-      const bgColor = config.background_color || defaultConfig.background_color;
-      document.body.style.background = bgColor;
-      document.querySelector('.main-wrapper').style.background = bgColor;
-      
-      const surfaces = document.querySelectorAll('.card-base, .step-card');
-      surfaces.forEach(el => {
-        el.style.background = config.surface_color || defaultConfig.surface_color;
-      });
-      
-      const textElements = document.querySelectorAll('.section-title, .grid-item-text, .grid-item-title, .step-title, .step-content, .step-list li, .posture-title, .posture-desc, .principe-title, .principe-text');
-      textElements.forEach(el => {
-        el.style.color = config.text_color || defaultConfig.text_color;
-      });
-      
-      document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
-      
-      document.querySelector('.nav-title').style.fontSize = `${baseSize * 1.25}px`;
-      document.querySelectorAll('.axe-title').forEach(el => {
-        el.style.fontSize = `${baseSize * 3.25}px`;
-      });
-      document.querySelectorAll('.axe-subtitle').forEach(el => {
-        el.style.fontSize = `${baseSize * 1.25}px`;
-      });
-      document.querySelectorAll('.section-title').forEach(el => {
-        el.style.fontSize = `${baseSize * 2}px`;
-      });
-      document.querySelectorAll('.grid-item-text').forEach(el => {
-        el.style.fontSize = `${baseSize * 0.9375}px`;
-      });
-      document.querySelectorAll('.grid-item-title').forEach(el => {
-        el.style.fontSize = `${baseSize * 1.1875}px`;
-      });
-      document.querySelectorAll('.step-title').forEach(el => {
-        el.style.fontSize = `${baseSize * 1.5}px`;
-      });
-      document.querySelectorAll('.step-content').forEach(el => {
-        el.style.fontSize = `${baseSize}px`;
-      });
-      document.querySelectorAll('.principe-title').forEach(el => {
-        el.style.fontSize = `${baseSize * 1.375}px`;
-      });
-      document.querySelectorAll('.principe-text').forEach(el => {
-        el.style.fontSize = `${baseSize * 0.9375}px`;
-      });
-      
-      document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
-      document.getElementById('main-subtitle').textContent = config.main_subtitle || defaultConfig.main_subtitle;
-      document.getElementById('socle-title').textContent = config.socle_title || defaultConfig.socle_title;
-      document.getElementById('axe1-title').textContent = config.axe1_title || defaultConfig.axe1_title;
-      document.getElementById('axe2-title').textContent = config.axe2_title || defaultConfig.axe2_title;
-      document.getElementById('axe3-title').textContent = config.axe3_title || defaultConfig.axe3_title;
-      document.getElementById('axe4-title').textContent = config.axe4_title || defaultConfig.axe4_title;
+    function updateProgressBar() {
+      const progress = (currentSlide / totalSlides) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
     }
 
-    function mapToCapabilities(config) {
-      return {
-        recolorables: [
-          {
-            get: () => config.background_color || defaultConfig.background_color,
-            set: (value) => {
-              config.background_color = value;
-              window.elementSdk.setConfig({ background_color: value });
-            }
-          },
-          {
-            get: () => config.surface_color || defaultConfig.surface_color,
-            set: (value) => {
-              config.surface_color = value;
-              window.elementSdk.setConfig({ surface_color: value });
-            }
-          },
-          {
-            get: () => config.text_color || defaultConfig.text_color,
-            set: (value) => {
-              config.text_color = value;
-              window.elementSdk.setConfig({ text_color: value });
-            }
-          },
-          {
-            get: () => config.primary_action_color || defaultConfig.primary_action_color,
-            set: (value) => {
-              config.primary_action_color = value;
-              window.elementSdk.setConfig({ primary_action_color: value });
-            }
-          },
-          {
-            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-            set: (value) => {
-              config.secondary_action_color = value;
-              window.elementSdk.setConfig({ secondary_action_color: value });
-            }
-          }
-        ],
-        borderables: [],
-        fontEditable: {
-          get: () => config.font_family || defaultConfig.font_family,
-          set: (value) => {
-            config.font_family = value;
-            window.elementSdk.setConfig({ font_family: value });
-          }
-        },
-        fontSizeable: {
-          get: () => config.font_size || defaultConfig.font_size,
-          set: (value) => {
-            config.font_size = value;
-            window.elementSdk.setConfig({ font_size: value });
-          }
-        }
-      };
+    function openBagagesModal() {
+      document.getElementById('modalBagages').classList.add('active');
     }
 
-    function mapToEditPanelValues(config) {
-      return new Map([
-        ["main_title", config.main_title || defaultConfig.main_title],
-        ["main_subtitle", config.main_subtitle || defaultConfig.main_subtitle],
-        ["socle_title", config.socle_title || defaultConfig.socle_title],
-        ["axe1_title", config.axe1_title || defaultConfig.axe1_title],
-        ["axe2_title", config.axe2_title || defaultConfig.axe2_title],
-        ["axe3_title", config.axe3_title || defaultConfig.axe3_title],
-        ["axe4_title", config.axe4_title || defaultConfig.axe4_title]
-      ]);
+    function closeBagagesModal() {
+      document.getElementById('modalBagages').classList.remove('active');
     }
 
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
-      });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+      if (e.key === 'ArrowRight') changeSlide(1);
+      if (e.key === 'Escape') closeBagagesModal();
+    });
+
+    // --- Injection de l'infographie fournie (Page 4 / Slide 3) ---
+    const infographicHTML = `<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La mobilité internationale</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif;overflow-x:hidden;}
+    html,body,.infographic-wrapper{height:100%;width:100%;}
+    .infographic-wrapper{background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);padding:2%;overflow-y:auto;}
+    .infographic-container{max-width:1400px;margin:0 auto;background:#fff;border-radius:30px;padding:3%;box-shadow:0 20px 60px rgba(0,0,0,0.3);position:relative;}
+    .header{text-align:center;margin-bottom:3%;position:relative;}
+    .header h1{font-size:3em;font-weight:800;margin:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .header .subtitle{font-size:1.8em;color:#f093fb;font-family:'Caveat',cursive;margin-top:0.5%;}
+    .central-section{text-align:center;margin:4% 0;position:relative;}
+    .character{font-size:5em;margin-bottom:2%;animation:float 3s ease-in-out infinite;}
+    @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-15px);}}
+    .speech-bubble{background:#fff3cd;border:3px solid #ffc107;border-radius:25px;padding:2%;max-width:500px;margin:0 auto;font-family:'Caveat',cursive;font-size:1.6em;position:relative;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+    .speech-bubble:after{content:'';position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:20px solid transparent;border-right:20px solid transparent;border-top:20px solid #ffc107;}
+    .journey-timeline{display:flex;justify-content:space-between;margin:5% 0;position:relative;padding:0 2%;}
+    .journey-timeline:before{content:'';position:absolute;top:25%;left:10%;right:10%;height:4px;background:linear-gradient(90deg,#667eea,#764ba2,#f093fb);z-index:0;}
+    .journey-phase{flex:1;text-align:center;position:relative;z-index:1;padding:2%;}
+    .phase-icon{font-size:2.5em;background:white;border-radius:50%;width:80px;height:80px;display:flex;align-items:center;justify-content:center;margin:0 auto 2%;border:5px solid;box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+    .journey-phase:nth-child(1) .phase-icon{border-color:#667eea;}
+    .journey-phase:nth-child(2) .phase-icon{border-color:#764ba2;}
+    .journey-phase:nth-child(3) .phase-icon{border-color:#f093fb;}
+    .phase-title{font-size:1.6em;font-weight:700;margin-bottom:2%;}
+    .phase-keywords{font-size:1em;color:#555;margin-bottom:2%;line-height:1.8;}
+    .phase-quote{font-family:'Caveat',cursive;font-size:1.3em;background:#f8f9fa;padding:2%;border-radius:15px;border-left:4px solid;margin-top:2%;}
+    .journey-phase:nth-child(1) .phase-quote{border-left-color:#667eea;}
+    .journey-phase:nth-child(2) .phase-quote{border-left-color:#764ba2;}
+    .journey-phase:nth-child(3) .phase-quote{border-left-color:#f093fb;}
+    .benefits-section{display:flex;gap:4%;margin:5% 0;}
+    .benefit-block{flex:1;background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);border-radius:20px;padding:3%;border:3px solid;box-shadow:0 10px 25px rgba(0,0,0,0.1);}
+    .benefit-block:nth-child(1){border-color:#667eea;}
+    .benefit-block:nth-child(2){border-color:#f093fb;}
+    .benefit-icons{font-size:2em;margin-bottom:2%;}
+    .benefit-block h3{font-size:1.4em;margin-bottom:3%;font-weight:700;}
+    .benefit-list{list-style:none;padding:0;margin:0;}
+    .benefit-list li{padding:2% 0;font-size:1.1em;position:relative;padding-left:8%;}
+    .benefit-list li:before{content:'✓';position:absolute;left:0;color:#28a745;font-weight:700;font-size:1.3em;}
+    .benefit-tagline{font-family:'Caveat',cursive;font-size:1.5em;text-align:center;margin-top:3%;padding:2%;background:rgba(255,255,255,0.5);border-radius:15px;}
+    .fears-section{margin:5% 0;background:#fff3cd;padding:3%;border-radius:20px;border:3px dashed #ffc107;}
+    .fears-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:3%;margin-top:2%;}
+    .fear-item{display:flex;align-items:center;gap:2%;background:white;padding:2%;border-radius:15px;box-shadow:0 3px 10px rgba(0,0,0,0.1);}
+    .fear-question{flex:1;font-size:1.1em;color:#dc3545;}
+    .fear-arrow{font-size:1.5em;color:#28a745;}
+    .fear-answer{flex:1;font-size:1.1em;color:#28a745;font-weight:600;}
+    .modulable-section{text-align:center;margin:5% 0;background:linear-gradient(135deg,#e9ecef 0%,#f8f9fa 100%);padding:3%;border-radius:20px;}
+    .modulable-section h3{font-size:1.8em;margin-bottom:3%;color:#764ba2;}
+    .modulable-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2%;margin-top:2%;}
+    .modulable-item{background:white;padding:3%;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+    .modulable-item .icon{font-size:2.5em;margin-bottom:2%;}
+    .modulable-item p{font-size:1em;font-weight:600;margin:0;}
+    .modulable-tagline{font-family:'Caveat',cursive;font-size:1.5em;margin-top:3%;color:#764ba2;}
+    .testimonials{display:flex;gap:3%;margin:5% 0;}
+    .testimonial{flex:1;background:#e3f2fd;border:3px solid #2196f3;border-radius:20px;padding:2%;font-family:'Caveat',cursive;font-size:1.3em;position:relative;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+    .testimonial:before{content:'"';font-size:3em;position:absolute;top:-10px;left:10px;color:#2196f3;}
+    .final-message{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:4%;border-radius:25px;text-align:center;margin-top:5%;box-shadow:0 15px 40px rgba(0,0,0,0.3);}
+    .final-message p{font-size:1.6em;line-height:1.6;margin:1% 0;font-weight:600;}
+    .final-message .highlight{font-size:1.8em;font-weight:800;}
+    @media (max-width:768px){
+      .journey-timeline{flex-direction:column;}
+      .journey-timeline:before{display:none;}
+      .benefits-section{flex-direction:column;}
+      .fears-grid,.modulable-grid{grid-template-columns:1fr;}
+      .testimonials{flex-direction:column;}
+      .header h1{font-size:2em;}
     }
+  </style>
+</head>
+<body>
+  <div class="infographic-wrapper">
+    <div class="infographic-container">
+      <div class="header">
+        <h1 id="main-title">🌍 La mobilité internationale</h1>
+        <div class="subtitle" id="subtitle">Une expérience qui fait grandir</div>
+      </div>
+
+      <div class="central-section">
+        <div class="character">🧍‍♀️</div>
+        <div class="speech-bubble" id="central-question">« Et si je tentais une expérience ailleurs ? »</div>
+      </div>
+
+      <div class="journey-timeline">
+        <div class="journey-phase">
+          <div class="phase-icon">⏳</div>
+          <div class="phase-title">AVANT</div>
+          <div class="phase-keywords">🧠 Doutes<br>❓ Questions<br>🧩 Envie de changement<br>💭 Curiosité</div>
+          <div class="phase-quote" id="before-phrase">Je me pose des questions, je ne sais pas encore.</div>
+        </div>
+        <div class="journey-phase">
+          <div class="phase-icon">🌍</div>
+          <div class="phase-title">PENDANT</div>
+          <div class="phase-keywords">🤝 Découverte<br>🌱 Apprentissages concrets<br>👥 Nouvelles rencontres<br>🛠️ Autonomie</div>
+          <div class="phase-quote" id="during-phrase">Je fais, j'apprends, j'essaie.</div>
+        </div>
+        <div class="journey-phase">
+          <div class="phase-icon">🚀</div>
+          <div class="phase-title">APRÈS</div>
+          <div class="phase-keywords">⭐ Confiance<br>🧭 Expérience<br>📄 Choix plus clairs<br>🎯 Projection</div>
+          <div class="phase-quote" id="after-phrase">Je sais mieux ce que je veux et ce que je vaux.</div>
+        </div>
+      </div>
+
+      <div class="benefits-section">
+        <div class="benefit-block">
+          <div class="benefit-icons">💪 🧠 ❤️</div>
+          <h3>Bénéfices PERSONNELS</h3>
+          <ul class="benefit-list">
+            <li>Confiance en soi</li>
+            <li>Autonomie</li>
+            <li>Fierté</li>
+            <li>Ouverture d'esprit</li>
+            <li>Capacité à s'adapter</li>
+          </ul>
+          <div class="benefit-tagline" id="personal-title">Je grandis en tant que personne.</div>
+        </div>
+
+        <div class="benefit-block">
+          <div class="benefit-icons">🧰 📈 👥</div>
+          <h3>Bénéfices PROFESSIONNELS</h3>
+          <ul class="benefit-list">
+            <li>Expérience valorisable</li>
+            <li>Engagement</li>
+            <li>Adaptation</li>
+            <li>Travail en équipe</li>
+            <li>Atout pour un CV</li>
+          </ul>
+          <div class="benefit-tagline" id="professional-title">J'ai quelque chose de concret à raconter.</div>
+        </div>
+      </div>
+
+      <div class="fears-section">
+        <h3 style="text-align:center;font-size:1.8em;margin-bottom:2%;">🛑 Peurs fréquentes → ✔️ Réponses</h3>
+        <div class="fears-grid">
+          <div class="fear-item"><div class="fear-question">❓ « Je parle pas anglais »</div><div class="fear-arrow">→</div><div class="fear-answer">✔️ On apprend en pratiquant</div></div>
+          <div class="fear-item"><div class="fear-question">❓ « Je n'ai pas d'argent »</div><div class="fear-arrow">→</div><div class="fear-answer">✔️ C'est financé</div></div>
+          <div class="fear-item"><div class="fear-question">❓ « J'ai peur d'être seul »</div><div class="fear-arrow">→</div><div class="fear-answer">✔️ Tu es accompagné</div></div>
+          <div class="fear-item"><div class="fear-question">❓ « Et si ça se passe mal ? »</div><div class="fear-arrow">→</div><div class="fear-answer">✔️ Tu n'es jamais bloqué</div></div>
+        </div>
+      </div>
+
+      <div class="modulable-section">
+        <h3>🧩 La mobilité, c'est modulable</h3>
+        <div class="modulable-grid">
+          <div class="modulable-item"><div class="icon">⏱️</div><p>Court ou long</p></div>
+          <div class="modulable-item"><div class="icon">👥</div><p>En groupe ou seul</p></div>
+          <div class="modulable-item"><div class="icon">📍</div><p>Proche ou plus loin</p></div>
+          <div class="modulable-item"><div class="icon">🗣️</div><p>Avec ou sans langue</p></div>
+        </div>
+        <div class="modulable-tagline">Il existe une mobilité adaptée à chacun.</div>
+      </div>
+
+      <div class="testimonials">
+        <div class="testimonial">J'ai repris confiance</div>
+        <div class="testimonial">Je ne pensais pas en être capable</div>
+        <div class="testimonial">Maintenant je sais mieux où je vais</div>
+      </div>
+
+      <div class="final-message">
+        <p class="highlight">Tu ne pars pas pour trouver un métier.</p>
+        <p class="highlight">Tu pars pour te découvrir,</p>
+        <p class="highlight">et avancer plus solidement.</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>`;
+
+    // Affectation au chargement
+    const miFrame = document.getElementById('miFrame');
+    if (miFrame) miFrame.srcdoc = infographicHTML;
+
+    updateProgressBar();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ba261bee752bb6a',t:'MTc2Nzc3NzY1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
